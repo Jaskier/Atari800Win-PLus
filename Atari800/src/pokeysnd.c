@@ -28,9 +28,8 @@
 #include "asap_internal.h"
 #else
 #include "atari.h"
-#ifndef __PLUS
 #include "sndsave.h"
-#else
+#ifdef __PLUS
 #include "sound_win.h"
 #endif
 #endif

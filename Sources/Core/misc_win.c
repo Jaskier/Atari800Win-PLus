@@ -215,30 +215,30 @@ ReadDisabledROMs( void )
 {
 	int	nRomFile;
 
-	nRomFile = _open( atari_basic_filename, O_BINARY | O_RDONLY, 0777 );
+	nRomFile = _open( CFG_basic_filename, O_BINARY | O_RDONLY, 0777 );
 	if( nRomFile == -1 )
 	{
-		Aprint( "Could not open %s for reading.", atari_basic_filename );
+		Aprint( "Could not open %s for reading.", CFG_basic_filename );
 		return FALSE;
 	}
 
 	if( _read( nRomFile, atari_basic, 8192 ) < 8192 )
 	{
-		Aprint( "Could not read all of atari basic from %s.", atari_basic_filename );
+		Aprint( "Could not read all of atari basic from %s.", CFG_basic_filename );
 		return FALSE;
 	}
 	_close( nRomFile );
 
-	nRomFile = _open( atari_xlxe_filename, O_BINARY | O_RDONLY, 0777 );
+	nRomFile = _open( CFG_xlxe_filename, O_BINARY | O_RDONLY, 0777 );
 	if( nRomFile == -1 )
 	{
-		Aprint( "Could not open %s for reading.", atari_xlxe_filename );
+		Aprint( "Could not open %s for reading.", CFG_xlxe_filename );
 		return FALSE;
 	}
 
 	if( _read( nRomFile, atari_os, 16384 ) < 16384 )
 	{
-		Aprint( "Could not read entire atari ROM from %s.", atari_xlxe_filename );
+		Aprint( "Could not read entire atari ROM from %s.", CFG_xlxe_filename );
 		return FALSE;
 	}
 	_close( nRomFile );
@@ -986,19 +986,19 @@ SearchingThreadProc(
 	BOOL  bFoundRom = FALSE;
 
 	if(	!s_bStopSearch &&
-		TestAndSetPath( atari_osa_filename,   RTI_OSA, pszStartPath ) )
+		TestAndSetPath( CFG_osa_filename,   RTI_OSA, pszStartPath ) )
 		bFoundRom = TRUE;
 	if(	!s_bStopSearch &&
-		TestAndSetPath( atari_osb_filename,   RTI_OSB, pszStartPath ) )
+		TestAndSetPath( CFG_osb_filename,   RTI_OSB, pszStartPath ) )
 		bFoundRom = TRUE;
 	if(	!s_bStopSearch &&
-		TestAndSetPath( atari_xlxe_filename,  RTI_XLE, pszStartPath ) )
+		TestAndSetPath( CFG_xlxe_filename,  RTI_XLE, pszStartPath ) )
 		bFoundRom = TRUE;
 	if(	!s_bStopSearch &&
-		TestAndSetPath( atari_5200_filename,  RTI_A52, pszStartPath ) )
+		TestAndSetPath( CFG_5200_filename,  RTI_A52, pszStartPath ) )
 		bFoundRom = TRUE;
 	if(	!s_bStopSearch &&
-		TestAndSetPath( atari_basic_filename, RTI_BAS, pszStartPath ) )
+		TestAndSetPath( CFG_basic_filename, RTI_BAS, pszStartPath ) )
 		bFoundRom = TRUE;
 
 	return bFoundRom;

@@ -466,7 +466,7 @@
 #undef SUPPORTS_ROTATE_VIDEOMODE
 
 /* Reinitialise the sound system. */
-#define SUPPORTS_SOUND_REINIT
+#undef SUPPORTS_SOUND_REINIT
 
 /* Define to use synchronized sound. */
 #define SYNCHRONIZED_SOUND

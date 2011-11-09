@@ -28,11 +28,11 @@ static char s_szSelectRom[ ROM_TYPES_NO ][ LOADSTRING_SIZE_S + 1 ];
 
 static CRomImagesBase::RomData_t s_aRomData[ ROM_TYPES_NO ] =
 {
-	{ atari_osa_filename,   FILE_NONE, 0, _LoadStringSx( IDS_SELECT_ROM_OSA,   s_szSelectRom[ 0 ] ), REG_ROM_OSA,   DONT_SHOW_OSA_WARN   },
-	{ atari_osb_filename,   FILE_NONE, 0, _LoadStringSx( IDS_SELECT_ROM_OSB,   s_szSelectRom[ 1 ] ), REG_ROM_OSB,   DONT_SHOW_OSB_WARN   },
-	{ atari_xlxe_filename,  FILE_NONE, 0, _LoadStringSx( IDS_SELECT_ROM_XLXE,  s_szSelectRom[ 2 ] ), REG_ROM_XLXE,  DONT_SHOW_XLXE_WARN  },
-	{ atari_5200_filename,  FILE_NONE, 0, _LoadStringSx( IDS_SELECT_ROM_5200,  s_szSelectRom[ 3 ] ), REG_ROM_5200,  DONT_SHOW_5200_WARN  },
-	{ atari_basic_filename, FILE_NONE, 0, _LoadStringSx( IDS_SELECT_ROM_BASIC, s_szSelectRom[ 4 ] ), REG_ROM_BASIC, DONT_SHOW_BASIC_WARN }
+	{ CFG_osa_filename,   FILE_NONE, 0, _LoadStringSx( IDS_SELECT_ROM_OSA,   s_szSelectRom[ 0 ] ), REG_ROM_OSA,   DONT_SHOW_OSA_WARN   },
+	{ CFG_osb_filename,   FILE_NONE, 0, _LoadStringSx( IDS_SELECT_ROM_OSB,   s_szSelectRom[ 1 ] ), REG_ROM_OSB,   DONT_SHOW_OSB_WARN   },
+	{ CFG_xlxe_filename,  FILE_NONE, 0, _LoadStringSx( IDS_SELECT_ROM_XLXE,  s_szSelectRom[ 2 ] ), REG_ROM_XLXE,  DONT_SHOW_XLXE_WARN  },
+	{ CFG_5200_filename,  FILE_NONE, 0, _LoadStringSx( IDS_SELECT_ROM_5200,  s_szSelectRom[ 3 ] ), REG_ROM_5200,  DONT_SHOW_5200_WARN  },
+	{ CFG_basic_filename, FILE_NONE, 0, _LoadStringSx( IDS_SELECT_ROM_BASIC, s_szSelectRom[ 4 ] ), REG_ROM_BASIC, DONT_SHOW_BASIC_WARN }
 };
 
 

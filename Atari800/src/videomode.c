@@ -197,7 +197,7 @@ unsigned int VIDEOMODE_NumAvailableResolutions(void)
 
 void VIDEOMODE_CopyResolutionName(unsigned int res_id, char *target, unsigned int size)
 {
-	snprintf(target, size, "%ix%i", resolutions[res_id].width, resolutions[res_id].height);
+	_snprintf(target, size, "%ix%i", resolutions[res_id].width, resolutions[res_id].height);
 }
 
 unsigned int VIDEOMODE_GetFullscreenResolution(void)
@@ -841,7 +841,7 @@ void VIDEOMODE_SetVideoSystem(int mode)
 
 void VIDEOMODE_CopyHostAspect(char *target, unsigned int size)
 {
-	snprintf(target, size, "%g:%g", VIDEOMODE_host_aspect_ratio_w, VIDEOMODE_host_aspect_ratio_h);
+	_snprintf(target, size, "%g:%g", VIDEOMODE_host_aspect_ratio_w, VIDEOMODE_host_aspect_ratio_h);
 }
 
 /* Find greatest common divisor of M and N. */

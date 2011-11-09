@@ -185,7 +185,7 @@ OnInitDialog()
 
 	m_ulMiscState       = g_Misc.ulState;
 	m_nSpeedPercent     = g_Misc.nSpeedPercent;
-	m_nRefreshRate      = refresh_rate;
+	m_nRefreshRate      = Atari800_refresh_rate;
 	m_nRefreshDoubleWnd = g_Misc.Refresh.nDoubleWnd;
 	m_nRefreshFullSpeed = g_Misc.Refresh.nFullSpeed;
 
@@ -461,13 +461,13 @@ OnOK()
 	}
 	if( bCommit )
 	{
-		if( m_nRefreshRate != refresh_rate )
+		if( m_nRefreshRate != Atari800_refresh_rate )
 		{
-			refresh_rate = m_nRefreshRate;
-			WriteRegDWORD( NULL, REG_REFRESH_RATE, refresh_rate );
+			Atari800_refresh_rate = m_nRefreshRate;
+			WriteRegDWORD( NULL, REG_REFRESH_RATE, Atari800_refresh_rate );
 
 			if( !ST_DOUBLEWND_REFRESH && !ST_FULLSPEED_REFRESH )
-				g_nTestVal = refresh_rate - 1;
+				g_nTestVal = Atari800_refresh_rate - 1;
 		}
 		if( m_nRefreshDoubleWnd != g_Misc.Refresh.nDoubleWnd )
 		{

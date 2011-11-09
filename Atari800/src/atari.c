@@ -98,10 +98,12 @@
 #include "ui.h"
 #endif
 #endif /* BASIC */
-#if defined(SOUND) && !defined(__PLUS)
+#if defined(SOUND)
 #include "pokeysnd.h"
 #include "sndsave.h"
+#if !defined(__PLUS)
 #include "sound.h"
+#endif
 #endif
 #ifdef R_IO_DEVICE
 #include "rdevice.h"
@@ -795,7 +797,7 @@ int Atari800_Initialise(int *argc, char *argv[])
 			CARTRIDGE_type = UI_SelectCartType(r);
 			UI_is_active = FALSE;
 #else /* __PLUS */
-			CARTRIDGE_type = (CARTRIDGE_NONE == nCartType ? UI_SelectCartType(r) : nCartType);
+			CARTRIDGE_type = (CARTRIDGE_NONE == nCartType ? SelectCartType(r) : nCartType);
 #endif /* __PLUS */
 			CARTRIDGE_Start();
 

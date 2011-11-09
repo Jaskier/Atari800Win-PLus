@@ -302,7 +302,7 @@ void StateSav_SaveFNAME(const char *filename)
 
 	/* Check to see if file is in application tree, if so, just save as
 	   relative path....*/
-	if (getcwd(dirname, FILENAME_MAX) != NULL) {
+	if (_getcwd(dirname, FILENAME_MAX) != NULL) {
 		if (strncmp(filename, dirname, strlen(dirname)) == 0)
 			/* XXX: check if '/' or '\\' follows dirname in filename? */
 			filename += strlen(dirname) + 1;

@@ -29,3 +29,9 @@ int       g_anRamSize     [] = { DEF_RAMSIZE_OSA, DEF_RAMSIZE_OSB, DEF_RAMSIZE_X
 
 char atari_exe_dir[FILENAME_MAX];
 char atari_state_dir[FILENAME_MAX]; 
+
+char CFG_osa_filename[FILENAME_MAX] = Util_FILENAME_NOT_SET;
+char CFG_osb_filename[FILENAME_MAX] = Util_FILENAME_NOT_SET;
+char CFG_xlxe_filename[FILENAME_MAX] = Util_FILENAME_NOT_SET;
+char CFG_5200_filename[FILENAME_MAX] = Util_FILENAME_NOT_SET;
+char CFG_basic_filename[FILENAME_MAX] = Util_FILENAME_NOT_SET;

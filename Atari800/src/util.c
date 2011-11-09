@@ -315,7 +315,7 @@ void Util_splitpath(const char *path, char *dir_part, char *file_part)
 
 void Util_catpath(char *result, const char *path1, const char *path2)
 {
-	snprintf(result, FILENAME_MAX,
+	_snprintf(result, FILENAME_MAX,
 		path1[0] == '\0' || path2[0] == Util_DIR_SEP_CHAR || path1[strlen(path1) - 1] == Util_DIR_SEP_CHAR
 #ifdef DIR_SEP_BACKSLASH
 		 || path2[0] == '/' || path1[strlen(path1) - 1] == '/'

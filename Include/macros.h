@@ -147,7 +147,7 @@ typedef unsigned (__stdcall *PTHREAD_START)(void *);
 
 #define _GetRefreshRate() \
 	(ST_FULLSPEED_REFRESH ? g_Misc.Refresh.nFullSpeed : \
-	(ST_DOUBLEWND_REFRESH ? g_Misc.Refresh.nDoubleWnd : refresh_rate))
+	(ST_DOUBLEWND_REFRESH ? g_Misc.Refresh.nDoubleWnd : Atari800_refresh_rate))
 
 #define _IsPathAvailable(sz) \
 	(BOOL)(*(sz) != '\0' && _stricmp(sz, FILE_NONE) != 0)

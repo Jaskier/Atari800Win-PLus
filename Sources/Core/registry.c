@@ -499,7 +499,7 @@ WriteAtari800Registry(
 		DisplayMessage( NULL, IDS_REG_OPEN_ERROR, 0, MB_ICONSTOP | MB_OK );
 		return;
 	}
-	_RegWriteNumber( hkKey, REG_REFRESH_RATE,        refresh_rate                  );
+	_RegWriteNumber( hkKey, REG_REFRESH_RATE,        Atari800_refresh_rate                  );
 	_RegWriteNumber( hkKey, REG_MACHINE_TYPE,        machine_type                  );
 	_RegWriteNumber( hkKey, REG_TV_MODE,             tv_mode                       );
 	_RegWriteNumber( hkKey, REG_HD_READ_ONLY,        h_read_only                  );
@@ -512,11 +512,11 @@ WriteAtari800Registry(
 	_RegWriteNumber( hkKey, REG_ENABLE_STEREO,       stereo_enabled                );
 	_RegWriteNumber( hkKey, REG_ARTIF_MODE,          global_artif_mode             );
 	_RegWriteNumber( hkKey, REG_CART_TYPE,           cart_type                     );
-	_RegWriteString( hkKey, REG_ROM_OSA,             atari_osa_filename            );
-	_RegWriteString( hkKey, REG_ROM_OSB,             atari_osb_filename            );
-	_RegWriteString( hkKey, REG_ROM_XLXE,            atari_xlxe_filename           );
-	_RegWriteString( hkKey, REG_ROM_5200,            atari_5200_filename           );
-	_RegWriteString( hkKey, REG_ROM_BASIC,           atari_basic_filename          );
+	_RegWriteString( hkKey, REG_ROM_OSA,             CFG_osa_filename              );
+	_RegWriteString( hkKey, REG_ROM_OSB,             CFG_osb_filename              );
+	_RegWriteString( hkKey, REG_ROM_XLXE,            CFG_xlxe_filename             );
+	_RegWriteString( hkKey, REG_ROM_5200,            CFG_5200_filename             );
+	_RegWriteString( hkKey, REG_ROM_BASIC,           CFG_basic_filename          );
 	_RegWriteString( hkKey, REG_FILE_TAPE,           cassette_filename             );
 	_RegWriteString( hkKey, REG_PRINT_COMMAND,       print_command                 );
 	_RegWriteNumber( hkKey, REG_MOUSE_MODE,          mouse_mode                    );
@@ -619,7 +619,7 @@ InitialiseRegistry(
 	global_artif_mode             = 0;
 	machine_type                  = MACHINE_XLXE;
 	tv_mode                       = TV_PAL;
-	refresh_rate                  = 1;
+	Atari800_refresh_rate         = 1;
 	h_read_only                   = 1;
 	disable_basic                 = 1;
 	rtime_enabled                 = 1;
@@ -684,16 +684,16 @@ InitialiseRegistry(
 		g_Input.Joy.anKeysets[ KEYS_B_JOYSTICK + NUM_KBJOY_DEVICES ][ i ] = 0;
 	}
 	
-	if( bErasePaths || '\0' == *atari_osa_filename ) /* WinNT wants this */
-		strcpy( atari_osa_filename, DEFAULT_OSA );
-	if( bErasePaths || '\0' == *atari_osb_filename )
-		strcpy( atari_osb_filename, DEFAULT_OSB );
-	if( bErasePaths || '\0' == *atari_xlxe_filename )
-		strcpy( atari_xlxe_filename, DEFAULT_OXL );
-	if( bErasePaths || '\0' == *atari_5200_filename )
-		strcpy( atari_5200_filename, DEFAULT_O52 );
-	if( bErasePaths || '\0' == *atari_basic_filename )
-		strcpy( atari_basic_filename, DEFAULT_BAS );
+	if( bErasePaths || '\0' == *CFG_osa_filename ) /* WinNT wants this */
+		strcpy( CFG_osa_filename, DEFAULT_OSA );
+	if( bErasePaths || '\0' == *CFG_osb_filename )
+		strcpy( CFG_osb_filename, DEFAULT_OSB );
+	if( bErasePaths || '\0' == *CFG_xlxe_filename )
+		strcpy( CFG_xlxe_filename, DEFAULT_OXL );
+	if( bErasePaths || '\0' == *CFG_5200_filename )
+		strcpy( CFG_5200_filename, DEFAULT_O52 );
+	if( bErasePaths || '\0' == *CFG_basic_filename )
+		strcpy( CFG_basic_filename, DEFAULT_BAS );
 
 	if( bErasePaths || '\0' == *g_szTemplateFile )
 		strcpy( g_szTemplateFile, DEFAULT_A8K );
@@ -759,11 +759,11 @@ ReadRegPaths(
 		DisplayMessage( NULL, IDS_REG_OPEN_ERROR, 0, MB_ICONSTOP | MB_OK );
 		return FALSE;
 	}
-	bFail |= _RegReadString( hkKey, REG_ROM_BASIC,     atari_basic_filename, DEFAULT_BAS,    MAX_PATH );
-	bFail |= _RegReadString( hkKey, REG_ROM_OSA,       atari_osa_filename,   DEFAULT_OSA,    MAX_PATH );
-	bFail |= _RegReadString( hkKey, REG_ROM_OSB,       atari_osb_filename,   DEFAULT_OSB,    MAX_PATH );
-	bFail |= _RegReadString( hkKey, REG_ROM_XLXE,      atari_xlxe_filename,  DEFAULT_OXL,    MAX_PATH );
-	bFail |= _RegReadString( hkKey, REG_ROM_5200,      atari_5200_filename,  DEFAULT_O52,    MAX_PATH );
+	bFail |= _RegReadString( hkKey, REG_ROM_BASIC,     CFG_basic_filename, DEFAULT_BAS,    MAX_PATH );
+	bFail |= _RegReadString( hkKey, REG_ROM_OSA,       CFG_osa_filename,   DEFAULT_OSA,    MAX_PATH );
+	bFail |= _RegReadString( hkKey, REG_ROM_OSB,       CFG_osb_filename,   DEFAULT_OSB,    MAX_PATH );
+	bFail |= _RegReadString( hkKey, REG_ROM_XLXE,      CFG_xlxe_filename,  DEFAULT_OXL,    MAX_PATH );
+	bFail |= _RegReadString( hkKey, REG_ROM_5200,      CFG_5200_filename,  DEFAULT_O52,    MAX_PATH );
 	bFail |= _RegReadString( hkKey, REG_FILE_TAPE,     cassette_filename,    DEFAULT_TAP,    FILENAME_MAX - 1 );
 	bFail |= _RegReadString( hkKey, REG_FILE_STATE,    atari_state_dir,      DEFAULT_A8S,    MAX_PATH );
 	bFail |= _RegReadString( hkKey, REG_EXE_PATH,      atari_exe_dir,        PATH_NONE,      MAX_PATH );

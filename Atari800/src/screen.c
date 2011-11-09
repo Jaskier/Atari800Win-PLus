@@ -391,7 +391,7 @@ void Screen_FindScreenshotFilename(char *buffer, unsigned bufsize)
 			no = 0;
 			overwrite = TRUE;
 		}
-		snprintf(buffer, bufsize, screenshot_filename_format, no);
+		_snprintf(buffer, bufsize, screenshot_filename_format, no);
 		if (overwrite)
 			break;
 		if (!Util_fileexists(buffer))

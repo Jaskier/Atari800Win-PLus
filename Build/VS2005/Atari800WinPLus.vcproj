@@ -1009,6 +1009,26 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath="..\..\Sources\Core\cfg.c"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
 					RelativePath="..\..\Sources\Core\crc32.c"
 					>
 					<FileConfiguration
@@ -1678,12 +1698,20 @@
 					RelativePath="..\..\Atari800\src\util.h"
 					>
 				</File>
+				<File
+					RelativePath="..\..\Atari800\src\videomode.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Core"
 				>
 				<File
 					RelativePath="..\..\Include\avisave.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\cfg.h"
 					>
 				</File>
 				<File

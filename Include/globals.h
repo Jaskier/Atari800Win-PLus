@@ -84,6 +84,12 @@ extern int       g_anRamSize     [];
 extern char atari_exe_dir[FILENAME_MAX];
 extern char atari_state_dir[FILENAME_MAX]; 
 
+extern char CFG_osa_filename[FILENAME_MAX];
+extern char CFG_osb_filename[FILENAME_MAX];
+extern char CFG_xlxe_filename[FILENAME_MAX];
+extern char CFG_5200_filename[FILENAME_MAX];
+extern char CFG_basic_filename[FILENAME_MAX];
+
 #ifdef __cplusplus
 }
 #endif
