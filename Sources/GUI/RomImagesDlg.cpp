@@ -230,7 +230,7 @@ OnInitDialog()
 	/* Backup cart path */
 	_strncpy( m_szCartName, g_szOtherRom, MAX_PATH );
 	/* Remember the cartridge state */
-	m_nCartState = (CART_NONE == cart_type ? CS_DETACHED : CS_ATTACHED);
+	m_nCartState = (CARTRIDGE_NONE == cart_type ? CS_DETACHED : CS_ATTACHED);
 
 	SetDlgState();
 
@@ -615,7 +615,7 @@ OnOK()
 		if( CS_ATTACHED == nNewCartState )
 		{
 			/* Attach the selected cartridge */
-			AttachCartridge( g_szOtherRom, CART_NONE );
+			AttachCartridge( g_szOtherRom, CARTRIDGE_NONE );
 		}
 		else
 		{

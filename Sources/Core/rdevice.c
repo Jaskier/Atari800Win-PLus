@@ -255,7 +255,7 @@ WSADATA stWSAData;
 		winsock_started = 1;
 		nWSAerror = WSWSASTARTUP(0x0101, &stWSAData);
 		if (nWSAerror != 0) {
-			Aprint("Unable to start Winsock!");
+			Log_print("Unable to start Winsock!");
 		}
 	}
 
@@ -264,31 +264,31 @@ WSADATA stWSAData;
 	PORT = (int) dGetByte(regX + 0x340 + 11);
 	if (temp == 8 && PORT > 0)
 	{
-		Aprint("R: request to dial-out intercepted.");
+		Log_print("R: request to dial-out intercepted.");
 		Device_GetFilename();
 		strcpy(ahost, filename);
-		Aprint(ahost);
+		Log_print(ahost);
 		_itoa(PORT, port, 5);
 		hostlookup = WSGETHOSTBYNAME(ahost);
 		if (hostlookup == NULL)
 		{
-			Aprint("ERROR! Cannot resolve %s.", ahost);
+			Log_print("ERROR! Cannot resolve %s.", ahost);
 			dPutByte(747,0);
 			regA = 170;
 			regY = 170;
 			SetN;
 			return;
 		}
-		Aprint("Resolve successful.");
+		Log_print("Resolve successful.");
 
 		HOST = ((struct in_addr *)hostlookup->h_addr)->s_addr;
-		Aprint("Got HOST.\n");
+		Log_print("Got HOST.\n");
 
 		memset(&in, 0, sizeof(struct sockaddr_in));
 
 		if ((newsock = WSSOCKET(AF_INET, SOCK_STREAM, 0)) == -1)
 		{
-			Aprint("Socket connect error.");
+			Log_print("Socket connect error.");
 			dPutByte(747, 0);
 			regA = 170;
 			regY = 170;
@@ -299,15 +299,15 @@ WSADATA stWSAData;
 		in.sin_port = WSHTONS((u_short)PORT);
 		in.sin_addr.s_addr = HOST;
 
-		Aprint("Ready to connect.");
+		Log_print("Ready to connect.");
 
 		retval = WSCONNECT(newsock, (struct sockaddr *)&in, sizeof(struct sockaddr_in));
 
-		Aprint("Got retval.");
+		Log_print("Got retval.");
 
 		if (retval == -1)
 		{
-			Aprint("Connect error.");
+			Log_print("Connect error.");
 			dPutByte(747, 0);
 			regA = 170;
 			regY = 170;
@@ -315,7 +315,7 @@ WSADATA stWSAData;
 			return;
 		}
 
-		Aprint("Successful connect.");
+		Log_print("Successful connect.");
 		WSIOCTLSOCKET(sock, FIONBIO, (u_long FAR*)&argp);
 		connected = 1;
 		concurrent = 1;
@@ -401,7 +401,7 @@ void Device_RHWRIT(void)
 
 		retval = WSSEND(newsock, &regA, 1, 0); /* returns -1 if disconnected */
 		if (retval == -1) {
-			Aprint("Error on R: write.");
+			Log_print("Error on R: write.");
 			dPutByte(749,0);
 			regA = 1;
 			regY = 1;
@@ -449,7 +449,7 @@ void Device_RHSTAT(void)
 				winsock_started = 1;
 				nWSAerror = WSWSASTARTUP(0x0101, &stWSAData);
 				if (nWSAerror != 0) {
-					Aprint("Unable to start Winsock!");
+					Log_print("Unable to start Winsock!");
 				}
 			}
 
@@ -458,29 +458,29 @@ void Device_RHSTAT(void)
 			memset ( &in, 0, sizeof ( struct sockaddr_in ) );
 			sock = WSSOCKET(AF_INET, SOCK_STREAM, 0);
 			if (sock == INVALID_SOCKET) {
-				Aprint("Unable to create socket!");
+				Log_print("Unable to create socket!");
 			}
 			in.sin_family = AF_INET;
 			in.sin_addr.s_addr = INADDR_ANY;
 			in.sin_port = WSHTONS(23);
 			nWSAerror = WSBIND(sock, (LPSOCKADDR)&in, sizeof(struct sockaddr_in));
 			if (nWSAerror == SOCKET_ERROR) {
-				Aprint("Unable to bind to socket!");
+				Log_print("Unable to bind to socket!");
 			}
 			nWSAerror = WSLISTEN(sock, 5);
 			if (nWSAerror == SOCKET_ERROR) {
-				Aprint("Unable to listen to socket!");
+				Log_print("Unable to listen to socket!");
 			}
 			retval = WSIOCTLSOCKET(sock, FIONBIO, (u_long FAR*)&argp);
 			len = sizeof ( struct sockaddr_in );
 			connected = 0;
 			bufend = 0;
-			Aprint("Socket is listening.");
+			Log_print("Socket is listening.");
 		}
 
 		newsock = WSACCEPT( sock, (struct sockaddr *)&peer_in, &len );
 		if (newsock != -1) {
-//			Aprint("Connected.");
+//			Log_print("Connected.");
 
 			retval = WSIOCTLSOCKET(newsock, FIONBIO, (u_long FAR*)&argp);
 			connected = 1;
@@ -505,7 +505,7 @@ void Device_RHSTAT(void)
 #else	/* Piotr's code */
 			time(&lTime);
 			datetime = localtime(&lTime);
-			Aprint("Connected %02u:%02u:%02u - %02u/%02u/%02u - From %s",
+			Log_print("Connected %02u:%02u:%02u - %02u/%02u/%02u - From %s",
 				datetime->tm_hour,
 				datetime->tm_min,
 				datetime->tm_sec,
@@ -573,11 +573,11 @@ void Device_RHSPEC(void)
 {
 	r_in = dGetByte(ICCOMZ);
 /*
-	Aprint( "R: device special" );
+	Log_print( "R: device special" );
 
-	Aprint("ICCOMZ =");
-	Aprint("%d",r_in);
-	Aprint("^^ in ICCOMZ");
+	Log_print("ICCOMZ =");
+	Log_print("%d",r_in);
+	Log_print("^^ in ICCOMZ");
 */
 
 	switch (r_in) {
@@ -594,7 +594,7 @@ void Device_RHSPEC(void)
 		xio_40();
 		break;
 	default:
-		Aprint("Unsupported XIO #.");
+		Log_print("Unsupported XIO #.");
 		break;
 	}
 /*
@@ -649,7 +649,7 @@ void RDevice_UpdatePatches(void)
 		Atari800_AddEscRts(R_PATCH_WRIT, ESC_RHWRIT, Device_RHWRIT);
 		Atari800_AddEscRts(R_PATCH_STAT, ESC_RHSTAT, Device_RHSTAT);
 		Atari800_AddEscRts(R_PATCH_SPEC, ESC_RHSPEC, Device_RHSPEC);
-		/* R: in HATABS will be added next frame by Device_Frame */
+		/* R: in HATABS will be added next frame by Devices_Frame */
 	}
 	else {	/* disable R: device */
 		/* remove R: entry from HATABS */
@@ -786,7 +786,7 @@ RDevice_IsCapable( void )
 {
 	if( !s_hWinSock2 )
 	{
-//		Aprint( "Cannot emulate R: device without ws2_32.dll loaded properly." );
+//		Log_print( "Cannot emulate R: device without ws2_32.dll loaded properly." );
 		return -1;
 	}
 	return 1;

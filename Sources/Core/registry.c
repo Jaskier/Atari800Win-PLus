@@ -501,7 +501,7 @@ WriteAtari800Registry(
 	}
 	_RegWriteNumber( hkKey, REG_REFRESH_RATE,        Atari800_refresh_rate                  );
 	_RegWriteNumber( hkKey, REG_MACHINE_TYPE,        machine_type                  );
-	_RegWriteNumber( hkKey, REG_TV_MODE,             tv_mode                       );
+	_RegWriteNumber( hkKey, REG_TV_MODE,             Atari800_tv_mode                       );
 	_RegWriteNumber( hkKey, REG_HD_READ_ONLY,        h_read_only                  );
 	_RegWriteNumber( hkKey, REG_DISABLE_BASIC,       disable_basic                 );
 	_RegWriteNumber( hkKey, REG_ENABLE_SIO_PATCH,    enable_sio_patch              );
@@ -618,7 +618,7 @@ InitialiseRegistry(
 	}
 	global_artif_mode             = 0;
 	machine_type                  = MACHINE_XLXE;
-	tv_mode                       = TV_PAL;
+	Atari800_tv_mode                       = Atari800_TV_PAL;
 	Atari800_refresh_rate         = 1;
 	h_read_only                   = 1;
 	disable_basic                 = 1;
@@ -628,7 +628,7 @@ InitialiseRegistry(
 	enable_p_patch                = 0;
 	enable_r_patch                = 0;
 	stereo_enabled                = 0;
-	cart_type                     = CART_NONE;
+	cart_type                     = CARTRIDGE_NONE;
 	joy_block_opposite_directions = 1;
 	joy_multijoy                  = 0;
 	mouse_mode                    = DEF_MOUSE_MODE;
@@ -825,7 +825,7 @@ ReadRegDrives(
 			else {
 				strcpy( szFileName, sio_filename[ i ] );
 				if( !SIO_Mount( i + 1, szFileName, _IsFlagSet(g_Misc.ulState, MS_DRIVE_READONLY) ) )
-					Aprint( "Disk File %s not found", sio_filename[ i ] );
+					Log_print( "Disk File %s not found", sio_filename[ i ] );
 			}
 		}
 	}
@@ -901,8 +901,8 @@ HandleRegistry( void )
 		{
 			bFail |= _RegReadString( hkKey, REG_PRINT_COMMAND,       print_command,                 DEF_PRINT_COMMAND, PRINT_CMD_LENGTH );
 			bFail |= _RegReadNumber( hkKey, REG_MACHINE_TYPE,        machine_type,                  MACHINE_XLXE            );
-			bFail |= _RegReadNumber( hkKey, REG_TV_MODE,             tv_mode,                       TV_PAL                  );
-			bFail |= _RegReadNumber( hkKey, REG_CART_TYPE,           cart_type,                     CART_NONE               );
+			bFail |= _RegReadNumber( hkKey, REG_TV_MODE,             Atari800_tv_mode,                       Atari800_TV_PAL         );
+			bFail |= _RegReadNumber( hkKey, REG_CART_TYPE,           cart_type,                     CARTRIDGE_NONE               );
 			bFail |= _RegReadNumber( hkKey, REG_DISABLE_BASIC,       disable_basic,                 1                       );
 			bFail |= _RegReadNumber( hkKey, REG_REFRESH_RATE,        refresh_rate,                  1                       );
 			bFail |= _RegReadNumber( hkKey, REG_HD_READ_ONLY,        h_read_only,                  1                       );
@@ -972,7 +972,7 @@ HandleRegistry( void )
 				g_nStartX = 0;
 			
 			if( g_nStartY > GetSystemMetrics( SM_CYFULLSCREEN ) )
-				g_nStartY = GetSystemMetrics( SM_CYFULLSCREEN ) - (_IsFlagSet( g_Screen.ulState, SM_WRES_DOUBLE ) ? ATARI_DOUBLE_HEIGHT : ATARI_HEIGHT);
+				g_nStartY = GetSystemMetrics( SM_CYFULLSCREEN ) - (_IsFlagSet( g_Screen.ulState, SM_WRES_DOUBLE ) ? ATARI_DOUBLE_HEIGHT : Screen_HEIGHT);
 			if( g_nStartY < 0 )
 				g_nStartY = 0;
 

@@ -218,13 +218,13 @@ ReadDisabledROMs( void )
 	nRomFile = _open( CFG_basic_filename, O_BINARY | O_RDONLY, 0777 );
 	if( nRomFile == -1 )
 	{
-		Aprint( "Could not open %s for reading.", CFG_basic_filename );
+		Log_print( "Could not open %s for reading.", CFG_basic_filename );
 		return FALSE;
 	}
 
 	if( _read( nRomFile, atari_basic, 8192 ) < 8192 )
 	{
-		Aprint( "Could not read all of atari basic from %s.", CFG_basic_filename );
+		Log_print( "Could not read all of atari basic from %s.", CFG_basic_filename );
 		return FALSE;
 	}
 	_close( nRomFile );
@@ -232,13 +232,13 @@ ReadDisabledROMs( void )
 	nRomFile = _open( CFG_xlxe_filename, O_BINARY | O_RDONLY, 0777 );
 	if( nRomFile == -1 )
 	{
-		Aprint( "Could not open %s for reading.", CFG_xlxe_filename );
+		Log_print( "Could not open %s for reading.", CFG_xlxe_filename );
 		return FALSE;
 	}
 
 	if( _read( nRomFile, atari_os, 16384 ) < 16384 )
 	{
-		Aprint( "Could not read entire atari ROM from %s.", CFG_xlxe_filename );
+		Log_print( "Could not read entire atari ROM from %s.", CFG_xlxe_filename );
 		return FALSE;
 	}
 	_close( nRomFile );
@@ -1305,7 +1305,7 @@ ExecuteCmd(
 						{
 							*pszOut = '\0';
 							/* Print message line to the Error View buffer */
-							Aprint( szText );
+							Log_print( szText );
 							pszOut = szText;
 						}
 					}
@@ -1369,7 +1369,7 @@ Misc_ExecutePrintCmd(
 							   szPath,
 							   SW_HIDE )) < 32 )
 		{
-			Aprint( "Printing error (shell execution code: %d)", nResult );
+			Log_print( "Printing error (shell execution code: %d)", nResult );
 			bResult = FALSE;
 		}
 	}
@@ -1421,7 +1421,7 @@ Misc_PrintTime( void )
 	/* Convert to a local time */
 	t = localtime( &long_time );
 
-	Aprint( "Start log [%04d.%02d.%02d %02d:%02d:%02d]",
+	Log_print( "Start log [%04d.%02d.%02d %02d:%02d:%02d]",
 			t->tm_year + 1900, t->tm_mon + 1, t->tm_mday,
 			t->tm_hour, t->tm_min, t->tm_sec );
 

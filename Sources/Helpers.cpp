@@ -38,7 +38,7 @@ InitialiseMachine( void )
 
 	if( !Atari800_InitialiseMachine() )
 	{
-		Aprint( "Failed loading specified Atari OS ROM or BASIC!\r\n"
+		Log_print( "Failed loading specified Atari OS ROM or BASIC!\r\n"
 				"Check filename under the 'Atari/ROM images' menu." );
 
 		_SetFlag( g_ulAtariState, ATARI_LOAD_FAILED );
@@ -119,7 +119,7 @@ HandleResetEvent( void )
 	if( !_IsFlagSet( g_Kaillera.ulState, KS_SYNC_GAME ) )
 	{
 #endif
-		if( 0 == start_binloading )
+		if( 0 == BINLOAD_start_binloading )
 			strcpy( g_szBinaryFile, FILE_NONE );
 
 		strcpy( g_szSnapshotFile, FILE_NONE );

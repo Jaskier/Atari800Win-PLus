@@ -571,7 +571,7 @@ OnMemoButton()
 {
 	_CursorBusy();
 
-	m_pCheatServer->ShotMemo( m_nMemo, memory, 65536 );
+	m_pCheatServer->ShotMemo( m_nMemo, MEMORY_mem, 65536 );
 	m_bTrainerChanged = TRUE;
 
 	EnableListUpdates( FALSE );
@@ -759,7 +759,7 @@ OnLoadButton()
 		else
 		{
 			/* Send the addresses to the cheat server */
-			m_pCheatServer->ImportAddr( pValues, nCount, memory );
+			m_pCheatServer->ImportAddr( pValues, nCount, MEMORY_mem );
 			/* Release the buffer allocated by ReadTrainerSnapshot */
 			free( pValues );
 

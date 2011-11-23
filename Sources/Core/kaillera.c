@@ -421,9 +421,9 @@ GameCallback(
 			_TRACE1( "Number of players: %d\n", nNumPlayers );
 			_TRACE2( "Player no: %d (port: %d)\n", nPlayerNo, g_Kaillera.nLocalPort + 1 );
 
-			Aprint( "Starting network game: %s", pszGame );
-			Aprint( "Number of players: %d", nNumPlayers );
-			Aprint( "Player no: %d (port: %d)", nPlayerNo, g_Kaillera.nLocalPort + 1 );
+			Log_print( "Starting network game: %s", pszGame );
+			Log_print( "Number of players: %d", nNumPlayers );
+			Log_print( "Player no: %d (port: %d)", nPlayerNo, g_Kaillera.nLocalPort + 1 );
 
 			s_nPlayerNo   = nPlayerNo - 1;
 			s_nNumPlayers = nNumPlayers;
@@ -459,7 +459,7 @@ ClientDroppedCallback(
 	int   nPlayerNo
 )
 {
-	Aprint( "Network game has been stopped (player %d dropped)", nPlayerNo );
+	Log_print( "Network game has been stopped (player %d dropped)", nPlayerNo );
 	Kaillera_GameStop();
 
 } /* #OF# ClientDroppedCallback */
@@ -520,7 +520,7 @@ Kaillera_Initialise( void )
 		Kaillera_GetVersion( s_szVersion );
 
 		/* Print out the version of Kaillera client */
-		Aprint( "Kaillera version: %s", s_szVersion );
+		Log_print( "Kaillera version: %s", s_szVersion );
 
 		if( strcmp( KA_CLIENT_VERSION, s_szVersion ) != 0 )
 		{
@@ -1027,7 +1027,7 @@ SetKeyboardMask(
 )
 {
 	key_consol = _TstCtrl( nValue, KA_CTRL_CONSOLE ) ? _GetConsole( nValue ) : CONSOL_NONE;
-	key_code   = _TstCtrl( nValue, KA_CTRL_KEY     ) ? _GetKey    ( nValue ) : AKEY_NONE;
+	INPUT_key_code   = _TstCtrl( nValue, KA_CTRL_KEY     ) ? _GetKey    ( nValue ) : AKEY_NONE;
 	key_shift  = _TstCtrl( nValue, KA_CTRL_SHIFT   ) ? _GetShift  ( nValue ) /* Not really necessary */ : NO_SHIFT;
 
 } /* #OF# SetKeyboardMask */
@@ -1123,7 +1123,7 @@ Kaillera_IsCapable( void )
 {
 	if( !s_hKailleraClient )
 	{
-//		Aprint( "Cannot allow network games without kaillera.dll loaded properly." );
+//		Log_print( "Cannot allow network games without kaillera.dll loaded properly." );
 		return -1;
 	}
 	return 1;

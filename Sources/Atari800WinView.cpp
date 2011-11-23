@@ -334,9 +334,9 @@ OnPrint(
 	/* We need it to clip and flip the Atari screen vertically,
 	   in case StretchDIBits can't do it. */
 	/* Alloc temporary buffer for flipped Atari screen */
-	UBYTE *pTmpScr = (UBYTE *)malloc(ATARI_VIS_WIDTH * ATARI_HEIGHT);
+	UBYTE *pTmpScr = (UBYTE *)malloc(ATARI_VIS_WIDTH * Screen_HEIGHT);
 	UBYTE *pSource = Screen_GetBuffer() + ATARI_HORZ_CLIP;
-	UBYTE *pTarget = pTmpScr + ATARI_VIS_WIDTH * (ATARI_HEIGHT - 1);
+	UBYTE *pTarget = pTmpScr + ATARI_VIS_WIDTH * (Screen_HEIGHT - 1);
 	int y;
 
 	struct ScreenInterParms_t dipInfo;
@@ -353,13 +353,13 @@ OnPrint(
 
 	/* Set the size of the temporary screen */
 	dipInfo.pBitmapInfo->bmiHeader.biWidth  = ATARI_VIS_WIDTH;
-	dipInfo.pBitmapInfo->bmiHeader.biHeight = ATARI_HEIGHT;
+	dipInfo.pBitmapInfo->bmiHeader.biHeight = Screen_HEIGHT;
 
 	/* Make flipped screen */
-	for( y = 0; y < ATARI_HEIGHT; y++ )
+	for( y = 0; y < Screen_HEIGHT; y++ )
 	{
 		memcpy( pTarget, pSource, ATARI_VIS_WIDTH );
-		pSource += ATARI_WIDTH;
+		pSource += Screen_WIDTH;
 		pTarget -= ATARI_VIS_WIDTH;
 	}
 	/* Find the largest integral multiple of width on the page */
@@ -368,8 +368,8 @@ OnPrint(
 	/* And stretch the original DIB to that size, centering it
 	   horizontally on the page */
 	StretchDIBits( pDC->m_hDC, (xRes - ATARI_VIS_WIDTH * nMult) / 2, 0,
-				   ATARI_VIS_WIDTH * nMult, ATARI_HEIGHT * nMult,
-				   0, 0, ATARI_VIS_WIDTH, ATARI_HEIGHT,
+				   ATARI_VIS_WIDTH * nMult, Screen_HEIGHT * nMult,
+				   0, 0, ATARI_VIS_WIDTH, Screen_HEIGHT,
 				   pTmpScr, dipInfo.pBitmapInfo, DIB_RGB_COLORS, SRCCOPY );
 
 	/* Restore original values */
@@ -466,7 +466,7 @@ OnLButtonDown(
 )
 {
 	if( _IsFlagSet( g_Input.ulState, IS_CAPTURE_MOUSE ) )
-		mouse_buttons |= 1;
+		INPUT_mouse_buttons |= 1;
 
 	CView::OnLButtonDown( nFlags, point );
 
@@ -487,7 +487,7 @@ OnLButtonUp(
 )
 {
 	if( _IsFlagSet( g_Input.ulState, IS_CAPTURE_MOUSE ) )
-		mouse_buttons &= ~1;
+		INPUT_mouse_buttons &= ~1;
 	
 	CView::OnLButtonUp( nFlags, point );
 
@@ -508,7 +508,7 @@ OnLButtonDblClk(
 )
 {
 	if( _IsFlagSet( g_Input.ulState, IS_CAPTURE_MOUSE ) )
-		mouse_buttons |= 1;
+		INPUT_mouse_buttons |= 1;
 	
 	CView::OnLButtonDblClk( nFlags, point );
 
@@ -529,7 +529,7 @@ OnRButtonDown(
 )
 {
 	if( _IsFlagSet( g_Input.ulState, IS_CAPTURE_MOUSE ) )
-		mouse_buttons |= 2;
+		INPUT_mouse_buttons |= 2;
 	
 	CView::OnRButtonDown( nFlags, point );
 
@@ -550,7 +550,7 @@ OnRButtonUp(
 )
 {
 	if( _IsFlagSet( g_Input.ulState, IS_CAPTURE_MOUSE ) )
-		mouse_buttons &= ~2;
+		INPUT_mouse_buttons &= ~2;
 	
 	CView::OnRButtonUp( nFlags, point );
 
@@ -571,7 +571,7 @@ OnRButtonDblClk(
 )
 {
 	if( _IsFlagSet( g_Input.ulState, IS_CAPTURE_MOUSE ) )
-		mouse_buttons |= 2;
+		INPUT_mouse_buttons |= 2;
 	
 	CView::OnRButtonDblClk( nFlags, point );
 

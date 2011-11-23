@@ -242,7 +242,7 @@ OnInitDialog()
 	CCommonDlg::OnInitDialog();
 
 	m_nLowSkipLimit  = 1;
-	m_nHighSkipLimit = tv_mode;
+	m_nHighSkipLimit = Atari800_tv_mode;
 	m_ulSoundState   = g_Sound.ulState;
 	m_nSoundRate     = g_Sound.nRate;
 	m_nSoundVol      = g_Sound.nVolume;

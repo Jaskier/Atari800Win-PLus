@@ -15,7 +15,7 @@ File    : FileService.cpp
 #include "WarningDlg.h"
 #include "Helpers.h"
 #include "FileService.h"
-
+#include "cassette.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // Public objects
@@ -684,7 +684,7 @@ RunExecutable(
 		strcpy( atari_exe_dir, szNewDir );
 		WriteRegString( NULL, REG_EXE_PATH, atari_exe_dir );
 	}
-	if( BIN_loader( pszFileName ) )
+	if( BINLOAD_Loader( pszFileName ) )
 	{
 		_strncpy( g_szBinaryFile, pszFileName, MAX_PATH );
 		bResult = TRUE;
@@ -717,7 +717,7 @@ RunSnapshot(
 		_strncpy( atari_state_dir, pszFileName, MAX_PATH );
 		WriteRegString( NULL, REG_FILE_STATE, atari_state_dir );
 	}
-	if( ReadAtariState( pszFileName, "rb" ) )
+	if( StateSav_ReadAtariState( pszFileName, "rb" ) )
 	{
 		_strncpy( g_szSnapshotFile, pszFileName, MAX_PATH );
 		bResult = TRUE;
@@ -736,45 +736,45 @@ Function : AttachCartridge
    Attaches a cartridge image */
 int
 /* #AS#
-   Type of an attached cartridge, otherwise CART_NONE */
+   Type of an attached cartridge, otherwise CARTRIDGE_NONE */
 AttachCartridge(
 	LPSTR pszFileName,
 	int   nType
 )
 {
-	int nCartType = CART_NONE;
+	int nCartType = CARTRIDGE_NONE;
 
-	int nCartSize = CART_Insert( pszFileName );
+	int nCartSize = CARTRIDGE_Insert( pszFileName );
 	if( nCartSize < 0 )
 	{
 		char szError[ LOADSTRING_SIZE_S + 1 ];
 		/* If there was an error... */
 		DisplayMessage( NULL, IDS_ERROR_ROM_LOAD, 0, MB_ICONEXCLAMATION | MB_OK,
 						pszFileName,
-						nCartSize == CART_CANT_OPEN    ? _LoadStringSx( IDS_ERROR_CANT_OPEN, szError ) :
-						nCartSize == CART_BAD_FORMAT   ? _LoadStringSx( IDS_ERROR_BAD_FORMAT, szError ) :
-						nCartSize == CART_BAD_CHECKSUM ? _LoadStringSx( IDS_ERROR_BAD_CHECKSUM, szError ) :
+						nCartSize == CARTRIDGE_CANT_OPEN    ? _LoadStringSx( IDS_ERROR_CANT_OPEN, szError ) :
+						nCartSize == CARTRIDGE_BAD_FORMAT   ? _LoadStringSx( IDS_ERROR_BAD_FORMAT, szError ) :
+						nCartSize == CARTRIDGE_BAD_CHECKSUM ? _LoadStringSx( IDS_ERROR_BAD_CHECKSUM, szError ) :
 						_LoadStringSx( IDS_ERROR_UNKNOWN, szError ) );
 	}
 	else if( nCartSize > 0 )
 	{
-		cart_type = CART_NONE == nType ? SelectCartType( nCartSize ) : nType;
-		if( CART_NONE != cart_type )
+		CARTRIDGE_type = CARTRIDGE_NONE == nType ? SelectCartType( nCartSize ) : nType;
+		if( CARTRIDGE_NONE != CARTRIDGE_type )
 		{
-			CART_Start();
+			CARTRIDGE_Start();
 			strcpy( g_szCurrentRom, pszFileName );
 
-			nCartType = cart_type;
+			nCartType = CARTRIDGE_type;
 		}
 	}
 	else if( nCartSize == 0 )
 	{
 		strcpy( g_szCurrentRom, pszFileName );
-		nCartType = cart_type;
+		nCartType = CARTRIDGE_type;
 	}
-	if( CART_NONE == nCartType )
+	if( CARTRIDGE_NONE == nCartType )
 	{
-		CART_Remove();
+		CARTRIDGE_Remove();
 		strcpy( g_szCurrentRom, FILE_NONE );
 	}
 	return nCartType;
@@ -793,7 +793,7 @@ SelectCartType(
 	int nCartSize
 )
 {
-	int nResult = CART_NONE;
+	int nResult = CARTRIDGE_NONE;
 	int nTypes  = 0;
 
 	CCartridgeTypeDlg dlgCartridgeType( nCartSize );
@@ -842,7 +842,7 @@ GetBootFileInfo(
 	if( 0 != (unFileType & IAF_ROM_IMAGE) )
 	{
 		if( _IsPathAvailable( g_szCurrentRom ) &&
-			CART_NONE != cart_type )
+			CARTRIDGE_NONE != CARTRIDGE_type )
 		{
 			*pFileType |= IAF_ROM_IMAGE;
 			if( NULL != pszFileName )
@@ -853,7 +853,7 @@ GetBootFileInfo(
 		}
 	}
 	/* Executable, disk and tape images are not used by 5200 */
-	if( MACHINE_5200 != machine_type )
+	if( Atari800_MACHINE_5200 != Atari800_machine_type )
 	{
 		UINT unType;
 		/* Is there any executable about to load/loaded? */
@@ -874,14 +874,14 @@ GetBootFileInfo(
 		/* Is there any disk inserted into the drive 1? */
 		if( 0 != (unFileType & IAF_DSK_IMAGE) )
 		{
-			if( _IsPathAvailable( sio_filename[ 0 ] ) &&
-				_stricmp( sio_filename[ 0 ], "Empty" ) != 0 &&
-				_stricmp( sio_filename[ 0 ], "Off" ) != 0 )
+			if( _IsPathAvailable( SIO_filename[ 0 ] ) &&
+				_stricmp( SIO_filename[ 0 ], "Empty" ) != 0 &&
+				_stricmp( SIO_filename[ 0 ], "Off" ) != 0 )
 			{
 				*pFileType |= IAF_DSK_IMAGE;
 				if( NULL != pszFileName )
 				{
-					_strncpy( pszFileName, sio_filename[ 0 ], nBufferLen );
+					_strncpy( pszFileName, SIO_filename[ 0 ], nBufferLen );
 					return TRUE;
 				}
 			}

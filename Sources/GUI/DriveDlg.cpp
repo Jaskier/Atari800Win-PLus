@@ -113,7 +113,7 @@ Method   : CDriveDlg::CheckSelectedDisk
 =========================================================*/
 /* #FN#
    Checks attributes of the pointed disk image */
-UnitStatus
+SIO_UnitStatus
 /* #AS#
    State of the tested disk image */
 CDriveDlg::
@@ -122,7 +122,7 @@ CheckSelectedDisk(
 	UINT  *pInfo /*= NULL*/
 )
 {
-	UnitStatus usResult = ReadOnly;
+	SIO_UnitStatus usResult = ReadOnly;
 	UINT unInfo = CSD_READERROR;
 
 	if( strcmp( pszDiskName, "Off" ) == 0 )
@@ -412,7 +412,7 @@ StatusSelChange(
 )
 {
 	UINT       unDiskInf =  0;
-	UnitStatus usRealMode;
+	SIO_UnitStatus usRealMode;
 	int        nDrive    = -1;
 
 	if( m_bSmallMode )

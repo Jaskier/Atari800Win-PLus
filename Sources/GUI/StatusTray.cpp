@@ -151,7 +151,7 @@ UINT
    Resource ID of the bitmap */
 GetVideoBmpID()
 {
-	return (TV_PAL == tv_mode ? IDB_SB_TVPAL_E : IDB_SB_TVNTSC_E);
+	return (Atari800_TV_PAL == Atari800_tv_mode ? IDB_SB_TVPAL_E : IDB_SB_TVNTSC_E);
 
 } /* #OF# GetVideoBmpID */
 

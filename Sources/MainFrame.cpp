@@ -631,7 +631,7 @@ void CMainFrame::StopThread()
 		Surface1Mutex->Unlock();
 		Surface2Mutex->Unlock();
 		Surface1Done = Surface2Done = FALSE;
-		atari_screen = (ULONG *) s_Buffer.pMainScr;
+		Screen_atari = (ULONG *) s_Buffer.pMainScr;
 		s_Buffer.pSource = s_Buffer.pMainScr;
 	}
 }
@@ -1540,7 +1540,7 @@ OnFileAttachCartridgeImage()
 
 	if( PickCartridge( szNewCart ) )
 	{
-		if( CART_NONE != AttachCartridge( szNewCart, CART_NONE ) )
+		if( CARTRIDGE_NONE != AttachCartridge( szNewCart, CARTRIDGE_NONE ) )
 		{
 			strcpy( g_szOtherRom, g_szCurrentRom );
 			WriteRegString( NULL, REG_ROM_OTHER, g_szOtherRom );
@@ -1697,7 +1697,7 @@ MachineTypeChanged(
 			if( MACHINE_5200 == machine_type ||
 				MACHINE_5200 == nMachineType )
 			{
-				if( cart_type != CART_NONE )
+				if( cart_type != CARTRIDGE_NONE )
 				{
 					CART_Remove();
 					strcpy( g_szCurrentRom, FILE_NONE );
@@ -1816,8 +1816,8 @@ OnAtariVideoSystem()
 
 	if( StreamWarning( IDS_WARN_RECORD_SYSTEM, SRW_VIDEO_STREAM | SRW_SOUND_STREAM ) )
 	{
-		tv_mode = (TV_PAL == tv_mode ? TV_NTSC : TV_PAL);
-		WriteRegDWORD( NULL, REG_TV_MODE, tv_mode );
+		Atari800_tv_mode = (Atari800_TV_PAL == tv_mode ? TV_NTSC : Atari800_TV_PAL);
+		WriteRegDWORD( NULL, REG_TV_MODE, Atari800_tv_mode );
 
 		if( _IsFlagSet( g_Misc.ulState, MS_REBOOT_WHEN_VIDEO ) )
 		{
@@ -1848,7 +1848,7 @@ void
 CMainFrame::
 OnAtariVideoSystemNtsc()
 {
-	if( TV_NTSC != tv_mode )
+	if( TV_NTSC != Atari800_tv_mode )
 		OnAtariVideoSystem();
 
 } /* #OF# CMainFrame::OnAtariVideoSystemNtsc */
@@ -1864,7 +1864,7 @@ void
 CMainFrame::
 OnAtariVideoSystemPal()
 {
-	if( TV_PAL != tv_mode )
+	if( Atari800_TV_PAL != Atari800_tv_mode )
 		OnAtariVideoSystem();
 
 } /* #OF# CMainFrame::OnAtariVideoSystemPal */
@@ -2946,7 +2946,7 @@ OnViewPerformanceTest()
 		ulStartTime = timeGetTime();
 
 		for( int i = 0; i < 30; i++ )
-			Atari_DisplayScreen();
+			PLATFORM_DisplayScreen();
 
 		ulTotalTime = timeGetTime() - ulStartTime;
 		nResult = (double)(ulTotalTime / 30.0f);
@@ -3114,7 +3114,7 @@ OnSoundPerformanceTest()
 	else
 	{
 		int    n16BitSnd   = _IsFlagSet( g_Sound.ulState, SS_16BIT_AUDIO ) ? 1 : 0;
-		int    nSampleSize = (g_Sound.nRate / (TV_PAL == tv_mode ? g_Timer.nPalFreq : g_Timer.nNtscFreq)) << n16BitSnd;
+		int    nSampleSize = (g_Sound.nRate / (Atari800_TV_PAL == Atari800_tv_mode ? g_Timer.nPalFreq : g_Timer.nNtscFreq)) << n16BitSnd;
 		UCHAR *pszBuffer   = NULL;
 
 		if( pszBuffer = (UCHAR*)calloc( 1, nSampleSize + 1 ) )
@@ -3921,7 +3921,7 @@ ConvertRomToCart()
 			if( (nBytes & 0x3ff) == 0 )
 			{
 				int nCartType = SelectCartType( nBytes / 1024 );
-				if( nCartType != CART_NONE )
+				if( nCartType != CARTRIDGE_NONE )
 				{
 					int nCheckSum = CART_Checksum( pImage, nBytes );
 					int i;
@@ -3934,7 +3934,7 @@ ConvertRomToCart()
 						strcat( szFileName, ".car" );
 					}
 
-					if( nCartType != CART_NONE &&
+					if( nCartType != CARTRIDGE_NONE &&
 						PickFileName( FALSE, szFileName, IDS_SELECT_CAR_SAVE, IDS_FILTER_CAR,
 									  "car", PF_SAVE_FLAGS, FALSE ) &&
 						*szFileName != '\0' )
@@ -4778,7 +4778,7 @@ AutobootAtariImage(
 		*/
 		if( IAF_ROM_IMAGE == unFileType || IAF_CAR_IMAGE == unFileType )
 		{
-			if( CART_NONE != AttachCartridge( pszFileName, CART_NONE ) )
+			if( CARTRIDGE_NONE != AttachCartridge( pszFileName, CARTRIDGE_NONE ) )
 			{
 				strcpy( g_szOtherRom, g_szCurrentRom );
 				WriteRegString( NULL, REG_ROM_OTHER, g_szOtherRom );
@@ -5121,7 +5121,7 @@ OnUpdateFileDetachCartridgeImage(
 	CCmdUI *pCmdUI /* #IN# The CCmdUI object that handles the update */
 )
 {
-	pCmdUI->Enable( CART_NONE != cart_type
+	pCmdUI->Enable( CARTRIDGE_NONE != cart_type
 #ifdef WIN_NETWORK_GAMES
 		&& !ST_KAILLERA_ACTIVE
 #endif
@@ -5188,7 +5188,7 @@ OnUpdateAtariVideoSystem(
 		pCmdUI->Enable( FALSE );
 	}
 #endif
-	pCmdUI->SetRadio( (pCmdUI->m_nID - ID_ATARI_VIDEOSYSTEM_BASE) == DWORD(TV_PAL == tv_mode ? 0 : 1) );
+	pCmdUI->SetRadio( (pCmdUI->m_nID - ID_ATARI_VIDEOSYSTEM_BASE) == DWORD(Atari800_TV_PAL == Atari800_tv_mode ? 0 : 1) );
 
 } /* #OF# CMainFrame::OnUpdateAtariVideoSystem */
 
@@ -6034,7 +6034,7 @@ SetIndicatorDesc(
 				break;
 
 			case ID_INDICATOR_VID:
-				strMode.LoadString( IDS_TRAYTIP_VID_PAL + (TV_PAL == tv_mode ? 0 : 1) );
+				strMode.LoadString( IDS_TRAYTIP_VID_PAL + (Atari800_TV_PAL == Atari800_tv_mode ? 0 : 1) );
 				strTip.Format( IDS_TRAYTIP_VID, strMode );
 				break;
 
@@ -6411,7 +6411,7 @@ OnMessageKailleraStart(
 			case IAF_BIN_IMAGE:
 			{
 				if( _IsPathAvailable( g_szCurrentRom ) &&
-					CART_NONE != cart_type )
+					CARTRIDGE_NONE != cart_type )
 				{
 					_strncpy( s_Settings.szCartFile, g_szCurrentRom, MAX_PATH );
 					/* Remove the cartridge */

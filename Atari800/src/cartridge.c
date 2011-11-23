@@ -977,7 +977,7 @@ void CARTRIDGE_StateRead(void)
 	char filename[FILENAME_MAX];
 
 	/* Read the cart type from the file.  If there is no cart type, becaused we have
-	   reached the end of the file, this will just default to CART_NONE */
+	   reached the end of the file, this will just default to CARTRIDGE_NONE */
 	StateSav_ReadINT(&savedCartType, 1);
 	if (savedCartType < 0) {
 		savedCartType = -savedCartType;

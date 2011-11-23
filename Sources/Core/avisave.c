@@ -427,7 +427,7 @@ Video_OpenOutput(
 		if( AVI_FileOpenWrite( &pfVideoOutput, pszOutFileName ) )
 		{
 			/* Calculate the frame rate */
-			int  nFrameRate = (TV_PAL == tv_mode ? g_Timer.nPalFreq : g_Timer.nNtscFreq) / _GetRefreshRate();
+			int  nFrameRate = (Atari800_TV_PAL == Atari800_tv_mode ? g_Timer.nPalFreq : g_Timer.nNtscFreq) / _GetRefreshRate();
 			BOOL bShowMsg   = TRUE;
 
 			struct ScreenInterParms_t dipInfo;

@@ -375,8 +375,8 @@ int CAtari800WinApp::Run()
 
 							if( ++g_nTestVal == nRefreshRate )
 							{
-								Atari_DisplayScreen();
-								nframes++; /* For autofire */
+								PLATFORM_DisplayScreen();
+								Atari800_nframes++; /* For autofire */
 
 								g_nTestVal = 0;
 							}
@@ -393,8 +393,8 @@ int CAtari800WinApp::Run()
 
 							if( ++g_nTestVal == nRefreshRate )
 							{
-								Atari_DisplayScreen();
-								nframes++; /* For autofire */
+								PLATFORM_DisplayScreen();
+								Atari800_nframes++; /* For autofire */
 
 								g_nTestVal = 0;
 							}
@@ -459,7 +459,7 @@ BOOL CAtari800WinApp::Emulate()
 		m_ulTotalTime = timeGetTime() - m_ulStartMeasure;
 
 		/* Full time for PAL would be 1280ms, for NTSC 1067ms */
-		m_ulSpeed = MulDiv( TV_PAL == tv_mode ? 2560L : 2134L, 100, m_ulTotalTime ? m_ulTotalTime : 1 );
+		m_ulSpeed = MulDiv( Atari800_TV_PAL == Atari800_tv_mode ? 2560L : 2134L, 100, m_ulTotalTime ? m_ulTotalTime : 1 );
 
 		m_ulStartMeasure = timeGetTime();
 		m_nLoopCounter = 0;
@@ -481,7 +481,7 @@ BOOL CAtari800WinApp::Emulate()
 		Input_UpdateMouse();
 		Input_UpdateJoystick();
 
-		key_code = Atari_Keyboard();
+		INPUT_key_code = Atari_Keyboard();
 
 #ifdef WIN_NETWORK_GAMES
 		Kaillera_Frame();
@@ -502,7 +502,7 @@ BOOL CAtari800WinApp::Emulate()
 #endif /*WIN_NETWORK_GAMES*/
 
 		RDevice_Frame();
-		Device_Frame();
+		Devices_Frame();
 
 		INPUT_Frame();
 		GTIA_Frame();
@@ -534,8 +534,8 @@ BOOL CAtari800WinApp::Emulate()
 			_IsFlagSet( g_Screen.ulState, SM_MODE_FULL ) )
 			if( ++g_nTestVal == nRefreshRate )
 			{
-				Atari_DisplayScreen();
-				nframes++; /* For autofire */
+				PLATFORM_DisplayScreen();
+				Atari800_nframes++; /* For autofire */
 
 				g_nTestVal = 0;
 			}
@@ -567,7 +567,7 @@ UINT Loop(LPVOID pParam)
 			}
 			if ( Surface1Mutex->Lock( 1 ) ) {
 				Surface1Done = FALSE;
-				atari_screen = (ULONG *) s_Buffer.pMainScr;
+				Screen_atari = (ULONG *) s_Buffer.pMainScr;
 				theApp.Emulate();
 				Surface1Done = TRUE;
 				Surface1Mutex->Unlock();
@@ -585,7 +585,7 @@ UINT Loop(LPVOID pParam)
 			}
 			if ( Surface2Mutex->Lock( 1 ) ) {
 				Surface2Done = FALSE;
-				atari_screen = (ULONG *) s_Buffer.pBackScr;
+				Screen_atari = (ULONG *) s_Buffer.pBackScr;
 				theApp.Emulate();
 				Surface2Done = TRUE;
 				Surface2Mutex->Unlock();

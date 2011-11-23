@@ -113,7 +113,7 @@ static struct
 }
 s_Surface =
 {
-	0L, ATARI_WIDTH, ATARI_HEIGHT + 16
+	0L, Screen_WIDTH, Screen_HEIGHT + 16
 };
 
 #define FLIPPED_BUFFERS_NO	2 /* Triple-buffering */
@@ -216,7 +216,7 @@ ShowDDError(
 	char szAction[ LOADSTRING_SIZE_L + 1 ];
 
 #ifdef _DEBUG
-	Aprint( "DirectDraw error: %s@%ld", pszFile, dwLine );
+	Log_print( "DirectDraw error: %s@%ld", pszFile, dwLine );
 #endif /*_DEBUG*/
 
 	/* Get us back to a GDI display and stop making noises */
@@ -290,7 +290,7 @@ AtariPlot(
 
 	get_charset( szCharset );
 
-	ptr = &pScreen[ 32 ]; //[24 * ATARI_WIDTH + 32 ];
+	ptr = &pScreen[ 32 ]; //[24 * Screen_WIDTH + 32 ];
 
 	for( i = 0; i < 8; i++ )
 	{
@@ -305,7 +305,7 @@ AtariPlot(
 			else
 				nPixel = nBg;
 
-			ptr[ (y * 8 + i) * ATARI_WIDTH + (x * 8 + j) ] = nPixel;
+			ptr[ (y * 8 + i) * Screen_WIDTH + (x * 8 + j) ] = nPixel;
 
 			data = data << 1;
 		}
@@ -381,7 +381,7 @@ DrawPaused(
 
 	for( i = 0; i < s_DDraw.nFlipBuffers + 1 /* + primary surface */; i++ )
 		/* We have to draw the text also on a GDI surface */
-		Atari_DisplayScreen();
+		PLATFORM_DisplayScreen();
 
 } /* #OF# DrawPaused */
 
@@ -450,7 +450,7 @@ SetupPrimarySurface( void )
 	{
 		for( ; s_DDraw.nFlipBuffers > 1; )
 		{
-			Aprint( "Initialization of %d-buffering failed...", s_DDraw.nFlipBuffers );
+			Log_print( "Initialization of %d-buffering failed...", s_DDraw.nFlipBuffers );
 			ddsp.dwBackBufferCount = --s_DDraw.nFlipBuffers;
 			if( SUCCEEDED(hResult = DD_SurfaceCreate( &ddsp, stPrimary )) )
 				break;
@@ -531,7 +531,7 @@ SetupMemorySurface( void )
 
 		hResult = DD_SurfaceCreate( &ddsp, stOffscrn );
 		if( FAILED(hResult) )
-			Aprint( "Video memory allocation failed, trying AGP memory..." );
+			Log_print( "Video memory allocation failed, trying AGP memory..." );
 	}
 	/* Try to allocate an AGP memory for offscreen surface */
 	if( MEMORY_AGP == g_Screen.nMemoryType || FAILED(hResult) )
@@ -540,7 +540,7 @@ SetupMemorySurface( void )
 
 		hResult = DD_SurfaceCreate( &ddsp, stOffscrn );
 		if( FAILED(hResult) )
-			Aprint( "AGP memory allocation failed, trying system memory..." );
+			Log_print( "AGP memory allocation failed, trying system memory..." );
 	}
 	/* Try to allocate a system memory for offscreen surface */
 	if( MEMORY_SYSTEM == g_Screen.nMemoryType || FAILED(hResult) )
@@ -553,7 +553,7 @@ SetupMemorySurface( void )
 			DD_SurfaceRelease( stOffscrn );
 			ServeDDError( IDS_DDERR_ALLOC_OFFSCR, hResult, FALSE );
 
-			Aprint( "Could not allocate system memory surface!" );
+			Log_print( "Could not allocate system memory surface!" );
 			return FALSE;
 		}
 	}
@@ -1009,7 +1009,7 @@ Screen_Redraw(
 		HDC hBackDC = g_Screen.hDC;
 		g_Screen.hDC = hDC;
 
-		Atari_DisplayScreen();
+		PLATFORM_DisplayScreen();
 
 		g_Screen.hDC = hBackDC;
 	}
@@ -1075,7 +1075,7 @@ Screen_DrawFrozen(
 		int i;
 		for( i = 0; i < s_DDraw.nFlipBuffers + 1 /* + primary surface */; i++ )
 			/* We have to redraw the screen also on a GDI surface */
-			Atari_DisplayScreen();
+			PLATFORM_DisplayScreen();
 	}
 	Screen_FlipToGDI( bUseSysPal );
 	Screen_PrepareRedraw( bForcePrep );
@@ -1101,7 +1101,7 @@ Screen_SetWindowSize(
 	if( g_hMainWnd )
 	{
 		int  nMenuHeight = GetSystemMetrics( SM_CYMENU );
-		int  nHeight = ATARI_HEIGHT;
+		int  nHeight = Screen_HEIGHT;
 		int  nWidth  = ATARI_VIS_WIDTH;
 		RECT rc;
 
@@ -1166,17 +1166,17 @@ SetupWindowedDisplay( void )
 	s_rcSource.left   = 0;
 	s_rcSource.top    = 0;
 	s_rcSource.right  = ATARI_VIS_WIDTH;
-	s_rcSource.bottom = ATARI_HEIGHT;
+	s_rcSource.bottom = Screen_HEIGHT;
 
 	screen_visible_x1 = ATARI_HORZ_CLIP;
 	screen_visible_x2 = ATARI_HORZ_CLIP + ATARI_VIS_WIDTH;
 	screen_visible_y1 = 0;
-	screen_visible_y2 = ATARI_HEIGHT;
+	screen_visible_y2 = Screen_HEIGHT;
 
 	s_lpbmi->bmiHeader.biWidth  =  ATARI_VIS_WIDTH;
-	s_lpbmi->bmiHeader.biHeight = -ATARI_HEIGHT;	/* Negative because we are a top-down bitmap */
+	s_lpbmi->bmiHeader.biHeight = -Screen_HEIGHT;	/* Negative because we are a top-down bitmap */
 	hqlpbmi->bmiHeader.biWidth  =  ATARI_VIS_WIDTH;
-	hqlpbmi->bmiHeader.biHeight = -ATARI_HEIGHT;	/* Negative because we are a top-down bitmap */
+	hqlpbmi->bmiHeader.biHeight = -Screen_HEIGHT;	/* Negative because we are a top-down bitmap */
 
 	if( _IsFlagSet( g_Screen.ulState, SM_OPTN_USE_GDI ) )
 	{
@@ -1282,9 +1282,9 @@ SetupFullScreenDisplay( void )
 		s_rcDestin.right  = 320;
 		s_rcDestin.bottom = 200;
 		s_rcSource.left   = ATARI_HORZ_CLIP + ((ATARI_VIS_WIDTH - 320) >> 1);
-		s_rcSource.top    = (ATARI_HEIGHT - 200) >> 1;
-		s_rcSource.right  = ATARI_WIDTH - s_rcSource.left;
-		s_rcSource.bottom = ATARI_HEIGHT - s_rcSource.top;
+		s_rcSource.top    = (Screen_HEIGHT - 200) >> 1;
+		s_rcSource.right  = Screen_WIDTH - s_rcSource.left;
+		s_rcSource.bottom = Screen_HEIGHT - s_rcSource.top;
 
 		screen_visible_x1 = s_rcSource.left;
 		screen_visible_x2 = s_rcSource.right;
@@ -1308,8 +1308,8 @@ SetupFullScreenDisplay( void )
 		s_rcDestin.bottom = 240;
 		s_rcSource.left   = ATARI_HORZ_CLIP + ((ATARI_VIS_WIDTH - 320) >> 1);
 		s_rcSource.top    = 0;
-		s_rcSource.right  = ATARI_WIDTH - s_rcSource.left;
-		s_rcSource.bottom = ATARI_HEIGHT;
+		s_rcSource.right  = Screen_WIDTH - s_rcSource.left;
+		s_rcSource.bottom = Screen_HEIGHT;
 
 		screen_visible_x1 = s_rcSource.left;
 		screen_visible_x2 = s_rcSource.right;
@@ -1332,9 +1332,9 @@ SetupFullScreenDisplay( void )
 		s_rcDestin.right  = 320;
 		s_rcDestin.bottom = 400;
 		s_rcSource.left   = ATARI_HORZ_CLIP + ((ATARI_VIS_WIDTH - 320) >> 1);
-		s_rcSource.top    = (ATARI_HEIGHT - 200) >> 1;
-		s_rcSource.right  = ATARI_WIDTH - s_rcSource.left;
-		s_rcSource.bottom = ATARI_HEIGHT - s_rcSource.top;
+		s_rcSource.top    = (Screen_HEIGHT - 200) >> 1;
+		s_rcSource.right  = Screen_WIDTH - s_rcSource.left;
+		s_rcSource.bottom = Screen_HEIGHT - s_rcSource.top;
 
 		screen_visible_x1 = s_rcSource.left;
 		screen_visible_x2 = s_rcSource.right;
@@ -1371,13 +1371,13 @@ SetupFullScreenDisplay( void )
 			return FALSE;
 		}
 		s_rcDestin.left   = (400 - ATARI_VIS_WIDTH) >> 1;
-		s_rcDestin.top    = (300 - ATARI_HEIGHT) >> 1;
+		s_rcDestin.top    = (300 - Screen_HEIGHT) >> 1;
 		s_rcDestin.right  = s_rcDestin.left + ATARI_VIS_WIDTH;
-		s_rcDestin.bottom = s_rcDestin.top + ATARI_HEIGHT;
+		s_rcDestin.bottom = s_rcDestin.top + Screen_HEIGHT;
 		s_rcSource.left   = ATARI_HORZ_CLIP;
 		s_rcSource.top    = 0;
-		s_rcSource.right  = ATARI_WIDTH - ATARI_HORZ_CLIP;
-		s_rcSource.bottom = ATARI_HEIGHT;
+		s_rcSource.right  = Screen_WIDTH - ATARI_HORZ_CLIP;
+		s_rcSource.bottom = Screen_HEIGHT;
 
 		screen_visible_x1 = s_rcSource.left;
 		screen_visible_x2 = s_rcSource.right;
@@ -1396,13 +1396,13 @@ SetupFullScreenDisplay( void )
 			return FALSE;
 		}
 		s_rcDestin.left   = (512 - ATARI_VIS_WIDTH) >> 1;
-		s_rcDestin.top    = (384 - ATARI_HEIGHT) >> 1;
+		s_rcDestin.top    = (384 - Screen_HEIGHT) >> 1;
 		s_rcDestin.right  = s_rcDestin.left + ATARI_VIS_WIDTH;
-		s_rcDestin.bottom = s_rcDestin.top + ATARI_HEIGHT;
+		s_rcDestin.bottom = s_rcDestin.top + Screen_HEIGHT;
 		s_rcSource.left   = ATARI_HORZ_CLIP;
 		s_rcSource.top    = 0;
-		s_rcSource.right  = ATARI_WIDTH - ATARI_HORZ_CLIP;
-		s_rcSource.bottom = ATARI_HEIGHT;
+		s_rcSource.right  = Screen_WIDTH - ATARI_HORZ_CLIP;
+		s_rcSource.bottom = Screen_HEIGHT;
 
 		screen_visible_x1 = s_rcSource.left;
 		screen_visible_x2 = s_rcSource.right;
@@ -1423,9 +1423,9 @@ SetupFullScreenDisplay( void )
 		s_rcDestin.right  = 640;
 		s_rcDestin.bottom = 400;
 		s_rcSource.left   = ATARI_HORZ_CLIP + ((ATARI_VIS_WIDTH - 320) >> 1);
-		s_rcSource.top    = (ATARI_HEIGHT - 200) >> 1;
-		s_rcSource.right  = ATARI_WIDTH - s_rcSource.left;
-		s_rcSource.bottom = ATARI_HEIGHT - s_rcSource.top;
+		s_rcSource.top    = (Screen_HEIGHT - 200) >> 1;
+		s_rcSource.right  = Screen_WIDTH - s_rcSource.left;
+		s_rcSource.bottom = Screen_HEIGHT - s_rcSource.top;
 
 		screen_visible_x1 = s_rcSource.left;
 		screen_visible_x2 = s_rcSource.right;
@@ -1467,8 +1467,8 @@ SetupFullScreenDisplay( void )
 		s_rcDestin.bottom = 480;
 		s_rcSource.left   = ATARI_HORZ_CLIP + ((ATARI_VIS_WIDTH - 320) >> 1);
 		s_rcSource.top    = 0;
-		s_rcSource.right  = ATARI_WIDTH - s_rcSource.left;
-		s_rcSource.bottom = ATARI_HEIGHT;
+		s_rcSource.right  = Screen_WIDTH - s_rcSource.left;
+		s_rcSource.bottom = Screen_HEIGHT;
 
 		screen_visible_x1 = s_rcSource.left;
 		screen_visible_x2 = s_rcSource.right;
@@ -1509,8 +1509,8 @@ SetupFullScreenDisplay( void )
 		s_rcDestin.bottom = s_rcDestin.top + ATARI_DOUBLE_HEIGHT;
 		s_rcSource.left   = ATARI_HORZ_CLIP;
 		s_rcSource.top    = 0;
-		s_rcSource.right  = ATARI_WIDTH - ATARI_HORZ_CLIP;
-		s_rcSource.bottom = ATARI_HEIGHT;
+		s_rcSource.right  = Screen_WIDTH - ATARI_HORZ_CLIP;
+		s_rcSource.bottom = Screen_HEIGHT;
 
 		screen_visible_x1 = s_rcSource.left;
 		screen_visible_x2 = s_rcSource.right;
@@ -1551,8 +1551,8 @@ SetupFullScreenDisplay( void )
 		s_rcDestin.bottom = s_rcDestin.top + ATARI_TRIPLE_HEIGHT;
 		s_rcSource.left   = ATARI_HORZ_CLIP;
 		s_rcSource.top    = 0;
-		s_rcSource.right  = ATARI_WIDTH - ATARI_HORZ_CLIP;
-		s_rcSource.bottom = ATARI_HEIGHT;
+		s_rcSource.right  = Screen_WIDTH - ATARI_HORZ_CLIP;
+		s_rcSource.bottom = Screen_HEIGHT;
 
 		screen_visible_x1 = s_rcSource.left;
 		screen_visible_x2 = s_rcSource.right;
@@ -1664,11 +1664,11 @@ Screen_InitialiseDisplay(
 
 		s_lpbmi->bmiHeader.biSize        = sizeof(BITMAPINFOHEADER);
 		s_lpbmi->bmiHeader.biWidth       =  ATARI_VIS_WIDTH;
-		s_lpbmi->bmiHeader.biHeight      = -ATARI_HEIGHT;	/* Negative because we are a top-down bitmap */
+		s_lpbmi->bmiHeader.biHeight      = -Screen_HEIGHT;	/* Negative because we are a top-down bitmap */
 		s_lpbmi->bmiHeader.biPlanes      = 1;
 		s_lpbmi->bmiHeader.biBitCount    = 8;				/* Each byte stands for a color value */
 		s_lpbmi->bmiHeader.biCompression = BI_RGB;			/* Uncompressed format */
-		s_lpbmi->bmiHeader.biSizeImage   = ATARI_VIS_WIDTH * ATARI_HEIGHT - (sizeof(BITMAPINFOHEADER) + sizeof(RGBQUAD) * PAL_ENTRIES_NO);
+		s_lpbmi->bmiHeader.biSizeImage   = ATARI_VIS_WIDTH * Screen_HEIGHT - (sizeof(BITMAPINFOHEADER) + sizeof(RGBQUAD) * PAL_ENTRIES_NO);
 		s_lpbmi->bmiHeader.biClrUsed     = PAL_ENTRIES_NO;
 
 		for( i = 0; i < PAL_ENTRIES_NO; i++ )
@@ -1686,7 +1686,7 @@ Screen_InitialiseDisplay(
 
 	/* HiEnd modes */
 	InitLUTs();
-	hqSource = malloc(ATARI_VIS_WIDTH * ATARI_HEIGHT * 2);
+	hqSource = malloc(ATARI_VIS_WIDTH * Screen_HEIGHT * 2);
 	hqTarget = malloc(ATARI_DOUBLE_VIS_WIDTH * ATARI_DOUBLE_HEIGHT * 4); // TRIPLE for hq3x
 	if( !hqlpbmi )
 	{
@@ -1695,7 +1695,7 @@ Screen_InitialiseDisplay(
 
 		hqlpbmi->bmiHeader.biSize        = sizeof(BITMAPINFOHEADER);
 		hqlpbmi->bmiHeader.biWidth       = ATARI_VIS_WIDTH;
-		hqlpbmi->bmiHeader.biHeight      = -ATARI_HEIGHT;	/* Negative because we are a top-down bitmap */
+		hqlpbmi->bmiHeader.biHeight      = -Screen_HEIGHT;	/* Negative because we are a top-down bitmap */
 		hqlpbmi->bmiHeader.biPlanes      = 1;
 		hqlpbmi->bmiHeader.biBitCount    = 32;
 		hqlpbmi->bmiHeader.biCompression = BI_RGB;			/* Uncompressed format */
@@ -1703,11 +1703,11 @@ Screen_InitialiseDisplay(
 
 	/* Allocate screen buffers */
 	if( !s_Buffer.pMainScr )
-		s_Buffer.pMainScr = malloc( ATARI_WIDTH * (ATARI_HEIGHT + 16) );
+		s_Buffer.pMainScr = malloc( Screen_WIDTH * (Screen_HEIGHT + 16) );
 	if( !s_Buffer.pWorkScr )
 		s_Buffer.pWorkScr = malloc( ATARI_TRIPLE_VIS_SCREEN_SIZE + 1 );
 	if( !s_Buffer.pBackScr )
-		s_Buffer.pBackScr = malloc( ATARI_WIDTH * (ATARI_HEIGHT + 16) );
+		s_Buffer.pBackScr = malloc( Screen_WIDTH * (Screen_HEIGHT + 16) );
 
 	if( !s_Buffer.pMainScr || !s_Buffer.pWorkScr )
 		return FALSE;
@@ -1729,7 +1729,7 @@ Screen_InitialiseDisplay(
 
 	if( s_Buffer.pBackScr && s_Buffer.pSource && !_IsFlagSet( g_Screen.ulState, SM_OPTN_SAFE_MODE ) )
  		/* Save the generated atari screen */
-		CopyMemory( s_Buffer.pBackScr, s_Buffer.pSource, ATARI_WIDTH * (ATARI_HEIGHT + 16) );
+		CopyMemory( s_Buffer.pBackScr, s_Buffer.pSource, Screen_WIDTH * (Screen_HEIGHT + 16) );
 
 	/* There is the same schema of using buffers for all the windowed modes;
 	   when in fullscreen the offscreen surface is used as source or target */
@@ -1747,8 +1747,8 @@ Screen_InitialiseDisplay(
 		s_DDraw.dwFlipFlags |= DDFLIP_NOVSYNC;
 	}
 	/* Generic size of the offscreen surface for the DirectDraw */
-	s_Surface.nHeight = ATARI_HEIGHT + 16;
-	s_Surface.nWidth  = ATARI_WIDTH;
+	s_Surface.nHeight = Screen_HEIGHT + 16;
+	s_Surface.nWidth  = Screen_WIDTH;
 	s_Surface.nPitch  = 0L;
 
 	if( !s_lWndStyleBack )
@@ -1880,11 +1880,11 @@ Screen_InitialiseDisplay(
 			g_Screen.nCurrentRate = 0;
 
 		/* Print some information */
-		Aprint( "%s", !s_DDraw.nFlipBuffers ? "Blitting to primary surface" : (1 == s_DDraw.nFlipBuffers ? "Double-buffering" : "Triple-buffering") );
-		Aprint( "Monitor refresh rate: %ld", g_Screen.nCurrentRate );
+		Log_print( "%s", !s_DDraw.nFlipBuffers ? "Blitting to primary surface" : (1 == s_DDraw.nFlipBuffers ? "Double-buffering" : "Triple-buffering") );
+		Log_print( "Monitor refresh rate: %ld", g_Screen.nCurrentRate );
 	}
 	/* Set kernel pointer to our screen buffer */
-	atari_screen = (ULONG *)s_Buffer.pSource;
+	Screen_atari = (ULONG *)s_Buffer.pSource;
 
 	if( _IsFlagSet( g_Input.ulState, IS_CAPTURE_CTRLESC ) &&
 		_IsFlagSet( g_Screen.ulState, SM_MODE_WIND ) && _IsFlagSet( s_ulScreenMode, SM_MODE_FULL ) )
@@ -1901,7 +1901,7 @@ Screen_InitialiseDisplay(
 
 	if( s_Buffer.pBackScr && s_Buffer.pSource && !_IsFlagSet( g_Screen.ulState, SM_OPTN_SAFE_MODE ) )
 		/* Restore the generated atari screen */
-		CopyMemory( s_Buffer.pSource, s_Buffer.pBackScr, ATARI_WIDTH * (ATARI_HEIGHT + 16) );
+		CopyMemory( s_Buffer.pSource, s_Buffer.pBackScr, Screen_WIDTH * (Screen_HEIGHT + 16) );
 
 	s_ulScreenMode  = g_Screen.ulState;
 	s_nStretchMode  = g_Screen.nStretchMode;
@@ -1935,7 +1935,7 @@ Screen_ComputeClipArea(
 		s_rcDestin.top  += GetSystemMetrics( SM_CYEDGE );
 
 		s_rcDestin.right  = s_rcDestin.left + (_IsFlagSet( g_Screen.ulState, SM_WRES_DOUBLE ) ? ATARI_DOUBLE_VIS_WIDTH : ATARI_VIS_WIDTH);
-		s_rcDestin.bottom = s_rcDestin.top  + (_IsFlagSet( g_Screen.ulState, SM_WRES_DOUBLE ) ? ATARI_DOUBLE_HEIGHT : ATARI_HEIGHT);
+		s_rcDestin.bottom = s_rcDestin.top  + (_IsFlagSet( g_Screen.ulState, SM_WRES_DOUBLE ) ? ATARI_DOUBLE_HEIGHT : Screen_HEIGHT);
 	}
 } /* #OF# Screen_ComputeClipArea */
 
@@ -1996,7 +1996,7 @@ Screen_Clear(
 	if( bDeepClear )
 	{
 		if( s_Buffer.pMainScr && !_IsFlagSet( g_ulAtariState, ATARI_PAUSED ) )
-			ZeroMemory( s_Buffer.pMainScr, ATARI_WIDTH * (ATARI_HEIGHT + 16) );
+			ZeroMemory( s_Buffer.pMainScr, Screen_WIDTH * (Screen_HEIGHT + 16) );
 	}
 	if( s_Buffer.pWorkScr )
 		ZeroMemory( s_Buffer.pWorkScr, ATARI_TRIPLE_VIS_SCREEN_SIZE );
@@ -2135,8 +2135,8 @@ Screen_CheckDDrawModes( void )
 		DD_GetVideoCaps( &g_Screen.ulVideoCaps );
 	}
 	/* Print some information */
-	Aprint( "DirectDraw7: %s", DD_IsObjectCreated() == 2 ? "yes" : "no" );
-	Aprint( "Can delay a flip: %s", _IsFlagSet( g_Screen.ulVideoCaps, DD_CAPS_FLIPINTERVAL ) ? "yes" : "no" );
+	Log_print( "DirectDraw7: %s", DD_IsObjectCreated() == 2 ? "yes" : "no" );
+	Log_print( "Can delay a flip: %s", _IsFlagSet( g_Screen.ulVideoCaps, DD_CAPS_FLIPINTERVAL ) ? "yes" : "no" );
 
 } /* #OF# Screen_CheckDDrawModes */
 
@@ -2922,10 +2922,10 @@ LockMemorySurface(
 } /* #OF# LockMemorySurface */
 
 /*========================================================
-Function : Atari_DisplayScreen
+Function : PLATFORM_DisplayScreen
 =========================================================*/
 void
-Atari_DisplayScreen( void ) {
+PLATFORM_DisplayScreen( void ) {
 	Atari_DisplayScreen_ptr();
 }
 
@@ -2953,7 +2953,7 @@ Screen_DDraw( void )
 		mov		esi, dword ptr [s_Buffer.pSource]	;; The source pointer
 		add		esi, ATARI_HORZ_CLIP
 		mov		edi, dword ptr [s_Buffer.pTarget]	;; The dest pointer
-		mov		eax, ATARI_HEIGHT					;; Number of lines
+		mov		eax, Screen_HEIGHT					;; Number of lines
 	scan_line:
 		mov		ecx, 054h		;; Our count of DWORDs to copy (ATARI_VIS_WIDTH/4)
 		rep		movsd			;; Move that string
@@ -2967,8 +2967,8 @@ Screen_DDraw( void )
 	{
 		/* This StretchDIB basically does only the color space conversion to the memory surface */
 		StretchDIBits( hdc,
-					   0, 0, ATARI_VIS_WIDTH, ATARI_HEIGHT,
-					   0, 0, ATARI_VIS_WIDTH, ATARI_HEIGHT,
+					   0, 0, ATARI_VIS_WIDTH, Screen_HEIGHT,
+					   0, 0, ATARI_VIS_WIDTH, Screen_HEIGHT,
 					   s_Buffer.pTarget, s_lpbmi, DIB_RGB_COLORS, SRCCOPY );
 
 		DD_SurfaceReleaseDC( hdc );
@@ -3011,7 +3011,7 @@ Screen_DDraw_Double( void )
 		mov		esi, dword ptr [s_Buffer.pSource]	;; The source pointer
 		add		esi, ATARI_HORZ_CLIP
 		mov		edi, dword ptr [s_Buffer.pTarget]	;; The dest pointer
-		mov		eax, ATARI_HEIGHT					;; Number of lines
+		mov		eax, Screen_HEIGHT					;; Number of lines
 	scan_line:
 		mov		ecx, 054h		;; Our count of DWORDs to copy (ATARI_VIS_WIDTH/4)
 		rep		movsd			;; Move that string
@@ -3025,8 +3025,8 @@ Screen_DDraw_Double( void )
 	{
 		/* This StretchDIB basically does only the color space conversion to the memory surface */
 		StretchDIBits( hdc,
-					   0, 0, ATARI_VIS_WIDTH, ATARI_HEIGHT,
-					   0, 0, ATARI_VIS_WIDTH, ATARI_HEIGHT,
+					   0, 0, ATARI_VIS_WIDTH, Screen_HEIGHT,
+					   0, 0, ATARI_VIS_WIDTH, Screen_HEIGHT,
 					   s_Buffer.pTarget, s_lpbmi, DIB_RGB_COLORS, SRCCOPY );
 
 		DD_SurfaceReleaseDC( hdc );
@@ -3064,7 +3064,7 @@ Screen_DDraw_Double_Interpolation( void )
 	HRESULT	hResult;
 	HDC	hdc;
 
-	Interpolate2( ATARI_HORZ_CLIP, ATARI_VIS_WIDTH, ATARI_HEIGHT,
+	Interpolate2( ATARI_HORZ_CLIP, ATARI_VIS_WIDTH, Screen_HEIGHT,
 				  ATARI_DOUBLE_VIS_WIDTH, ATARI_DOUBLE_HEIGHT,
 				  s_Buffer.pSource, s_Buffer.pTarget, 0, FALSE );
 
@@ -3121,7 +3121,7 @@ Screen_DDraw_Double_Scanlines( void )
 			mov		esi, dword ptr [s_Buffer.pSource]	;; The source pointer
 			add		esi, ATARI_HORZ_CLIP
 			mov		edi, dword ptr [s_Buffer.pTarget]	;; The dest pointer
-			mov		ebx, ATARI_HEIGHT		;; Number of line pairs (ATARI_HEIGHT)
+			mov		ebx, Screen_HEIGHT		;; Number of line pairs (ATARI_HEIGHT)
 			mov		edx, ATARI_VIS_WIDTH	;; Offset from normal line to dark line
 			movq	mm2, qword ptr [colMask]
 			movq	mm3, qword ptr [lumMask]
@@ -3164,7 +3164,7 @@ Screen_DDraw_Double_Scanlines( void )
 			mov		esi, dword ptr [s_Buffer.pSource]	;; The source pointer
 			add		esi, ATARI_HORZ_CLIP
 			mov		edi, dword ptr [s_Buffer.pTarget]	;; The dest pointer
-			mov		ebx, ATARI_HEIGHT		;; Number of line pairs (ATARI_HEIGHT)
+			mov		ebx, Screen_HEIGHT		;; Number of line pairs (ATARI_HEIGHT)
 		new_line:
 			mov		ecx, 0x54				;; Our count of DWORDs to copy (ATARI_VIS_WIDTH/4)
 			rep		movsd					;; Move that string
@@ -3195,7 +3195,7 @@ Screen_DDraw_Double_Scanlines( void )
 		mov		esi, dword ptr [s_Buffer.pSource]	;; The source pointer
 		add		esi, ATARI_HORZ_CLIP
 		mov		edi, dword ptr [s_Buffer.pTarget]	;; The dest pointer
-		mov		eax, ATARI_HEIGHT					;; Number of line pairs (ATARI_HEIGHT)
+		mov		eax, Screen_HEIGHT					;; Number of line pairs (ATARI_HEIGHT)
 	new_line:
 		mov		ecx, 054h				;; Our count of DWORDs to copy (ATARI_VIS_WIDTH/4)
 		rep		movsd					;; Move that string
@@ -3267,7 +3267,7 @@ Screen_DDraw_Double_HiEnd( void )
 	unsigned short *s = (unsigned short *)hqSource;
 	unsigned short r,g,b;
 
-	for (j=0; j<ATARI_HEIGHT; j++) {
+	for (j=0; j<Screen_HEIGHT; j++) {
 		for (i=0; i<ATARI_VIS_WIDTH; i++) {
 			r = s_lpbmi->bmiColors[ *c ].rgbRed   >> 3;
 			g = s_lpbmi->bmiColors[ *c ].rgbGreen >> 2;
@@ -3279,7 +3279,7 @@ Screen_DDraw_Double_HiEnd( void )
 		c+=ATARI_FULL_HORZ_CLIP;
 	}
 
-	hq2x_32(hqSource, hqTarget, ATARI_VIS_WIDTH, ATARI_HEIGHT, ATARI_DOUBLE_VIS_WIDTH * 4);
+	hq2x_32(hqSource, hqTarget, ATARI_VIS_WIDTH, Screen_HEIGHT, ATARI_DOUBLE_VIS_WIDTH * 4);
 
 	if( SUCCEEDED(hResult = DD_SurfaceGetDC( &hdc )) )
 	{
@@ -3334,11 +3334,11 @@ Screen_DDraw_Full_Blt( void )
 			UCHAR *pTarget = s_Buffer.pTarget;
 			int i;
 
-			for( i = 0; i < ATARI_HEIGHT; i++ )
+			for( i = 0; i < Screen_HEIGHT; i++ )
 			{
-				CopyMemory( pTarget, pSource, ATARI_WIDTH );
+				CopyMemory( pTarget, pSource, Screen_WIDTH );
 				pTarget += s_Surface.nPitch;
-				pSource += ATARI_WIDTH;
+				pSource += Screen_WIDTH;
 			}
 		}
 		else
@@ -3383,7 +3383,7 @@ Screen_DDraw_Full_Blt_Interpolation( void )
 
 	if( MEMORY_SYSTEM != g_Screen.nMemoryType )
 	{
-		Interpolate2( ATARI_HORZ_CLIP, ATARI_VIS_WIDTH, ATARI_HEIGHT,
+		Interpolate2( ATARI_HORZ_CLIP, ATARI_VIS_WIDTH, Screen_HEIGHT,
 					  s_Surface.nWidth, ATARI_DOUBLE_HEIGHT,
 					  s_Buffer.pSource, s_Buffer.pWorkScr, 0, FALSE );
 
@@ -3415,7 +3415,7 @@ Screen_DDraw_Full_Blt_Interpolation( void )
 			if( !LockMemorySurface( TRUE ) )
 				return;
 		}
-		Interpolate2( ATARI_HORZ_CLIP, ATARI_VIS_WIDTH, ATARI_HEIGHT,
+		Interpolate2( ATARI_HORZ_CLIP, ATARI_VIS_WIDTH, Screen_HEIGHT,
 					  s_Surface.nWidth, ATARI_DOUBLE_HEIGHT,
 					  s_Buffer.pSource, s_Buffer.pTarget, s_Surface.nPitch, FALSE );
 	}
@@ -3473,7 +3473,7 @@ Screen_DDraw_Full_Blt_Scanlines( void )
 		mov		edi, dword ptr [s_Buffer.pTarget]	;; The dest pointer
 		add		edi, ATARI_HORZ_CLIP
 		add		nCache, 0x30			;; Skip margins in dest
-		mov		ebx, ATARI_HEIGHT		;; Number of line pairs (ATARI_HEIGHT)
+		mov		ebx, Screen_HEIGHT		;; Number of line pairs (ATARI_HEIGHT)
 	new_line:
 		mov		ecx, 0x54				;; Our count of DWORDs to copy (ATARI_VIS_WIDTH/4)
 		rep		movsd					;; Move that string
@@ -3504,13 +3504,13 @@ Screen_DDraw_Full_Blt_Scanlines( void )
 	{
 		mov		esi, dword ptr [s_Buffer.pSource]	;; The source pointer
 		mov		edi, dword ptr [s_Buffer.pTarget]	;; The dest pointer
-		mov		eax, ATARI_HEIGHT					;; Number of line pairs (ATARI_HEIGHT)
+		mov		eax, Screen_HEIGHT					;; Number of line pairs (ATARI_HEIGHT)
 	new_line:
-		mov		ecx, 060h				;; Our count of DWORDs to copy (ATARI_WIDTH/4)
+		mov		ecx, 060h				;; Our count of DWORDs to copy (Screen_WIDTH/4)
 		rep		movsd					;; Move that string
 
-		sub		esi, ATARI_WIDTH		;; Move back to origin of original scan line
-		mov		edx, ATARI_WIDTH		;; The pixel counter
+		sub		esi, Screen_WIDTH		;; Move back to origin of original scan line
+		mov		edx, Screen_WIDTH		;; The pixel counter
 	dark_line:
 		mov		bl, byte ptr [esi]		;; Make copy of original pixel
 		mov		cl, bl					;; Another copy of original pixel
@@ -3567,7 +3567,7 @@ Screen_DDraw_1024_Interpolation( void )
 
 	if( MEMORY_SYSTEM != g_Screen.nMemoryType )
 	{
-		Interpolate3( ATARI_HORZ_CLIP, ATARI_VIS_WIDTH, ATARI_HEIGHT,
+		Interpolate3( ATARI_HORZ_CLIP, ATARI_VIS_WIDTH, Screen_HEIGHT,
 					  ATARI_TRIPLE_VIS_WIDTH, ATARI_TRIPLE_HEIGHT,
 					  s_Buffer.pSource, s_Buffer.pWorkScr, 0 );
 
@@ -3599,7 +3599,7 @@ Screen_DDraw_1024_Interpolation( void )
 			if( !LockMemorySurface( TRUE ) )
 				return;
 		}
-		Interpolate3( ATARI_HORZ_CLIP, ATARI_VIS_WIDTH, ATARI_HEIGHT,
+		Interpolate3( ATARI_HORZ_CLIP, ATARI_VIS_WIDTH, Screen_HEIGHT,
 					  ATARI_TRIPLE_VIS_WIDTH, ATARI_TRIPLE_HEIGHT,
 					  s_Buffer.pSource, s_Buffer.pTarget, s_Surface.nPitch );
 	}
@@ -3657,7 +3657,7 @@ Screen_DDraw_1024_Scanlines( void )
 		mov		edi, dword ptr [s_Buffer.pTarget]	;; The dest pointer
 		add		edi, ATARI_HORZ_CLIP
 		add		nCache, 0x30			;; Skip margins in dest
-		mov		ebx, ATARI_HEIGHT		;; Number of line pairs (ATARI_HEIGHT)
+		mov		ebx, Screen_HEIGHT		;; Number of line pairs (ATARI_HEIGHT)
 	new_line:
 		mov		ecx, 0x54				;; Our count of DWORDs to copy (ATARI_VIS_WIDTH/4)
 		rep		movsd					;; Move that string
@@ -3694,16 +3694,16 @@ Screen_DDraw_1024_Scanlines( void )
 		;; Order in this routine has been manipulated to maximize pairing on a Pentium processor
 		mov		esi, dword ptr [s_Buffer.pSource]	;; the source pointer
 		mov		edi, dword ptr [s_Buffer.pTarget]	;; the dest pointer
-		mov		eax, ATARI_HEIGHT					;; Number of line pairs (ATARI_HEIGHT)
+		mov		eax, Screen_HEIGHT					;; Number of line pairs (ATARI_HEIGHT)
 	new_line:
-		mov		ecx, 060h			;; Our count of DWORDs to copy (ATARI_WIDTH/4)
+		mov		ecx, 060h			;; Our count of DWORDs to copy (Screen_WIDTH/4)
 		rep		movsd				;; Move that string
-		sub		esi, ATARI_WIDTH	;; Move back to origin of this scan line
+		sub		esi, Screen_WIDTH	;; Move back to origin of this scan line
 		mov		ecx, 060h			;; Going to move another set of words...
 		rep		movsd				;; Make another copy of scanline
 
-		sub		esi, ATARI_WIDTH	;; Move back to origin of original scan line
-		mov		edx, ATARI_WIDTH	;; The pixel counter
+		sub		esi, Screen_WIDTH	;; Move back to origin of original scan line
+		mov		edx, Screen_WIDTH	;; The pixel counter
 	dark_line:
 		mov		bl, byte ptr [esi]	;; Make copy of original pixel
 		mov		cl, bl				;; Another copy of original pixel
@@ -3782,9 +3782,9 @@ Screen_GDI_Double( void )
 	{
 #ifdef INTEL_ASM
 		int nWidth = ATARI_VIS_WIDTH;
-		int nSrcWidth = ATARI_WIDTH;
+		int nSrcWidth = Screen_WIDTH;
 		int nDestWidth = ATARI_DOUBLE_VIS_WIDTH;
-		int nHeight = ATARI_HEIGHT;
+		int nHeight = Screen_HEIGHT;
 		/* Size: 2x2, Mode: DUPLICATE, Cpu: MMX */
 		_ASSERT(nWidth % 16 == 0);
 		_asm
@@ -3879,7 +3879,7 @@ Screen_GDI_Double( void )
 		{
 			mov		esi, dword ptr [pSourceLine]	;; The source pointer
 			mov		edi, dword ptr [pTargetLine]	;; The dest pointer
-			mov		ebx, ATARI_HEIGHT				;; Number of line pairs (ATARI_HEIGHT)
+			mov		ebx, Screen_HEIGHT				;; Number of line pairs (ATARI_HEIGHT)
 		mmx_line:
 			mov		ecx, 0x15						;; Count of OWORDs (ATARI_VIS_WIDTH/16)
 		mmx_oword:
@@ -3920,7 +3920,7 @@ Screen_GDI_Double( void )
 		{
 			mov		esi, dword ptr [pSourceLine]	;; The source pointer
 			mov		edi, dword ptr [pTargetLine]	;; The dest pointer
-			mov		dword ptr [lineCount], ATARI_HEIGHT
+			mov		dword ptr [lineCount], Screen_HEIGHT
 		new_line_2:
 			mov		ecx, 0x54
 		copy_scanline_2:
@@ -4011,7 +4011,7 @@ Screen_GDI_Double_Interpolation( void )
 		/* We have to flip the top-down bitmap verticaly, because
 		   video compressors do not support bitmap mirroring
 		*/
-		Interpolate2( ATARI_HORZ_CLIP, ATARI_VIS_WIDTH, ATARI_HEIGHT,
+		Interpolate2( ATARI_HORZ_CLIP, ATARI_VIS_WIDTH, Screen_HEIGHT,
 					  ATARI_DOUBLE_VIS_WIDTH, ATARI_DOUBLE_HEIGHT,
 					  s_Buffer.pSource, s_Buffer.pTarget, 0, TRUE );
 		/* Save the DIB to video output stream */
@@ -4019,7 +4019,7 @@ Screen_GDI_Double_Interpolation( void )
 	}
 	else
 	{
-		Interpolate2( ATARI_HORZ_CLIP, ATARI_VIS_WIDTH, ATARI_HEIGHT,
+		Interpolate2( ATARI_HORZ_CLIP, ATARI_VIS_WIDTH, Screen_HEIGHT,
 					  ATARI_DOUBLE_VIS_WIDTH, ATARI_DOUBLE_HEIGHT,
 					  s_Buffer.pSource, s_Buffer.pTarget, 0, FALSE );
 	}
@@ -4064,7 +4064,7 @@ Screen_GDI_Double_Scanlines( void )
 		{
 			mov		esi, dword ptr [pSourceLine]	;; The source pointer
 			mov		edi, dword ptr [pTargetLine]	;; The dest pointer
-			mov		ebx, ATARI_HEIGHT				;; Number of line pairs (ATARI_HEIGHT)
+			mov		ebx, Screen_HEIGHT				;; Number of line pairs (ATARI_HEIGHT)
 			movq	mm2, qword ptr [colMask]
 			movq	mm3, qword ptr [lumMask]
 		mmx_line:
@@ -4107,7 +4107,7 @@ Screen_GDI_Double_Scanlines( void )
 		{
 			mov		esi, dword ptr [pSourceLine]	;; The source pointer
 			mov		edi, dword ptr [pTargetLine]	;; The dest pointer
-			mov		ebx, ATARI_HEIGHT				;; Number of line pairs (ATARI_HEIGHT)
+			mov		ebx, Screen_HEIGHT				;; Number of line pairs (ATARI_HEIGHT)
 		new_line_1:
 			mov		ecx, 0xa8						;; Count of WORDs to copy (ATARI_VIS_WIDTH/2)
 		copy_scanline_1:
@@ -4200,7 +4200,7 @@ Screen_GDI_Double_HiEnd( void )
 	unsigned short *s = (unsigned short *)hqSource;
 	unsigned short r,g,b;
 
-	for (j=0; j<ATARI_HEIGHT; j++) {
+	for (j=0; j<Screen_HEIGHT; j++) {
 		for (i=0; i<ATARI_VIS_WIDTH; i++) {
 			r = s_lpbmi->bmiColors[ *c ].rgbRed   >> 3;
 			g = s_lpbmi->bmiColors[ *c ].rgbGreen >> 2;
@@ -4212,7 +4212,7 @@ Screen_GDI_Double_HiEnd( void )
 		c+=ATARI_FULL_HORZ_CLIP;
 	}
 
-	hq2x_32(hqSource, hqTarget, ATARI_VIS_WIDTH, ATARI_HEIGHT, ATARI_DOUBLE_VIS_WIDTH * 4);
+	hq2x_32(hqSource, hqTarget, ATARI_VIS_WIDTH, Screen_HEIGHT, ATARI_DOUBLE_VIS_WIDTH * 4);
 
 	StretchDIBits( g_Screen.hDC,
 				   0, 0, ATARI_DOUBLE_VIS_WIDTH, ATARI_DOUBLE_HEIGHT,
@@ -4243,7 +4243,7 @@ Screen_GDI( void )
 			add		esi, ATARI_HORZ_CLIP
 			mov		edi, dword ptr [s_Buffer.pTarget]	;; The dest pointer
 			add		edi, 0139b0h						;; ATARI_VIS_SCREEN_SIZE - ATARI_VIS_WIDTH
-			mov		eax, ATARI_HEIGHT					;; Number of lines
+			mov		eax, Screen_HEIGHT					;; Number of lines
 		scan_line_1:
 			mov		ecx, 054h		;; Our count of DWORDs to copy (ATARI_VIS_WIDTH/4)
 			rep		movsd			;; Move that string
@@ -4264,7 +4264,7 @@ Screen_GDI( void )
 			mov		esi, dword ptr [s_Buffer.pSource]	;; the source pointer
 			add		esi, ATARI_HORZ_CLIP
 			mov		edi, dword ptr [s_Buffer.pTarget]	;; the dest pointer
-			mov		eax, ATARI_HEIGHT					;; number of lines
+			mov		eax, Screen_HEIGHT					;; number of lines
 		scan_line_2:
 			mov		ecx, 054h		;; Our count of DWORDs to copy (ATARI_VIS_WIDTH/4)
 			rep		movsd			;; Move that string
@@ -4276,8 +4276,8 @@ Screen_GDI( void )
 	}
 	/* Make the prepared bitmap visible on the screen */
 	StretchDIBits( g_Screen.hDC,
-				   0, 0, ATARI_VIS_WIDTH, ATARI_HEIGHT,
-				   0, 0, ATARI_VIS_WIDTH, ATARI_HEIGHT,
+				   0, 0, ATARI_VIS_WIDTH, Screen_HEIGHT,
+				   0, 0, ATARI_VIS_WIDTH, Screen_HEIGHT,
 				   s_Buffer.pTarget, s_lpbmi, DIB_RGB_COLORS, SRCCOPY );
 
 } /* #OF# Screen_GDI */

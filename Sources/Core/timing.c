@@ -47,7 +47,7 @@ void
 Timer_Reset( void )
 {
 	LARGE_INTEGER lnTimeFreq;
-	int nSysFreq = (TV_PAL == tv_mode ? g_Timer.nPalFreq : g_Timer.nNtscFreq);
+	int nSysFreq = (Atari800_TV_PAL == Atari800_tv_mode ? g_Timer.nPalFreq : g_Timer.nNtscFreq);
 
 	QueryPerformanceFrequency( &lnTimeFreq );
 	s_ulDeltaT = lnTimeFreq.LowPart / (nSysFreq ? nSysFreq : 1);

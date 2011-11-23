@@ -394,7 +394,7 @@ OnOK()
 		unSectors = GetDlgItemInt( IDC_NEWDISKIMAGE_SECTORS, &bTrans, FALSE );
 		if( !bTrans )
 		{
-			Aprint( "Error while receiving content of dialog controls" );
+			Log_print( "Error while receiving content of dialog controls" );
 			return;
 		}
 		/* Image length divided by 16 */

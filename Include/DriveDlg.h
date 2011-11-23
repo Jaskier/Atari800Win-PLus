@@ -29,7 +29,7 @@ public:
 		UINT       nButtonID;
 		UINT       nEditID;
 		UINT       nComboID;
-		UnitStatus usStatus;
+		SIO_UnitStatus usStatus;
 	};
 
 // Construction
@@ -55,7 +55,7 @@ private:
 	BOOL       DriveButton       ( UINT nButtonID, HWND hwndButton );
 	BOOL       KillfocusEditDrive( UINT nEditID,   HWND hwndEdit );
 	BOOL       StatusSelChange   ( UINT nComboID,  HWND hwndCombo );
-	UnitStatus CheckSelectedDisk ( LPCSTR pszDiskName, UINT *pInfo = NULL );
+	SIO_UnitStatus CheckSelectedDisk ( LPCSTR pszDiskName, UINT *pInfo = NULL );
 
 // Implementation: overrides
 	// ClassWizard generated virtual function overrides

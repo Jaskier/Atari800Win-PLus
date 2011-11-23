@@ -125,7 +125,7 @@ Commit()
 		if( _stricmp( m_pRomData[ i ].pszName, m_pRomData[ i ].szNewName ) != 0 )
 		{
 			/* If the ROM was changed for an active system */
-			if( i == machine_type || i == RTI_BAS )
+			if( i == Atari800_machine_type || i == RTI_BAS )
 			{
 				int nCFOut;
 				if( CheckFile( m_pRomData[ i ].pszName, &nCFOut ) !=

@@ -121,7 +121,7 @@ PopulateRefreshRateList()
 	   item the user will be allow to select for achieving double-sync */
 	if( 0 == anRefreshRates[ 0 ] )
 	{
-		anRefreshRates[ 0 ] = (TV_PAL == tv_mode ? DEF_PAL_FREQUENCY : DEF_NTSC_FREQUENCY) * -2;
+		anRefreshRates[ 0 ] = (Atari800_TV_PAL == Atari800_tv_mode ? DEF_PAL_FREQUENCY : DEF_NTSC_FREQUENCY) * -2;
 		anRefreshRates[ 1 ] = 0;
 	}
 	/* Sort the refresh rate table (not really necessary at the moment) */

@@ -564,7 +564,7 @@ ShowDInputError(
 	char szAction[ LOADSTRING_SIZE_L + 1 ];
 
 #ifdef _DEBUG
-	Aprint( "DirectInput error: %s@%ld", pszFile, dwLine );
+	Log_print( "DirectInput error: %s@%ld", pszFile, dwLine );
 #endif /*_DEBUG*/
 
 	/* Get us back to a GDI display and stop making noises */
@@ -1390,7 +1390,7 @@ Input_ResetMouse(
 		}
 	}
 	/* There were some problems with light pen cursor, fixed */
-	mouse_buttons = 0;
+	INPUT_mouse_buttons = 0;
 
 } /* #OF# Input_ResetMouse */
 

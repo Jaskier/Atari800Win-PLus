@@ -46,7 +46,7 @@ static SLONG cassette_elapsedtime;  /* elapsed time since begin of file */
 static SLONG cassette_savetime;	    /* helper for cas save */
 static SLONG cassette_nextirqevent; /* timestamp of next irq in scanlines */
 
-static char cassette_filename[FILENAME_MAX];
+char cassette_filename[FILENAME_MAX];
 static char cassette_description[CASSETTE_DESCRIPTION_MAX];
 static int cassette_current_blockbyte = 0;
 static int cassette_current_block;

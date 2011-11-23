@@ -76,7 +76,7 @@ static volatile int s_nSaveFragNo           = MM_SAVE_FRAG_NO;
 static int          s_nNumberOfFrags        = MM_NUMBER_OF_FRAGS;
 static int          s_nFramesPerFrag        = MM_FRAMES_PER_FRAG;
 static int          s_nFrameCnt             = 1;
-static int          s_nUpdatesPerFrag       = TV_PAL * MM_FRAMES_PER_FRAG / DEF_SKIP_UPDATE;
+static int          s_nUpdatesPerFrag       = Atari800_TV_PAL * MM_FRAMES_PER_FRAG / DEF_SKIP_UPDATE;
 static int          s_nUpdateCnt            = 1;
 static int          s_nSkipUpdate           = DEF_SKIP_UPDATE;
 static DWORD        s_dwBufferSize          = 0;
@@ -149,7 +149,7 @@ ShowMMError(
 	char szAction[ LOADSTRING_SIZE_L + 1 ];
 
 #ifdef _DEBUG
-	Aprint( "Multimedia Sound error: %s@%ld", pszFile, dwLine );
+	Log_print( "Multimedia Sound error: %s@%ld", pszFile, dwLine );
 #endif /*_DEBUG*/
 
 	/* Get us back to a GDI display and disable sound */
@@ -192,7 +192,7 @@ ShowDSError(
 	char szAction[ LOADSTRING_SIZE_L + 1 ];
 
 #ifdef _DEBUG
-	Aprint( "DirectSound error: %s@%ld", pszFile, dwLine );
+	Log_print( "DirectSound error: %s@%ld", pszFile, dwLine );
 #endif /*_DEBUG*/
 
 	/* Get us back to a GDI display and disable sound */
@@ -337,10 +337,10 @@ Sound_Initialise(
 		_ASSERT(2 == nNumberOfFrags);
 	}
 	/* Compute the values related to sound buffer size */
-	if( TV_PAL == tv_mode )
+	if( Atari800_TV_PAL == Atari800_tv_mode )
 	{
 		dwFragSize = (g_Sound.nRate / g_Timer.nPalFreq) * nFramesPerFrag * nChannels * (n16BitSnd + 1);
-		nUpdatesPerFrag = TV_PAL * nFramesPerFrag / nSkipUpdate;
+		nUpdatesPerFrag = Atari800_TV_PAL * nFramesPerFrag / nSkipUpdate;
 	}
 	else
 	{
