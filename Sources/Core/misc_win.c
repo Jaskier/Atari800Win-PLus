@@ -313,10 +313,10 @@ Atari_Initialise(
 				DisplayWarning( IDS_WARN_SOCKUSE, DONT_SHOW_SOCKUSE_WARN, FALSE );
 
 			/* Turn off R: device emulation if there is no winsocket library available */
-			if( enable_r_patch )
+			if( Devices_enable_r_patch )
 			{
-				enable_r_patch = 0;
-				WriteRegDWORD( NULL, REG_ENABLE_R_PATCH, enable_r_patch );
+				Devices_enable_r_patch = 0;
+				WriteRegDWORD( NULL, REG_ENABLE_R_PATCH, Devices_enable_r_patch );
 			}
 		}
 	}
@@ -435,10 +435,10 @@ void
    Nothing */
 Misc_ToggleSIOPatch( void )
 {
-	enable_sio_patch = enable_sio_patch ? 0 : 1;
-	WriteRegDWORD( NULL, REG_ENABLE_SIO_PATCH, enable_sio_patch );
+	ESC_enable_sio_patch = ESC_enable_sio_patch ? 0 : 1;
+	WriteRegDWORD( NULL, REG_ENABLE_SIO_PATCH, ESC_enable_sio_patch );
 
-	Atari800_UpdatePatches();
+	ESC_UpdatePatches();
 
 } /* #OF# Misc_ToggleSIOPatch */
 
@@ -601,7 +601,7 @@ Atari_Exit(
 {
 	if ( ATARI_CRASHED == g_ulAtariState )
 	{
-		wsync_halt = 1;	/* turn off CPU */
+		ANTIC_wsync_halt = 1;	/* turn off CPU */
 		return 0;
 	}
 
@@ -613,7 +613,7 @@ Atari_Exit(
 		
 		if ( _IsFlagSet( g_ulAtariState, ATARI_CRASHED ) )
 		{
-			wsync_halt = 1; /* turn off CPU */
+			ANTIC_wsync_halt = 1; /* turn off CPU */
 			if ( _IsFlagSet( g_Misc.ulState, MS_MONITOR_ALWAYS) )
 			{
 				bContinue = Misc_LaunchMonitor();
@@ -644,7 +644,7 @@ Atari_Exit(
 			return 1;
 		}
 		g_ulAtariState = ATARI_CRASHED;
-		wsync_halt = 1;	/* Turn off CPU */
+		ANTIC_wsync_halt = 1;	/* Turn off CPU */
 		g_nTestVal = 32767;
 
 		InvalidateRect( g_hMainWnd, NULL, TRUE );
@@ -660,7 +660,7 @@ Atari_Exit(
 
 		g_ulAtariState = ATARI_UNINITIALIZED | ATARI_CLOSING;
 
-		CART_Remove();
+		CARTRIDGE_Remove();
 		CASSETTE_Remove();
 		SIO_Exit();
 

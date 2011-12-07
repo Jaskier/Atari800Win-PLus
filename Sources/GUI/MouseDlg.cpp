@@ -113,26 +113,26 @@ SetDlgState()
 	_SetSelCbox( IDC_MOUSE_PORT,           m_nMousePort );
 
 	/* Enable/Disable appriopriate controls */
-	_EnableCtrl( IDC_MOUSE_MOUSESPEED,          MOUSE_OFF != m_nMouseMode );
-	_EnableCtrl( IDC_MOUSE_MOUSESPEED_LABEL,    MOUSE_OFF != m_nMouseMode );
-	_EnableCtrl( IDC_MOUSE_MOUSESPIN,           MOUSE_OFF != m_nMouseMode );
-	_EnableCtrl( IDC_MOUSE_MINPOT,              MOUSE_PAD == m_nMouseMode || MOUSE_TOUCH == m_nMouseMode || MOUSE_KOALA == m_nMouseMode );
-	_EnableCtrl( IDC_MOUSE_MINPOT_LABEL,        MOUSE_PAD == m_nMouseMode || MOUSE_TOUCH == m_nMouseMode || MOUSE_KOALA == m_nMouseMode );
-	_EnableCtrl( IDC_MOUSE_MINSPIN,             MOUSE_PAD == m_nMouseMode || MOUSE_TOUCH == m_nMouseMode || MOUSE_KOALA == m_nMouseMode );
-	_EnableCtrl( IDC_MOUSE_MAXPOT,              MOUSE_PAD == m_nMouseMode || MOUSE_TOUCH == m_nMouseMode || MOUSE_KOALA == m_nMouseMode );
-	_EnableCtrl( IDC_MOUSE_MAXPOT_LABEL,        MOUSE_PAD == m_nMouseMode || MOUSE_TOUCH == m_nMouseMode || MOUSE_KOALA == m_nMouseMode );
-	_EnableCtrl( IDC_MOUSE_MAXSPIN,             MOUSE_PAD == m_nMouseMode || MOUSE_TOUCH == m_nMouseMode || MOUSE_KOALA == m_nMouseMode );
-	_EnableCtrl( IDC_MOUSE_PENHORZOFFSET,       MOUSE_PEN == m_nMouseMode || MOUSE_GUN == m_nMouseMode );
-	_EnableCtrl( IDC_MOUSE_PENHORZOFFSET_LABEL, MOUSE_PEN == m_nMouseMode || MOUSE_GUN == m_nMouseMode );
-	_EnableCtrl( IDC_MOUSE_PENHORZSPIN,         MOUSE_PEN == m_nMouseMode || MOUSE_GUN == m_nMouseMode );
-	_EnableCtrl( IDC_MOUSE_PENVERTOFFSET,       MOUSE_PEN == m_nMouseMode || MOUSE_GUN == m_nMouseMode );
-	_EnableCtrl( IDC_MOUSE_PENVERTOFFSET_LABEL, MOUSE_PEN == m_nMouseMode || MOUSE_GUN == m_nMouseMode );
-	_EnableCtrl( IDC_MOUSE_PENVERTSPIN,         MOUSE_PEN == m_nMouseMode || MOUSE_GUN == m_nMouseMode );
-	_EnableCtrl( IDC_MOUSE_JOYINERTIA,          MOUSE_JOY == m_nMouseMode );
-	_EnableCtrl( IDC_MOUSE_JOYINERTIA_LABEL,    MOUSE_JOY == m_nMouseMode );
-	_EnableCtrl( IDC_MOUSE_JOYSPIN,             MOUSE_JOY == m_nMouseMode );
-	_EnableCtrl( IDC_MOUSE_PORT,                MOUSE_OFF != m_nMouseMode );
-	_EnableCtrl( IDC_MOUSE_PORT_LABEL,          MOUSE_OFF != m_nMouseMode );
+	_EnableCtrl( IDC_MOUSE_MOUSESPEED,          INPUT_MOUSE_OFF != m_nMouseMode );
+	_EnableCtrl( IDC_MOUSE_MOUSESPEED_LABEL,    INPUT_MOUSE_OFF != m_nMouseMode );
+	_EnableCtrl( IDC_MOUSE_MOUSESPIN,           INPUT_MOUSE_OFF != m_nMouseMode );
+	_EnableCtrl( IDC_MOUSE_MINPOT,              INPUT_MOUSE_PAD == m_nMouseMode || INPUT_MOUSE_TOUCH == m_nMouseMode || INPUT_MOUSE_KOALA == m_nMouseMode );
+	_EnableCtrl( IDC_MOUSE_MINPOT_LABEL,        INPUT_MOUSE_PAD == m_nMouseMode || INPUT_MOUSE_TOUCH == m_nMouseMode || INPUT_MOUSE_KOALA == m_nMouseMode );
+	_EnableCtrl( IDC_MOUSE_MINSPIN,             INPUT_MOUSE_PAD == m_nMouseMode || INPUT_MOUSE_TOUCH == m_nMouseMode || INPUT_MOUSE_KOALA == m_nMouseMode );
+	_EnableCtrl( IDC_MOUSE_MAXPOT,              INPUT_MOUSE_PAD == m_nMouseMode || INPUT_MOUSE_TOUCH == m_nMouseMode || INPUT_MOUSE_KOALA == m_nMouseMode );
+	_EnableCtrl( IDC_MOUSE_MAXPOT_LABEL,        INPUT_MOUSE_PAD == m_nMouseMode || INPUT_MOUSE_TOUCH == m_nMouseMode || INPUT_MOUSE_KOALA == m_nMouseMode );
+	_EnableCtrl( IDC_MOUSE_MAXSPIN,             INPUT_MOUSE_PAD == m_nMouseMode || INPUT_MOUSE_TOUCH == m_nMouseMode || INPUT_MOUSE_KOALA == m_nMouseMode );
+	_EnableCtrl( IDC_MOUSE_PENHORZOFFSET,       INPUT_MOUSE_PEN == m_nMouseMode || INPUT_MOUSE_GUN == m_nMouseMode );
+	_EnableCtrl( IDC_MOUSE_PENHORZOFFSET_LABEL, INPUT_MOUSE_PEN == m_nMouseMode || INPUT_MOUSE_GUN == m_nMouseMode );
+	_EnableCtrl( IDC_MOUSE_PENHORZSPIN,         INPUT_MOUSE_PEN == m_nMouseMode || INPUT_MOUSE_GUN == m_nMouseMode );
+	_EnableCtrl( IDC_MOUSE_PENVERTOFFSET,       INPUT_MOUSE_PEN == m_nMouseMode || INPUT_MOUSE_GUN == m_nMouseMode );
+	_EnableCtrl( IDC_MOUSE_PENVERTOFFSET_LABEL, INPUT_MOUSE_PEN == m_nMouseMode || INPUT_MOUSE_GUN == m_nMouseMode );
+	_EnableCtrl( IDC_MOUSE_PENVERTSPIN,         INPUT_MOUSE_PEN == m_nMouseMode || INPUT_MOUSE_GUN == m_nMouseMode );
+	_EnableCtrl( IDC_MOUSE_JOYINERTIA,          INPUT_MOUSE_JOY == m_nMouseMode );
+	_EnableCtrl( IDC_MOUSE_JOYINERTIA_LABEL,    INPUT_MOUSE_JOY == m_nMouseMode );
+	_EnableCtrl( IDC_MOUSE_JOYSPIN,             INPUT_MOUSE_JOY == m_nMouseMode );
+	_EnableCtrl( IDC_MOUSE_PORT,                INPUT_MOUSE_OFF != m_nMouseMode );
+	_EnableCtrl( IDC_MOUSE_PORT_LABEL,          INPUT_MOUSE_OFF != m_nMouseMode );
 
 	/* Set up check button state */
 	_SetChkBttn( IDC_MOUSE_MOUSECAPTURE, _IsFlagSet( m_ulInputState, IS_CAPTURE_MOUSE ) );
@@ -168,7 +168,7 @@ OnInitDialog()
 	CCommonDlg::OnInitDialog();
 
 	m_ulInputState = g_Input.ulState;
-	m_nMouseMode   = mouse_mode;
+	m_nMouseMode   = INPUT_mouse_mode;
 	m_nMousePort   = mouse_port;
 	m_nMouseSpeed  = mouse_speed;
 	m_nPotMin      = mouse_pot_min;
@@ -494,10 +494,10 @@ OnOK()
 	   handling this when the user uses accelerators */
 	ReceiveFocused();
 
-	if( m_nMouseMode != mouse_mode )
+	if( m_nMouseMode != INPUT_mouse_mode )
 	{
-		mouse_mode = m_nMouseMode;
-		WriteRegDWORD( NULL, REG_MOUSE_MODE, mouse_mode );
+		INPUT_mouse_mode = m_nMouseMode;
+		WriteRegDWORD( NULL, REG_MOUSE_MODE, INPUT_mouse_mode );
 
 		/* Update main window's indicator */
 		UpdateIndicator( ID_INDICATOR_MSE );

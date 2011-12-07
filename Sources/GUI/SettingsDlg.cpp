@@ -150,11 +150,11 @@ OnInitDialog()
 	CCommonDlg::OnInitDialog();
 
 	m_ulMiscState     = g_Misc.ulState;
-	m_nDisableBasic   = disable_basic;
-	m_nEnableSIOPatch = enable_sio_patch;
-	m_nEnableHPatch   = enable_h_patch;
-	m_nEnablePPatch   = enable_p_patch;
-	m_nEnableRPatch   = enable_r_patch;
+	m_nDisableBasic   = Atari800_disable_basic;
+	m_nEnableSIOPatch = ESC_enable_sio_patch;
+	m_nEnableHPatch   = Devices_enable_h_patch;
+	m_nEnablePPatch   = Devices_enable_p_patch;
+	m_nEnableRPatch   = Devices_enable_r_patch;
 	m_nHardReadOnly   = h_read_only;
 	m_nEnableRTime    = rtime_enabled;
 
@@ -353,41 +353,41 @@ OnOK()
 	}
 	if( bCommit )
 	{
-		if( m_nDisableBasic != disable_basic )
+		if( m_nDisableBasic != Atari800_disable_basic )
 		{
-			disable_basic = m_nDisableBasic;
-			WriteRegDWORD( NULL, REG_DISABLE_BASIC, disable_basic );
+			Atari800_disable_basic = m_nDisableBasic;
+			WriteRegDWORD( NULL, REG_DISABLE_BASIC, Atari800_disable_basic );
 
 	//		m_bReboot = TRUE; /* I think we don't really need this */
 		}
-		if( m_nEnableSIOPatch != enable_sio_patch )
+		if( m_nEnableSIOPatch != ESC_enable_sio_patch )
 		{
-			enable_sio_patch = m_nEnableSIOPatch;
-			WriteRegDWORD( NULL, REG_ENABLE_SIO_PATCH, enable_sio_patch );
+			ESC_enable_sio_patch = m_nEnableSIOPatch;
+			WriteRegDWORD( NULL, REG_ENABLE_SIO_PATCH, ESC_enable_sio_patch );
 
-			Atari800_UpdatePatches();
+			ESC_UpdatePatches();
 		}
-		if( m_nEnableHPatch != enable_h_patch )
+		if( m_nEnableHPatch != Devices_enable_h_patch )
 		{
-			enable_h_patch = m_nEnableHPatch;
-			WriteRegDWORD( NULL, REG_ENABLE_H_PATCH, enable_h_patch );
+			Devices_enable_h_patch = m_nEnableHPatch;
+			WriteRegDWORD( NULL, REG_ENABLE_H_PATCH, Devices_enable_h_patch );
 
-			Atari800_UpdatePatches();
+			ESC_UpdatePatches();
 		}
-		if( m_nEnablePPatch != enable_p_patch )
+		if( m_nEnablePPatch != Devices_enable_p_patch )
 		{
-			enable_p_patch = m_nEnablePPatch;
-			WriteRegDWORD( NULL, REG_ENABLE_P_PATCH, enable_p_patch );
+			Devices_enable_p_patch = m_nEnablePPatch;
+			WriteRegDWORD( NULL, REG_ENABLE_P_PATCH, Devices_enable_p_patch );
 
-			Atari800_UpdatePatches();
+			ESC_UpdatePatches();
 		}
-		if( m_nEnableRPatch != enable_r_patch )
+		if( m_nEnableRPatch != Devices_enable_r_patch )
 		{
-			enable_r_patch = m_nEnableRPatch;
-			WriteRegDWORD( NULL, REG_ENABLE_R_PATCH, enable_r_patch );
+			Devices_enable_r_patch = m_nEnableRPatch;
+			WriteRegDWORD( NULL, REG_ENABLE_R_PATCH, Devices_enable_r_patch );
 
 			RDevice_UpdatePatches();
-			Atari800_UpdatePatches();
+			ESC_UpdatePatches();
 		}
 		if( m_nHardReadOnly != h_read_only )
 		{

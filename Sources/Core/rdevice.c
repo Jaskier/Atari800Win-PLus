@@ -620,14 +620,14 @@ static UWORD r_entry_address = 0;
 /* call before Atari800_Frame() */
 void RDevice_Frame(void)
 {
-	if (enable_r_patch)
+	if (Devices_enable_r_patch)
 		r_entry_address = Device_UpdateHATABSEntry('R', r_entry_address, R_TABLE_ADDRESS);
 }
 
-/* call before or after Atari800_UpdatePatches */
+/* call before or after ESC_UpdatePatches */
 void RDevice_UpdatePatches(void)
 {
-	if (enable_r_patch) {		/* enable R: device */
+	if (Devices_enable_r_patch) {		/* enable R: device */
 		/* change memory attributex for the area, where we put
 		   R: handler table and patches */
 #ifndef PAGED_ATTRIB

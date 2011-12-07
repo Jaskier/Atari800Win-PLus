@@ -493,22 +493,22 @@ CMainFrame()
 		WriteRegDWORD( NULL, REG_MISC_STATE, g_Misc.ulState );
 
 	/* Set appropriate memory size */
-	switch( machine_type )
+	switch( Atari800_machine_type )
 	{
-		case MACHINE_OSA:
-			ram_size = g_anRamSize[ MACHINE_OSA ];
+		case Atari800_MACHINE_OSA:
+			MEMORY_ram_size = g_anRamSize[ Atari800_MACHINE_OSA ];
 			break;
 
-		case MACHINE_OSB:
-			ram_size = g_anRamSize[ MACHINE_OSB ];
+		case Atari800_MACHINE_OSB:
+			MEMORY_ram_size = g_anRamSize[ Atari800_MACHINE_OSB ];
 			break;
 
-		case MACHINE_XLXE:
-			ram_size = g_anRamSize[ MACHINE_XLXE ];
+		case Atari800_MACHINE_XLXE:
+			MEMORY_ram_size = g_anRamSize[ Atari800_MACHINE_XLXE ];
 			break;
 
-		case MACHINE_5200:
-			ram_size = 16; /* Always 16 KB */
+		case Atari800_MACHINE_5200:
+			MEMORY_ram_size = 16; /* Always 16 KB */
 			break;
 
 		default:
@@ -686,7 +686,7 @@ DriveInsert(
 	CString strPrompt;
 
 	/* Get the most recently used file name to use in a file dialog */
-	_strncpy( szDiskName, sio_filename[ nDriveNum - 1 ], MAX_PATH );
+	_strncpy( szDiskName, SIO_filename[ nDriveNum - 1 ], MAX_PATH );
 	strPrompt.Format( IDS_SELECT_DSK_LOAD, nDriveNum );
 
 	if( PickFileName( TRUE, szDiskName, strPrompt, IDS_FILTER_DSK,
@@ -717,8 +717,8 @@ DriveRemove(
 	SIO_Dismount( nDriveNum );
 	if( _IsFlagSet( g_Misc.ulState, MS_TURN_DRIVES_OFF ) )
 	{
-		drive_status[ nDriveNum - 1 ] = Off;
-		strcpy( sio_filename[ nDriveNum - 1 ], "Off" );
+		SIO_drive_status[ nDriveNum - 1 ] = SIO_OFF;
+		strcpy( SIO_filename[ nDriveNum - 1 ], "Off" );
 	}
 } /* #OF# CMainFrame::DriveRemove */
 
@@ -754,7 +754,7 @@ SaveState(
 				strcpy( atari_state_dir, szFileName );
 				WriteRegString( NULL, REG_FILE_STATE, atari_state_dir );
 			}
-			if( !SaveAtariState( atari_state_dir, "wb", nSaveRom ) )
+			if( !StateSav_SaveAtariState( atari_state_dir, "wb", nSaveRom ) )
 				DisplayMessage( NULL, IDS_ERROR_A8S_SAVE, 0, MB_ICONEXCLAMATION | MB_OK );
 		}
 		UpdateStatus();
@@ -785,7 +785,7 @@ SaveSnapshot(
 	CString strPrompt;
 
 	if( !bChanged ) {
-		Screen_FindScreenshotFilename(filename);
+		Screen_FindScreenshotFilename(filename, FILENAME_MAX);
 		m_strScreenshotName = filename;
 	}
 
@@ -1222,7 +1222,7 @@ OnFileDetachDiskImageAll()
 {
 	SuspendThread();
 
-	for( int i = 1; i <= MAX_DRIVES; i++ )
+	for( int i = 1; i <= SIO_MAX_DRIVES; i++ )
 	{
 #ifdef WIN_NETWORK_GAMES
 		if( 1 != i || !ST_KAILLERA_ACTIVE )
@@ -1385,7 +1385,7 @@ OnFileTurnDisk()
 
 	char szDiskPath[ MAX_PATH + 1 ];
 
-	_strncpy( szDiskPath, sio_filename[ 0 ], MAX_PATH );
+	_strncpy( szDiskPath, SIO_filename[ 0 ], MAX_PATH );
 	if( strcmp( szDiskPath, "Empty" ) != 0 &&
 		strcmp( szDiskPath, "Off" ) != 0 )
 	{
@@ -1449,7 +1449,7 @@ OnFileTurnDisk()
 		if( bTurnDisk )
 		{
 			SIO_Dismount( 1 );
-			SIO_Mount( 1, szDiskPath, drive_status[0]==ReadOnly );
+			SIO_Mount( 1, szDiskPath, SIO_drive_status[0]==SIO_READ_ONLY );
 			WriteRegDrives( NULL );
 		}
 		/* Restore directory */
@@ -1546,7 +1546,7 @@ OnFileAttachCartridgeImage()
 			WriteRegString( NULL, REG_ROM_OTHER, g_szOtherRom );
 		}
 		WriteRegString( NULL, REG_ROM_CURRENT, g_szCurrentRom );
-		WriteRegDWORD ( NULL, REG_CART_TYPE,   cart_type );
+		WriteRegDWORD ( NULL, REG_CART_TYPE,   CARTRIDGE_type );
 
 		if( _IsFlagSet( g_Misc.ulState, MS_REBOOT_WHEN_CART ) )
 			OnAtariColdstart();
@@ -1569,11 +1569,11 @@ OnFileDetachCartridgeImage()
 {
 	SuspendThread();
 
-	CART_Remove();
+	CARTRIDGE_Remove();
 	strcpy( g_szCurrentRom, FILE_NONE );
 
 	WriteRegString( NULL, REG_ROM_CURRENT, g_szCurrentRom );
-	WriteRegDWORD ( NULL, REG_CART_TYPE, cart_type );
+	WriteRegDWORD ( NULL, REG_CART_TYPE, CARTRIDGE_type );
 
 	if( _IsFlagSet( g_Misc.ulState, MS_REBOOT_WHEN_CART ) )
 		OnAtariColdstart();
@@ -1667,10 +1667,10 @@ OnAtariMachineType()
 {
 	SuspendThread();
 
-	int nMachineType = machine_type;
+	int nMachineType = Atari800_machine_type;
 
-	if( ++nMachineType > MACHINE_5200 )
-		nMachineType = MACHINE_OSA;
+	if( ++nMachineType > Atari800_MACHINE_5200 )
+		nMachineType = Atari800_MACHINE_OSA;
 
 	MachineTypeChanged( nMachineType );
 
@@ -1690,41 +1690,41 @@ MachineTypeChanged(
 	int nMachineType
 )
 {
-	if( nMachineType != machine_type )
+	if( nMachineType != Atari800_machine_type )
 	{
 		if( StreamWarning( IDS_WARN_RECORD_SYSTEM, SRW_VIDEO_STREAM | SRW_SOUND_STREAM ) )
 		{
-			if( MACHINE_5200 == machine_type ||
-				MACHINE_5200 == nMachineType )
+			if( Atari800_MACHINE_5200 == Atari800_machine_type ||
+				Atari800_MACHINE_5200 == nMachineType )
 			{
-				if( cart_type != CARTRIDGE_NONE )
+				if( CARTRIDGE_type != CARTRIDGE_NONE )
 				{
-					CART_Remove();
+					CARTRIDGE_Remove();
 					strcpy( g_szCurrentRom, FILE_NONE );
 
 					WriteRegString( NULL, REG_ROM_CURRENT, g_szCurrentRom );
-					WriteRegDWORD ( NULL, REG_CART_TYPE,   cart_type );
+					WriteRegDWORD ( NULL, REG_CART_TYPE,   CARTRIDGE_type );
 				}
 			}
-			machine_type = nMachineType;
-			WriteRegDWORD( NULL, REG_MACHINE_TYPE, machine_type );
+			Atari800_machine_type = nMachineType;
+			WriteRegDWORD( NULL, REG_MACHINE_TYPE, Atari800_machine_type );
 
-			switch( machine_type )
+			switch( Atari800_machine_type )
 			{
-				case MACHINE_OSA:
-					ram_size = g_anRamSize[ MACHINE_OSA ];
+				case Atari800_MACHINE_OSA:
+					MEMORY_ram_size = g_anRamSize[ Atari800_MACHINE_OSA ];
 					break;
 
-				case MACHINE_OSB:
-					ram_size = g_anRamSize[ MACHINE_OSB ];
+				case Atari800_MACHINE_OSB:
+					MEMORY_ram_size = g_anRamSize[ Atari800_MACHINE_OSB ];
 					break;
 
-				case MACHINE_XLXE:
-					ram_size = g_anRamSize[ MACHINE_XLXE ];
+				case Atari800_MACHINE_XLXE:
+					MEMORY_ram_size = g_anRamSize[ Atari800_MACHINE_XLXE ];
 					break;
 
-				case MACHINE_5200:
-					ram_size = 16; /* Always 16 KB */
+				case Atari800_MACHINE_5200:
+					MEMORY_ram_size = 16; /* Always 16 KB */
 					break;
 
 				default:
@@ -1749,7 +1749,7 @@ CMainFrame::
 OnAtariMachineTypeOsa()
 {
 	SuspendThread();
-	MachineTypeChanged( MACHINE_OSA );
+	MachineTypeChanged( Atari800_MACHINE_OSA );
 	ResumeThread();
 } /* #OF# CMainFrame::OnAtariMachineTypeOsa */
 
@@ -1765,7 +1765,7 @@ CMainFrame::
 OnAtariMachineTypeOsb()
 {
 	SuspendThread();
-	MachineTypeChanged( MACHINE_OSB );
+	MachineTypeChanged( Atari800_MACHINE_OSB );
 	ResumeThread();
 } /* #OF# CMainFrame::OnAtariMachineTypeOsb */
 
@@ -1781,7 +1781,7 @@ CMainFrame::
 OnAtariMachineTypeXlXe()
 {
 	SuspendThread();
-	MachineTypeChanged( MACHINE_XLXE );
+	MachineTypeChanged( Atari800_MACHINE_XLXE );
 	ResumeThread();
 } /* #OF# CMainFrame::OnAtariMachineType800xl */
 
@@ -1797,7 +1797,7 @@ CMainFrame::
 OnAtariMachineType5200()
 {
 	SuspendThread();
-	MachineTypeChanged( MACHINE_5200 );
+	MachineTypeChanged( Atari800_MACHINE_5200 );
 	ResumeThread();
 } /* #OF# CMainFrame::OnAtariMachineType5200 */
 
@@ -1816,7 +1816,7 @@ OnAtariVideoSystem()
 
 	if( StreamWarning( IDS_WARN_RECORD_SYSTEM, SRW_VIDEO_STREAM | SRW_SOUND_STREAM ) )
 	{
-		Atari800_tv_mode = (Atari800_TV_PAL == tv_mode ? TV_NTSC : Atari800_TV_PAL);
+		Atari800_tv_mode = (Atari800_TV_PAL == Atari800_tv_mode ? Atari800_TV_NTSC : Atari800_TV_PAL);
 		WriteRegDWORD( NULL, REG_TV_MODE, Atari800_tv_mode );
 
 		if( _IsFlagSet( g_Misc.ulState, MS_REBOOT_WHEN_VIDEO ) )
@@ -1848,7 +1848,7 @@ void
 CMainFrame::
 OnAtariVideoSystemNtsc()
 {
-	if( TV_NTSC != Atari800_tv_mode )
+	if( Atari800_TV_NTSC != Atari800_tv_mode )
 		OnAtariVideoSystem();
 
 } /* #OF# CMainFrame::OnAtariVideoSystemNtsc */
@@ -1882,28 +1882,28 @@ MemorySizeChanged(
 	int nRamSize
 )
 {
-	if( nRamSize != ram_size )
+	if( nRamSize != MEMORY_ram_size )
 	{
-		ram_size = nRamSize;
+		MEMORY_ram_size = nRamSize;
 
-		switch( machine_type )
+		switch( Atari800_machine_type )
 		{
-			case MACHINE_OSA:
-				g_anRamSize[ MACHINE_OSA ] = ram_size;
-				WriteRegDWORD( NULL, REG_RAMSIZE_OSA, ram_size );
+			case Atari800_MACHINE_OSA:
+				g_anRamSize[ Atari800_MACHINE_OSA ] = MEMORY_ram_size;
+				WriteRegDWORD( NULL, REG_RAMSIZE_OSA, MEMORY_ram_size );
 				break;
 
-			case MACHINE_OSB:
-				g_anRamSize[ MACHINE_OSB ] = ram_size;
-				WriteRegDWORD( NULL, REG_RAMSIZE_OSB, ram_size );
+			case Atari800_MACHINE_OSB:
+				g_anRamSize[ Atari800_MACHINE_OSB ] = MEMORY_ram_size;
+				WriteRegDWORD( NULL, REG_RAMSIZE_OSB, MEMORY_ram_size );
 				break;
 
-			case MACHINE_XLXE:
-				g_anRamSize[ MACHINE_XLXE ] = ram_size;
-				WriteRegDWORD( NULL, REG_RAMSIZE_XLXE, ram_size );
+			case Atari800_MACHINE_XLXE:
+				g_anRamSize[ Atari800_MACHINE_XLXE ] = MEMORY_ram_size;
+				WriteRegDWORD( NULL, REG_RAMSIZE_XLXE, MEMORY_ram_size );
 				break;
 
-			case MACHINE_5200:
+			case Atari800_MACHINE_5200:
 				/* Always 16 KB */
 				break;
 
@@ -2008,7 +2008,7 @@ CMainFrame::
 OnAtariMemorySize320KbCompy()
 {
 	SuspendThread();
-	MemorySizeChanged( RAM_320_COMPY_SHOP );
+	MemorySizeChanged( MEMORY_RAM_320_COMPY_SHOP );
 	ResumeThread();
 } /* #OF# CMainFrame::OnAtariMemorySize320KbCompy */
 
@@ -2024,7 +2024,7 @@ CMainFrame::
 OnAtariMemorySize320KbRambo()
 {
 	SuspendThread();
-	MemorySizeChanged( RAM_320_RAMBO );
+	MemorySizeChanged( MEMORY_RAM_320_RAMBO );
 	ResumeThread();
 } /* #OF# CMainFrame::OnAtariMemorySize320KbRambo */
 
@@ -2186,10 +2186,10 @@ OnAtariHPatch()
 {
 	SuspendThread();
 
-	enable_h_patch = enable_h_patch ? 0 : 1;
-	WriteRegDWORD( NULL, REG_ENABLE_H_PATCH, enable_h_patch );
+	Devices_enable_h_patch = Devices_enable_h_patch ? 0 : 1;
+	WriteRegDWORD( NULL, REG_ENABLE_H_PATCH, Devices_enable_h_patch );
 
-	Atari800_UpdatePatches();
+	ESC_UpdatePatches();
 
 	ResumeThread();
 } /* #OF# CMainFrame::OnAtariHPatch */
@@ -2207,10 +2207,10 @@ OnAtariPPatch()
 {
 	SuspendThread();
 
-	enable_p_patch = enable_p_patch ? 0 : 1;
-	WriteRegDWORD( NULL, REG_ENABLE_P_PATCH, enable_p_patch );
+	Devices_enable_p_patch = Devices_enable_p_patch ? 0 : 1;
+	WriteRegDWORD( NULL, REG_ENABLE_P_PATCH, Devices_enable_p_patch );
 
-	Atari800_UpdatePatches();
+	ESC_UpdatePatches();
 
 	ResumeThread();
 } /* #OF# CMainFrame::OnAtariPPatch */
@@ -2228,11 +2228,11 @@ OnAtariRPatch()
 {
 	SuspendThread();
 
-	enable_r_patch = enable_r_patch ? 0 : 1;
-	WriteRegDWORD( NULL, REG_ENABLE_R_PATCH, enable_r_patch );
+	Devices_enable_r_patch = Devices_enable_r_patch ? 0 : 1;
+	WriteRegDWORD( NULL, REG_ENABLE_R_PATCH, Devices_enable_r_patch );
 
 	RDevice_UpdatePatches();
-	Atari800_UpdatePatches();
+	ESC_UpdatePatches();
 
 	ResumeThread();
 } /* #OF# CMainFrame::OnAtariRPatch */
@@ -2250,8 +2250,8 @@ OnAtariDisableBasic()
 {
 	SuspendThread();
 
-	disable_basic = disable_basic ? 0 : 1;
-	WriteRegDWORD( NULL, REG_DISABLE_BASIC, disable_basic );
+	Atari800_disable_basic = Atari800_disable_basic ? 0 : 1;
+	WriteRegDWORD( NULL, REG_DISABLE_BASIC, Atari800_disable_basic );
 	if ( _IsFlagSet( g_Misc.ulState, MS_REBOOT_WHEN_BASIC) )
 		OnAtariColdstart();
 
@@ -2371,7 +2371,7 @@ OnAtariWarmstart()
 {
 	SuspendThread();
 
-	if( MACHINE_5200 == machine_type ) /* 5200 has no warmstart */
+	if( Atari800_MACHINE_5200 == Atari800_machine_type ) /* 5200 has no warmstart */
 	{
 		OnAtariColdstart();
 		ResumeThread();
@@ -2392,14 +2392,14 @@ OnAtariWarmstart()
 		if( _IsFlagSet( g_ulAtariState, ATARI_CRASHED ) )
 		{
 			g_ulAtariState = ATARI_RUNNING;
-			wsync_halt = 0;	/* Turn on CPU */
+			ANTIC_wsync_halt = 0;	/* Turn on CPU */
 			g_nTestVal = 0;
 			/* OnSetFocus won't invoke that */
 			Sound_Restart();
 			CleanScreen( TRUE );
 		}
 		/* Do warm reset */
-		Warmstart();
+		Atari800_Warmstart();
 	}
 	UpdateStatus();
 
@@ -2433,14 +2433,14 @@ OnAtariColdstart()
 		if( _IsFlagSet( g_ulAtariState, ATARI_CRASHED ) )
 		{
 			g_ulAtariState = ATARI_RUNNING;
-			wsync_halt = 0;	/* Turn on CPU */
+			ANTIC_wsync_halt = 0;	/* Turn on CPU */
 			g_nTestVal = 0;
 			/* OnSetFocus won't invoke that */
 			Sound_Restart();
 			CleanScreen( TRUE );
 		}
 		/* Do cold reset */
-		Coldstart();
+		Atari800_Coldstart();
 	}
 	UpdateStatus();
 
@@ -2555,7 +2555,7 @@ OnViewShowDiskActivity()
 {
 	_ToggleFlag( g_Misc.ulState, MS_SHOW_DRIVE_LED );
 	WriteRegDWORD( NULL, REG_MISC_STATE, g_Misc.ulState );
-	show_disk_led = _IsFlagSet( g_Misc.ulState, MS_SHOW_DRIVE_LED ) ? 1 : 0;
+	Screen_show_disk_led = _IsFlagSet( g_Misc.ulState, MS_SHOW_DRIVE_LED ) ? 1 : 0;
 
 } /* #OF# CMainFrame::OnViewShowDiskActivity */
 
@@ -2572,7 +2572,7 @@ OnViewShowSectorCounter()
 {
 	_ToggleFlag( g_Misc.ulState, MS_SHOW_SECTOR_COUNTER );
 	WriteRegDWORD( NULL, REG_MISC_STATE, g_Misc.ulState );
-	show_sector_counter = _IsFlagSet( g_Misc.ulState, MS_SHOW_SECTOR_COUNTER ) ? 1 : 0;
+	Screen_show_sector_counter = _IsFlagSet( g_Misc.ulState, MS_SHOW_SECTOR_COUNTER ) ? 1 : 0;
 
 } /* #OF# CMainFrame::OnViewShowSectorCounter */
 
@@ -2700,11 +2700,11 @@ void
 CMainFrame::
 OnViewArtifacting()
 {
-	if( ++global_artif_mode > 4 )
-		global_artif_mode = 0;
+	if( ++ANTIC_artif_mode > 4 )
+		ANTIC_artif_mode = 0;
 	ANTIC_UpdateArtifacting();
 
-	WriteRegDWORD( NULL, REG_ARTIF_MODE, global_artif_mode );
+	WriteRegDWORD( NULL, REG_ARTIF_MODE, ANTIC_artif_mode );
 
 } /* #OF# CMainFrame::OnViewArtifacting */
 
@@ -2719,10 +2719,10 @@ void
 CMainFrame::
 OnViewArtifactingNone()
 {
-	global_artif_mode = 0;
+	ANTIC_artif_mode = 0;
 
 	ANTIC_UpdateArtifacting();
-	WriteRegDWORD( NULL, REG_ARTIF_MODE, global_artif_mode );
+	WriteRegDWORD( NULL, REG_ARTIF_MODE, ANTIC_artif_mode );
 
 } /* #OF# CMainFrame::OnViewArtifactingNone */
 
@@ -2737,10 +2737,10 @@ void
 CMainFrame::
 OnViewArtifactingBluebrown1()
 {
-	global_artif_mode = 1;
+	ANTIC_artif_mode = 1;
 
 	ANTIC_UpdateArtifacting();
-	WriteRegDWORD( NULL, REG_ARTIF_MODE, global_artif_mode );
+	WriteRegDWORD( NULL, REG_ARTIF_MODE, ANTIC_artif_mode );
 
 } /* #OF# CMainFrame::OnViewArtifactingBluebrown1 */
 
@@ -2755,10 +2755,10 @@ void
 CMainFrame::
 OnViewArtifactingBluebrown2()
 {
-	global_artif_mode = 2;
+	ANTIC_artif_mode = 2;
 
 	ANTIC_UpdateArtifacting();
-	WriteRegDWORD( NULL, REG_ARTIF_MODE, global_artif_mode );
+	WriteRegDWORD( NULL, REG_ARTIF_MODE, ANTIC_artif_mode );
 
 } /* #OF# CMainFrame::OnViewArtifactingBluebrown2 */
 
@@ -2773,10 +2773,10 @@ void
 CMainFrame::
 OnViewArtifactingGtia()
 {
-	global_artif_mode = 3;
+	ANTIC_artif_mode = 3;
 
 	ANTIC_UpdateArtifacting();
-	WriteRegDWORD( NULL, REG_ARTIF_MODE, global_artif_mode );
+	WriteRegDWORD( NULL, REG_ARTIF_MODE, ANTIC_artif_mode );
 
 } /* #OF# CMainFrame::OnViewArtifactingGtia */
 
@@ -2791,10 +2791,10 @@ void
 CMainFrame::
 OnViewArtifactingCtia()
 {
-	global_artif_mode = 4;
+	ANTIC_artif_mode = 4;
 
 	ANTIC_UpdateArtifacting();
-	WriteRegDWORD( NULL, REG_ARTIF_MODE, global_artif_mode );
+	WriteRegDWORD( NULL, REG_ARTIF_MODE, ANTIC_artif_mode );
 
 } /* #OF# CMainFrame::OnViewArtifactingCtia */
 
@@ -3013,8 +3013,8 @@ OnSoundStereo()
 
 	if( StreamWarning( IDS_WARN_RECORD_SNDOUT, SRW_SOUND_STREAM ) )
 	{
-		stereo_enabled = stereo_enabled ? 0 : 1;
-		WriteRegDWORD( NULL, REG_ENABLE_STEREO, stereo_enabled );
+		POKEYSND_stereo_enabled = POKEYSND_stereo_enabled ? 0 : 1;
+		WriteRegDWORD( NULL, REG_ENABLE_STEREO, POKEYSND_stereo_enabled );
 
 		Sound_Initialise( FALSE );
 	}
@@ -3127,7 +3127,7 @@ OnSoundPerformanceTest()
 				ulStartTime = timeGetTime();
 				/* Begin the performance test */
 				for( int i = 0; i < 60; i++ )
-					Pokey_process( pszBuffer, nSampleSize >> n16BitSnd );
+					POKEYSND_Process_ptr( pszBuffer, nSampleSize >> n16BitSnd );
 
 				ulTotalTime = timeGetTime() - ulStartTime;
 				free( pszBuffer );
@@ -3238,12 +3238,12 @@ ChangeAutofire(
 
 	if( bForward )
 	{
-		if( ++nAutofireMode > AUTOFIRE_CONT )
-			nAutofireMode = AUTOFIRE_OFF;
+		if( ++nAutofireMode > INPUT_AUTOFIRE_CONT )
+			nAutofireMode = INPUT_AUTOFIRE_OFF;
 	}
 	else
-		if( --nAutofireMode < AUTOFIRE_OFF )
-			nAutofireMode = AUTOFIRE_CONT;
+		if( --nAutofireMode < INPUT_AUTOFIRE_OFF )
+			nAutofireMode = INPUT_AUTOFIRE_CONT;
 
 	AutofireChanged( nAutofireMode );
 
@@ -3265,7 +3265,7 @@ AutofireChanged(
 	for( int i = 0; i < MAX_ATARI_JOYPORTS; i++ )
 	{
 		if( g_Input.Joy.ulAutoSticks & (1 << i) )
-			joy_autofire[ i ] = nAutofireMode;
+			INPUT_joy_autofire[ i ] = nAutofireMode;
 	}
 	if( g_Input.Joy.nAutoMode != nAutofireMode )
 	{
@@ -3303,7 +3303,7 @@ void
 CMainFrame::
 OnInputAutofireOff()
 {
-	AutofireChanged( AUTOFIRE_OFF );
+	AutofireChanged( INPUT_AUTOFIRE_OFF );
 
 } /* #OF# CMainFrame::OnInputAutofireOff */
 
@@ -3318,7 +3318,7 @@ void
 CMainFrame::
 OnInputAutofireFireDependent()
 {
-	AutofireChanged( AUTOFIRE_FIRE );
+	AutofireChanged( INPUT_AUTOFIRE_FIRE );
 
 } /* #OF# CMainFrame::OnInputAutofireFireDependent */
 
@@ -3333,7 +3333,7 @@ void
 CMainFrame::
 OnInputAutofireAllTime()
 {
-	AutofireChanged( AUTOFIRE_CONT );
+	AutofireChanged( INPUT_AUTOFIRE_CONT );
 
 } /* #OF# CMainFrame::OnInputAutofireAllTime */
 
@@ -3350,16 +3350,16 @@ ChangeMouseDevice(
 	BOOL bForward /*=TRUE*/
 )
 {
-	int nMouseMode = mouse_mode;
+	int nMouseMode = INPUT_mouse_mode;
 
 	if( bForward )
 	{
-		if( ++nMouseMode > MOUSE_JOY )
-			nMouseMode = MOUSE_OFF;
+		if( ++nMouseMode > INPUT_MOUSE_JOY )
+			nMouseMode = INPUT_MOUSE_OFF;
 	}
 	else
-		if( --nMouseMode < MOUSE_OFF )
-			nMouseMode = MOUSE_JOY;
+		if( --nMouseMode < INPUT_MOUSE_OFF )
+			nMouseMode = INPUT_MOUSE_JOY;
 
 	MouseDeviceChanged( nMouseMode );
 
@@ -3378,10 +3378,10 @@ MouseDeviceChanged(
 	int nMouseMode
 )
 {
-	if( mouse_mode != nMouseMode )
+	if( INPUT_mouse_mode != nMouseMode )
 	{
-		mouse_mode = nMouseMode;
-		WriteRegDWORD( NULL, REG_MOUSE_MODE, mouse_mode );
+		INPUT_mouse_mode = nMouseMode;
+		WriteRegDWORD( NULL, REG_MOUSE_MODE, INPUT_mouse_mode );
 
 		UpdateIndicator( ID_INDICATOR_MSE );
 	}
@@ -3398,7 +3398,7 @@ void
 CMainFrame::
 OnInputMouseDeviceNone()
 {
-	MouseDeviceChanged( MOUSE_OFF );
+	MouseDeviceChanged( INPUT_MOUSE_OFF );
 
 } /* #OF# CMainFrame::OnInputMouseDeviceNone */
 
@@ -3413,7 +3413,7 @@ void
 CMainFrame::
 OnInputMouseDevicePaddles()
 {
-	MouseDeviceChanged( MOUSE_PAD );
+	MouseDeviceChanged( INPUT_MOUSE_PAD );
 
 } /* #OF# CMainFrame::OnInputMouseDevicePaddles */
 
@@ -3428,7 +3428,7 @@ void
 CMainFrame::
 OnInputMouseDeviceTouchTablet()
 {
-	MouseDeviceChanged( MOUSE_TOUCH );
+	MouseDeviceChanged( INPUT_MOUSE_TOUCH );
 
 } /* #OF# CMainFrame::OnInputMouseDeviceTouchTablet */
 
@@ -3442,7 +3442,7 @@ void
    Nothing */
 CMainFrame::OnInputMouseDeviceKoalaPad()
 {
-	MouseDeviceChanged( MOUSE_KOALA );
+	MouseDeviceChanged( INPUT_MOUSE_KOALA );
 
 } /* #OF# CMainFrame::OnInputMouseDeviceKoalaPad */
 
@@ -3457,7 +3457,7 @@ void
 CMainFrame::
 OnInputMouseDeviceLightPen()
 {
-	MouseDeviceChanged( MOUSE_PEN );
+	MouseDeviceChanged( INPUT_MOUSE_PEN );
 
 } /* #OF# CMainFrame::OnInputMouseDeviceLightPen */
 
@@ -3472,7 +3472,7 @@ void
 CMainFrame::
 OnInputMouseDeviceLightGun()
 {
-	MouseDeviceChanged( MOUSE_GUN );
+	MouseDeviceChanged( INPUT_MOUSE_GUN );
 
 } /* #OF# CMainFrame::OnInputMouseDeviceLightGun */
 
@@ -3487,7 +3487,7 @@ void
 CMainFrame::
 OnInputMouseDeviceAmigaMouse()
 {
-	MouseDeviceChanged( MOUSE_AMIGA );
+	MouseDeviceChanged( INPUT_MOUSE_AMIGA );
 
 } /* #OF# CMainFrame::OnInputMouseDeviceAmigaMouse */
 
@@ -3502,7 +3502,7 @@ void
 CMainFrame::
 OnInputMouseDeviceStMouse()
 {
-	MouseDeviceChanged( MOUSE_ST );
+	MouseDeviceChanged( INPUT_MOUSE_ST );
 
 } /* #OF# CMainFrame::OnInputMouseDeviceStMouse */
 
@@ -3517,7 +3517,7 @@ void
 CMainFrame::
 OnInputMouseDeviceTrakBall()
 {
-	MouseDeviceChanged( MOUSE_TRAK );
+	MouseDeviceChanged( INPUT_MOUSE_TRAK );
 
 } /* #OF# CMainFrame::OnInputMouseDeviceTrakBall */
 
@@ -3532,7 +3532,7 @@ void
 CMainFrame::
 OnInputMouseDeviceJoystick()
 {
-	MouseDeviceChanged( MOUSE_JOY );
+	MouseDeviceChanged( INPUT_MOUSE_JOY );
 
 } /* #OF# CMainFrame::OnInputMouseDeviceJoystick */
 
@@ -3773,7 +3773,7 @@ ConvertDcmToAtr()
 						DisplayMessage( NULL, IDS_DCM2ATR_MSG3, 0, MB_ICONEXCLAMATION | MB_OK, szFullDestName );
 						return;
 					}
-					if( !CompressedFile_DCMtoATR( fpInput, fpOutput ) )
+					if( !CompFile_DCMtoATR( fpInput, fpOutput ) )
 					{
 						int nResult;
 						nResult = DisplayMessage( NULL, IDS_DCM2ATR_MSG1, 0, MB_ICONQUESTION | MB_YESNO );
@@ -3902,7 +3902,7 @@ ConvertRomToCart()
 					  "rom", PF_LOAD_FLAGS ) &&
 		*szFileName != '\0' )
 	{
-		UBYTE *pImage = new UBYTE[ CART_MAX_SIZE + 1 ];
+		UBYTE *pImage = new UBYTE[ CARTRIDGE_MAX_SIZE + 1 ];
 
 		if( pImage )
 		{
@@ -3915,7 +3915,7 @@ ConvertRomToCart()
 				DisplayMessage( NULL, IDS_ERROR_R2C_READ, 0, MB_ICONEXCLAMATION | MB_OK );
 				return;
 			}
-			nBytes = fread( pImage, 1, CART_MAX_SIZE + 1, fFile );
+			nBytes = fread( pImage, 1, CARTRIDGE_MAX_SIZE + 1, fFile );
 			fclose( fFile );
 
 			if( (nBytes & 0x3ff) == 0 )
@@ -3923,7 +3923,7 @@ ConvertRomToCart()
 				int nCartType = SelectCartType( nBytes / 1024 );
 				if( nCartType != CARTRIDGE_NONE )
 				{
-					int nCheckSum = CART_Checksum( pImage, nBytes );
+					int nCheckSum = CARTRIDGE_Checksum( pImage, nBytes );
 					int i;
 
 					for( i = strlen( szFileName ) - 1; i > 0 && szFileName[ i ] != '.' && szFileName[ i ] != '\\'; i-- );
@@ -4702,11 +4702,11 @@ AutobootAtariImage(
 		if( bReboot || bReinit )
 		{
 			/* Detach currently used cartridge first */
-			CART_Remove();
+			CARTRIDGE_Remove();
 			strcpy( g_szCurrentRom, FILE_NONE );
 
 			WriteRegString( NULL, REG_ROM_CURRENT, g_szCurrentRom );
-			WriteRegDWORD ( NULL, REG_CART_TYPE, cart_type );
+			WriteRegDWORD ( NULL, REG_CART_TYPE, CARTRIDGE_type );
 		}
 		/*
 		   Is it an Atari executable?
@@ -4749,7 +4749,7 @@ AutobootAtariImage(
 			{
 				if( bReboot && (!ST_ATARI_FAILED || bReinit) ) /* Do coldstart */
 				{
-					hold_start = press_space = 1;
+					CASSETTE_hold_start = CASSETTE_press_space = 1;
 					OnAtariColdstart();
 				}
 			}
@@ -4784,7 +4784,7 @@ AutobootAtariImage(
 				WriteRegString( NULL, REG_ROM_OTHER, g_szOtherRom );
 			}
 			WriteRegString( NULL, REG_ROM_CURRENT, g_szCurrentRom );
-			WriteRegDWORD ( NULL, REG_CART_TYPE,   cart_type );
+			WriteRegDWORD ( NULL, REG_CART_TYPE,   CARTRIDGE_type );
 
 			if( _IsFlagSet( g_Misc.ulState, MS_REBOOT_WHEN_CART ) && bReboot &&
 				(!ST_ATARI_FAILED || bReinit) )
@@ -4987,11 +4987,11 @@ OnUpdateFileDetachDiskImageAll(
 )
 {
 	BOOL bEnable = FALSE;
-	for( int i = 0; i < MAX_DRIVES; i++ )
+	for( int i = 0; i < SIO_MAX_DRIVES; i++ )
 	{
-		if( *sio_filename[ i ] &&
-			 strcmp( sio_filename[ i ], "Off" )   != 0 &&
-			(strcmp( sio_filename[ i ], "Empty" ) != 0 || _IsFlagSet( g_Misc.ulState, MS_TURN_DRIVES_OFF ))
+		if( *SIO_filename[ i ] &&
+			 strcmp( SIO_filename[ i ], "Off" )   != 0 &&
+			(strcmp( SIO_filename[ i ], "Empty" ) != 0 || _IsFlagSet( g_Misc.ulState, MS_TURN_DRIVES_OFF ))
 #ifdef WIN_NETWORK_GAMES
 			 && (0 != i || !ST_KAILLERA_ACTIVE)
 #endif
@@ -5021,9 +5021,9 @@ OnUpdateFileDetachDiskImageDrive(
 	int nDriveNum = pCmdUI->m_nID - ID_FILE_DETACHDISKIMAGE_BASE;
 
 	pCmdUI->Enable(
-		_IsPathAvailable( sio_filename[ nDriveNum ] ) &&
-		strcmp( sio_filename[ nDriveNum ], "Off" )   != 0 &&
-		strcmp( sio_filename[ nDriveNum ], "Empty" ) != 0
+		_IsPathAvailable( SIO_filename[ nDriveNum ] ) &&
+		strcmp( SIO_filename[ nDriveNum ], "Off" )   != 0 &&
+		strcmp( SIO_filename[ nDriveNum ], "Empty" ) != 0
 #ifdef WIN_NETWORK_GAMES
 		&& (0 != nDriveNum || !ST_KAILLERA_ACTIVE)
 #endif
@@ -5044,8 +5044,8 @@ OnUpdateFileTurnDisk(
 )
 {
 	pCmdUI->Enable(
-		strcmp( sio_filename[ 0 ], "Off" )   != 0 &&
-		strcmp( sio_filename[ 0 ], "Empty" ) != 0
+		strcmp( SIO_filename[ 0 ], "Off" )   != 0 &&
+		strcmp( SIO_filename[ 0 ], "Empty" ) != 0
 #ifdef WIN_NETWORK_GAMES
 		&& !ST_KAILLERA_ACTIVE
 #endif
@@ -5121,7 +5121,7 @@ OnUpdateFileDetachCartridgeImage(
 	CCmdUI *pCmdUI /* #IN# The CCmdUI object that handles the update */
 )
 {
-	pCmdUI->Enable( CARTRIDGE_NONE != cart_type
+	pCmdUI->Enable( CARTRIDGE_NONE != CARTRIDGE_type
 #ifdef WIN_NETWORK_GAMES
 		&& !ST_KAILLERA_ACTIVE
 #endif
@@ -5165,7 +5165,7 @@ OnUpdateAtariMachineType(
 		pCmdUI->Enable( FALSE );
 	}
 #endif
-	pCmdUI->SetRadio( (pCmdUI->m_nID - ID_ATARI_MACHINETYPE_BASE) == DWORD(machine_type) );
+	pCmdUI->SetRadio( (pCmdUI->m_nID - ID_ATARI_MACHINETYPE_BASE) == DWORD(Atari800_machine_type) );
 
 } /* #OF# CMainFrame::OnUpdateAtariMachineType */
 
@@ -5208,12 +5208,12 @@ OnUpdateAtariMemorySize(
 	/* CAUTION:
 	   The code below works only if there are the following const
 	   values defined in atari.h:
-			#define MACHINE_OSA		0
-			#define MACHINE_OSB		1
-			#define MACHINE_XLXE	2
-			#define MACHINE_5200	3
+			#define Atari800_MACHINE_OSA		0
+			#define Atari800_MACHINE_OSB		1
+			#define Atari800_MACHINE_XLXE	2
+			#define Atari800_MACHINE_5200	3
 	*/
-	static int  anMemVal[] = { 16, 48, 52, 64, 128, RAM_320_COMPY_SHOP, RAM_320_RAMBO, 576, 1088 };
+	static int  anMemVal[] = { 16, 48, 52, 64, 128, MEMORY_RAM_320_COMPY_SHOP, MEMORY_RAM_320_RAMBO, 576, 1088 };
 	const  int  nMemValNo  = sizeof(anMemVal)/sizeof(anMemVal[0]);
 	static BOOL abMemFlg[ 4 ][ nMemValNo ] =
 	{
@@ -5231,9 +5231,9 @@ OnUpdateAtariMemorySize(
 	}
 	else
 #endif
-		pCmdUI->Enable( abMemFlg[ machine_type ][ nSelItem ] );
+		pCmdUI->Enable( abMemFlg[ Atari800_machine_type ][ nSelItem ] );
 
-	pCmdUI->SetRadio( anMemVal[ nSelItem ] == ram_size );
+	pCmdUI->SetRadio( anMemVal[ nSelItem ] == MEMORY_ram_size );
 
 } /* #OF# CMainFrame::OnUpdateAtariMemorySize */
 
@@ -5286,7 +5286,7 @@ OnUpdateAtariSioPatch(
 	CCmdUI *pCmdUI /* #IN# The CCmdUI object that handles the update */
 )
 {
-	pCmdUI->SetCheck( 0 != enable_sio_patch );
+	pCmdUI->SetCheck( 0 != ESC_enable_sio_patch );
 #ifdef WIN_NETWORK_GAMES
 	pCmdUI->Enable( !ST_KAILLERA_ACTIVE );
 #endif
@@ -5305,7 +5305,7 @@ OnUpdateAtariHPatch(
 	CCmdUI *pCmdUI /* #IN# The CCmdUI object that handles the update */
 )
 {
-	pCmdUI->SetCheck( 0 != enable_h_patch );
+	pCmdUI->SetCheck( 0 != Devices_enable_h_patch );
 #ifdef WIN_NETWORK_GAMES
 	pCmdUI->Enable( !ST_KAILLERA_ACTIVE );
 #endif
@@ -5324,7 +5324,7 @@ OnUpdateAtariPPatch(
 	CCmdUI *pCmdUI /* #IN# The CCmdUI object that handles the update */
 )
 {
-	pCmdUI->SetCheck( 0 != enable_p_patch );
+	pCmdUI->SetCheck( 0 != Devices_enable_p_patch );
 #ifdef WIN_NETWORK_GAMES
 	pCmdUI->Enable( !ST_KAILLERA_ACTIVE );
 #endif
@@ -5343,7 +5343,7 @@ OnUpdateAtariRPatch(
 	CCmdUI *pCmdUI /* #IN# The CCmdUI object that handles the update */
 )
 {
-	pCmdUI->SetCheck( 0 != enable_r_patch );
+	pCmdUI->SetCheck( 0 != Devices_enable_r_patch );
 	pCmdUI->Enable( RDevice_IsCapable() != -1
 #ifdef WIN_NETWORK_GAMES
 		&& !ST_KAILLERA_ACTIVE
@@ -5364,7 +5364,7 @@ OnUpdateAtariDisableBasic(
 	CCmdUI *pCmdUI /* #IN# The CCmdUI object that handles the update */
 )
 {
-	pCmdUI->SetCheck( disable_basic );
+	pCmdUI->SetCheck( Atari800_disable_basic );
 #ifdef WIN_NETWORK_GAMES
 	pCmdUI->Enable( !ST_KAILLERA_ACTIVE );
 #endif
@@ -5519,7 +5519,7 @@ OnUpdateViewArtifacting(
 	CCmdUI *pCmdUI /* #IN# The CCmdUI object that handles the update */
 )
 {
-	pCmdUI->SetRadio( (pCmdUI->m_nID - ID_VIEW_ARTIFACTING_BASE) == (DWORD)global_artif_mode );
+	pCmdUI->SetRadio( (pCmdUI->m_nID - ID_VIEW_ARTIFACTING_BASE) == (DWORD)ANTIC_artif_mode );
 
 } /* #OF# CMainFrame::OnUpdateViewArtifacting */
 
@@ -5576,7 +5576,7 @@ OnUpdateSoundStereo(
 	CCmdUI *pCmdUI /* #IN# The CCmdUI object that handles the update */
 )
 {
-	pCmdUI->SetCheck( 0 != stereo_enabled );
+	pCmdUI->SetCheck( 0 != POKEYSND_stereo_enabled );
 
 } /* #OF# CMainFrame::OnUpdateSoundStereo */
 
@@ -5646,7 +5646,7 @@ OnUpdateInputMouseDevice(
 	CCmdUI *pCmdUI /* #IN# The CCmdUI object that handles the update */
 )
 {
-	pCmdUI->SetRadio( (pCmdUI->m_nID - ID_INPUT_MOUSEDEVICE_BASE) == DWORD(mouse_mode) );
+	pCmdUI->SetRadio( (pCmdUI->m_nID - ID_INPUT_MOUSEDEVICE_BASE) == DWORD(INPUT_mouse_mode) );
 
 } /* #OF# CMainFrame::OnUpdateInputMouseDevice */
 
@@ -6039,12 +6039,12 @@ SetIndicatorDesc(
 				break;
 
 			case ID_INDICATOR_SIO:
-				strMode.LoadString( IDS_TRAYTIP_SIO_OFF + enable_sio_patch );
+				strMode.LoadString( IDS_TRAYTIP_SIO_OFF + ESC_enable_sio_patch );
 				strTip.Format( IDS_TRAYTIP_SIO, strMode );
 				break;
 
 			case ID_INDICATOR_MSE:
-				strMode.LoadString( IDS_TRAYTIP_MSE_NONE + mouse_mode );
+				strMode.LoadString( IDS_TRAYTIP_MSE_NONE + INPUT_mouse_mode );
 				strTip.Format( IDS_TRAYTIP_MSE, strMode );
 				break;
 
@@ -6375,8 +6375,8 @@ OnMessageKailleraStart(
 		s_Settings.bLocked = TRUE;
 
 		s_Settings.ulMiscState = g_Misc.ulState;
-		s_Settings.bHoldStart  = hold_start;
-		s_Settings.nCartType   = cart_type;
+		s_Settings.bHoldStart  = CASSETTE_hold_start;
+		s_Settings.nCartType   = CARTRIDGE_type;
 		*s_Settings.szSnapFile = '\0';
 		*s_Settings.szCartFile = '\0';
 		*s_Settings.szExecFile = '\0';
@@ -6388,17 +6388,17 @@ OnMessageKailleraStart(
 		{
 			case IAF_CAS_IMAGE:
 			{
-				if( _IsPathAvailable( sio_filename[ 0 ] ) &&
-				  /*_stricmp( sio_filename[ 0 ], "Empty" ) != 0 &&*/ /* We have to turn the drive off */
-					_stricmp( sio_filename[ 0 ], "Off" ) != 0 )
+				if( _IsPathAvailable( SIO_filename[ 0 ] ) &&
+				  /*_stricmp( SIO_filename[ 0 ], "Empty" ) != 0 &&*/ /* We have to turn the drive off */
+					_stricmp( SIO_filename[ 0 ], "Off" ) != 0 )
 				{
-					_strncpy( s_Settings.szDiskFile, sio_filename[ 0 ], MAX_PATH );
+					_strncpy( s_Settings.szDiskFile, SIO_filename[ 0 ], MAX_PATH );
 					/* Detach the disk image */
 					SIO_Dismount( 1 );
-					drive_status[ 0 ] = Off;
-					strcpy( sio_filename[ 0 ], "Off" );
+					SIO_drive_status[ 0 ] = SIO_OFF;
+					strcpy( SIO_filename[ 0 ], "Off" );
 				}
-				hold_start = 1; /* Autoboot the tape image */
+				CASSETTE_hold_start = 1; /* Autoboot the tape image */
 			}
 			case IAF_DSK_IMAGE:
 			{
@@ -6411,11 +6411,11 @@ OnMessageKailleraStart(
 			case IAF_BIN_IMAGE:
 			{
 				if( _IsPathAvailable( g_szCurrentRom ) &&
-					CARTRIDGE_NONE != cart_type )
+					CARTRIDGE_NONE != CARTRIDGE_type )
 				{
 					_strncpy( s_Settings.szCartFile, g_szCurrentRom, MAX_PATH );
 					/* Remove the cartridge */
-					CART_Remove();
+					CARTRIDGE_Remove();
 					strcpy( g_szCurrentRom, FILE_NONE );
 				}
 			}
@@ -6512,10 +6512,10 @@ OnMessageKailleraStop(
 		if( g_Misc.ulState != ulMiscState )
 			WriteRegDWORD( NULL, REG_MISC_STATE, g_Misc.ulState );
 
-		hold_start = s_Settings.bHoldStart ? 1 : 0;
+		CASSETTE_hold_start = s_Settings.bHoldStart ? 1 : 0;
 
 		if( bReboot ) /* Is rebooting necessary? */
-			Coldstart();
+			Atari800_Coldstart();
 
 		UpdateStatus();
 		UpdateIndicator( ID_INDICATOR_NET );
@@ -6619,27 +6619,27 @@ UpdateStatus(
 		else
 		{
 			/* What about the emulated system type? */
-			switch( machine_type )
+			switch( Atari800_machine_type )
 			{
-				case MACHINE_OSA:
-					strHelper.Format( "OS-A (%d KB)", ram_size );
+				case Atari800_MACHINE_OSA:
+					strHelper.Format( "OS-A (%d KB)", MEMORY_ram_size );
 					break;
 
-				case MACHINE_OSB:
-					strHelper.Format( "OS-B (%d KB)", ram_size );
+				case Atari800_MACHINE_OSB:
+					strHelper.Format( "OS-B (%d KB)", MEMORY_ram_size );
 					break;
 
-				case MACHINE_XLXE:
-					strHelper.Format( "XL/XE (%d KB", ram_size & ~1 );
-					if( RAM_320_COMPY_SHOP == ram_size )
+				case Atari800_MACHINE_XLXE:
+					strHelper.Format( "XL/XE (%d KB", MEMORY_ram_size & ~1 );
+					if( MEMORY_RAM_320_COMPY_SHOP == MEMORY_ram_size )
 						strHelper += " Compy";
 					else
-					if( RAM_320_RAMBO == ram_size )
+					if( MEMORY_RAM_320_RAMBO == MEMORY_ram_size )
 						strHelper += " Rambo";
 					strHelper += ")";
 					break;
 
-				case MACHINE_5200:
+				case Atari800_MACHINE_5200:
 					strHelper = "5200 (16 KB)";
 					break;
 

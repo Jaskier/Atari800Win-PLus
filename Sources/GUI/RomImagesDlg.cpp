@@ -121,15 +121,15 @@ SetDlgState()
 	{
 		RomType rtType = RTI_XLE;
 		/* Get the default system OS type */
-		switch( machine_type )
+		switch( Atari800_machine_type )
 		{
-			case MACHINE_OSA:
+			case Atari800_MACHINE_OSA:
 				rtType = RTI_OSA;
 				break;
-			case MACHINE_OSB:
+			case Atari800_MACHINE_OSB:
 				rtType = RTI_OSB;
 				break;
-			case MACHINE_5200:
+			case Atari800_MACHINE_5200:
 				rtType = RTI_A52;
 				break;
 			default:
@@ -230,7 +230,7 @@ OnInitDialog()
 	/* Backup cart path */
 	_strncpy( m_szCartName, g_szOtherRom, MAX_PATH );
 	/* Remember the cartridge state */
-	m_nCartState = (CARTRIDGE_NONE == cart_type ? CS_DETACHED : CS_ATTACHED);
+	m_nCartState = (CARTRIDGE_NONE == CARTRIDGE_type ? CS_DETACHED : CS_ATTACHED);
 
 	SetDlgState();
 
@@ -575,8 +575,8 @@ OnOK()
 		if( _stricmp( m_pRomData[ i ].pszName, m_pRomData[ i ].szNewName ) != 0 )
 		{
 			/* If the ROM was changed for an active system */
-			if( i == machine_type ||
-			    i == RTI_BAS && machine_type != MACHINE_5200 )
+			if( i == Atari800_machine_type ||
+			    i == RTI_BAS && Atari800_machine_type != Atari800_MACHINE_5200 )
 			{
 				int nCFOut;
 				if( CheckFile( m_pRomData[ i ].pszName, &nCFOut ) !=
@@ -621,12 +621,12 @@ OnOK()
 		{
 			ASSERT(CS_DETACHED == nNewCartState);
 
-			CART_Remove();
+			CARTRIDGE_Remove();
 			strcpy( g_szCurrentRom, FILE_NONE );
 		}
 		/* Update the registry with new cartridge's state */
 		WriteRegString( NULL, REG_ROM_CURRENT, g_szCurrentRom );
-		WriteRegDWORD ( NULL, REG_CART_TYPE,   cart_type );
+		WriteRegDWORD ( NULL, REG_CART_TYPE,   CARTRIDGE_type );
 
 		if( RBT_RESTART != m_eReboot )
 			m_eReboot = RBT_COLDSTART;

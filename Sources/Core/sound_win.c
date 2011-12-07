@@ -270,7 +270,7 @@ DetermineHardwareCaps(
 			else if( !_IsFlagSet( dscaps.dwFlags, DSCAPS_PRIMARY8BIT ) )
 				strcat( szFailed, _LoadStringMx( IDS_DSERR_NO_8BIT, szError ) );
 
-			if( stereo_enabled )
+			if( POKEYSND_stereo_enabled )
 			{
 				if( !_IsFlagSet( dscaps.dwFlags, DSCAPS_PRIMARYSTEREO ) )
 					strcat( szFailed, _LoadStringMx( IDS_DSERR_NO_STEREO, szError ) );
@@ -317,7 +317,7 @@ Sound_Initialise(
 	int   nUpdatesPerFrag = 0;
 	int   n16BitSnd       = _IsFlagSet( g_Sound.ulState, SS_16BIT_AUDIO ) ? 1 : 0;
 	int   nSkipUpdate     = g_Sound.nSkipUpdate;
-	int   nChannels       = stereo_enabled ? 2 : 1;
+	int   nChannels       = POKEYSND_stereo_enabled ? 2 : 1;
 	int   i; /* Loop counter */
 
 	_ASSERT(_IsFlagSet( g_Sound.ulState, SS_MM_SOUND | SS_DS_SOUND ));
@@ -345,7 +345,7 @@ Sound_Initialise(
 	else
 	{
 		dwFragSize = (g_Sound.nRate / g_Timer.nNtscFreq) * nFramesPerFrag * nChannels * (n16BitSnd + 1);
-		nUpdatesPerFrag = TV_NTSC * nFramesPerFrag / nSkipUpdate;
+		nUpdatesPerFrag = Atari800_TV_NTSC * nFramesPerFrag / nSkipUpdate;
 	}
 	/* If size of the sound buffer has not been changed, there is no need to realloc it */
 	Sound_Clear( TRUE, !(nNumberOfFrags * dwFragSize == dwBufferSize) );
@@ -399,7 +399,7 @@ Sound_Initialise(
 	Pokey_sound_init( FREQ_17_EXACT,
 					  (uint16)g_Sound.nRate,
 					  (uint8)nChannels,
-					  (n16BitSnd ? SND_BIT16 : 0) | (stereo_enabled ? SND_STEREO : 0),
+					  (n16BitSnd ? SND_BIT16 : 0) | (POKEYSND_stereo_enabled ? SND_STEREO : 0),
 					  bClearRegs );
 
 	/* Set this up for PCM, 1/2 channels, 8/16 bits unsigned samples */
@@ -667,7 +667,7 @@ pokey_update( void )
 			dwFragPos = s_dwFragPos + (dwSampleSize << s_n16BitSnd);
 
 			/* Write the part of audio data to the buffer */
-			Pokey_process( s_pSaveCursor + s_dwFragPos, dwSampleSize );
+			POKEYSND_Process_ptr( s_pSaveCursor + s_dwFragPos, dwSampleSize );
 
 			s_dwFragPos = dwFragPos;
 		}
@@ -691,7 +691,7 @@ SndPlay_NoSound( void )
 		_ASSERT(s_dwFragPos <= s_dwFragSize);
 
 		if( s_dwFragPos < s_dwFragSize )
-			Pokey_process( s_pSaveCursor + s_dwFragPos, (s_dwFragSize - s_dwFragPos) >> s_n16BitSnd );
+			POKEYSND_Process_ptr( s_pSaveCursor + s_dwFragPos, (s_dwFragSize - s_dwFragPos) >> s_n16BitSnd );
 
 		if( g_Sound.pfOutput )
 			fwrite( s_pSaveCursor, s_dwFragSize, 1, g_Sound.pfOutput );
@@ -730,7 +730,7 @@ SndPlay_MMSound( void )
 
 		if( s_dwFragPos < s_dwFragSize )
 			/* Write the audio data to the buffer if it is not full */
-			Pokey_process( s_pSaveCursor + s_dwFragPos, (s_dwFragSize - s_dwFragPos) >> s_n16BitSnd );
+			POKEYSND_Process_ptr( s_pSaveCursor + s_dwFragPos, (s_dwFragSize - s_dwFragPos) >> s_n16BitSnd );
 
 		if( g_Sound.pfOutput )
 			fwrite( s_pSaveCursor, s_dwFragSize, 1, g_Sound.pfOutput );
@@ -775,7 +775,7 @@ SndPlay_DSSound( void )
 		_ASSERT(s_dwFragPos <= s_dwFragSize);
 
 		if( s_dwFragPos < s_dwFragSize )
-			Pokey_process( s_pSaveCursor + s_dwFragPos, (s_dwFragSize - s_dwFragPos) >> s_n16BitSnd );
+			POKEYSND_Process_ptr( s_pSaveCursor + s_dwFragPos, (s_dwFragSize - s_dwFragPos) >> s_n16BitSnd );
 
 		if( g_Sound.pfOutput )
 			fwrite( s_pSaveCursor, s_dwFragSize, 1, g_Sound.pfOutput );
@@ -1214,7 +1214,7 @@ Sound_OpenOutput( char *pszOutFileName )
 		/* Close Sound Output file */
 		Sound_CloseOutput();
 
-	_ASSERT(0 == stereo_enabled || 1 == stereo_enabled);
+	_ASSERT(0 == POKEYSND_stereo_enabled || 1 == POKEYSND_stereo_enabled);
 
 	if( (g_Sound.pfOutput = fopen( pszOutFileName, "wb" )) )
 	{
@@ -1222,7 +1222,7 @@ Sound_OpenOutput( char *pszOutFileName )
 		WORD wBitsPerSample = s_n16BitSnd ? 16 : 8;
 
 //		wf.wFormatTag      = WAVE_FORMAT_PCM;
-		wf.nChannels       = stereo_enabled + 1;
+		wf.nChannels       = POKEYSND_stereo_enabled + 1;
 		wf.nSamplesPerSec  = g_Sound.nRate;
 		wf.nBlockAlign     = wf.nChannels * wBitsPerSample / 8;
 		wf.nAvgBytesPerSec = wf.nSamplesPerSec * wf.nBlockAlign;

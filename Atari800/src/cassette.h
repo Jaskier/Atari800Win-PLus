@@ -7,6 +7,8 @@
 
 #define CASSETTE_DESCRIPTION_MAX 256
 
+extern int cassette_current_block;
+extern int cassette_max_block;
 extern char cassette_filename[FILENAME_MAX];
 int CASSETTE_Initialise(int *argc, char *argv[]);
 
@@ -16,7 +18,7 @@ int CASSETTE_Insert(const char *filename);
 void CASSETTE_Remove(void);
 
 extern int CASSETTE_hold_start;
-extern int CASSETTE_hold_start_on_reboot; /* preserve hold_start after reboot */
+extern int CASSETTE_hold_start_on_reboot; /* preserve CASSETTE_hold_start after reboot */
 extern int CASSETTE_press_space;
 
 int CASSETTE_AddGap(int gaptime);

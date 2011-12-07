@@ -94,7 +94,7 @@ void Atari800_Coldstart(void);
 /* Presses the Reset key in the emulated Atari. */
 void Atari800_Warmstart(void);
 
-/* Reinitializes after Atari800_machine_type or ram_size change.
+/* Reinitializes after Atari800_machine_type or MEMORY_ram_size change.
    You should call Atari800_Coldstart() after it. */
 int Atari800_InitialiseMachine(void);
 

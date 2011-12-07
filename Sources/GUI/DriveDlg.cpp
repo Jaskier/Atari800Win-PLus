@@ -36,16 +36,16 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // Static objects
 
-static CDriveDlg::DiskData_t s_aDiskData[ MAX_DRIVES ] =
+static CDriveDlg::DiskData_t s_aDiskData[ SIO_MAX_DRIVES ] =
 {
-	{ sio_filename[ 0 ], "Off", 0, 0, 0, Off },
-	{ sio_filename[ 1 ], "Off", 0, 0, 0, Off },
-	{ sio_filename[ 2 ], "Off", 0, 0, 0, Off },
-	{ sio_filename[ 3 ], "Off", 0, 0, 0, Off },
-	{ sio_filename[ 4 ], "Off", 0, 0, 0, Off },
-	{ sio_filename[ 5 ], "Off", 0, 0, 0, Off },
-	{ sio_filename[ 6 ], "Off", 0, 0, 0, Off },
-	{ sio_filename[ 7 ], "Off", 0, 0, 0, Off }
+	{ SIO_filename[ 0 ], "Off", 0, 0, 0, Off },
+	{ SIO_filename[ 1 ], "Off", 0, 0, 0, Off },
+	{ SIO_filename[ 2 ], "Off", 0, 0, 0, Off },
+	{ SIO_filename[ 3 ], "Off", 0, 0, 0, Off },
+	{ SIO_filename[ 4 ], "Off", 0, 0, 0, Off },
+	{ SIO_filename[ 5 ], "Off", 0, 0, 0, Off },
+	{ SIO_filename[ 6 ], "Off", 0, 0, 0, Off },
+	{ SIO_filename[ 7 ], "Off", 0, 0, 0, Off }
 };
 
 
@@ -122,7 +122,7 @@ CheckSelectedDisk(
 	UINT  *pInfo /*= NULL*/
 )
 {
-	SIO_UnitStatus usResult = ReadOnly;
+	SIO_UnitStatus usResult = SIO_READ_ONLY;
 	UINT unInfo = CSD_READERROR;
 
 	if( strcmp( pszDiskName, "Off" ) == 0 )
@@ -243,7 +243,7 @@ SetDlgState()
 	{
 		nDrive = _GetSelCbox( IDC_DRIVE_NUMBER );
 	}
-	for( int i = 0; i < MAX_DRIVES; i++ )
+	for( int i = 0; i < SIO_MAX_DRIVES; i++ )
 	{
 		if( !m_bSmallMode || (m_bSmallMode && i == nDrive ) )
 		{
@@ -267,7 +267,7 @@ SetDlgState()
 					pEdit->SetReadOnly( FALSE );
 					break;
 
-				case ReadOnly:
+				case SIO_READ_ONLY:
 					pCombo->SetCurSel( 2 );
 					pEdit->SetReadOnly( FALSE );
 					break;
@@ -319,7 +319,7 @@ OnInitDialog()
 {
 	CCommonDlg::OnInitDialog();
 
-	const UINT anCtrlsLarge[ MAX_DRIVES ][ 3 ] =
+	const UINT anCtrlsLarge[ SIO_MAX_DRIVES ][ 3 ] =
 	{
 		{ IDC_DRIVE_BUTTON1, IDC_DRIVE_EDIT1, IDC_DRIVE_COMBO1 },
 		{ IDC_DRIVE_BUTTON2, IDC_DRIVE_EDIT2, IDC_DRIVE_COMBO2 },
@@ -333,7 +333,7 @@ OnInitDialog()
 
 	m_bSmallMode = g_Screen.ulState & SM_ATTR_SMALL_DLG;
 
-	for( int i = 0; i < MAX_DRIVES; i++ )
+	for( int i = 0; i < SIO_MAX_DRIVES; i++ )
 	{
 		/* Set the appropriate controls IDs */
 		m_pDiskData[ i ].nButtonID = (m_bSmallMode ? IDC_DRIVE_BUTTON : anCtrlsLarge[ i ][ 0 ]);
@@ -341,7 +341,7 @@ OnInitDialog()
 		m_pDiskData[ i ].nComboID  = (m_bSmallMode ? IDC_DRIVE_COMBO  : anCtrlsLarge[ i ][ 2 ]);
 		/* Backup drives paths */
 		_strncpy( m_pDiskData[ i ].szNewName, m_pDiskData[ i ].pszName, MAX_PATH );
-		m_pDiskData[ i ].usStatus = drive_status[ i ];
+		m_pDiskData[ i ].usStatus = SIO_drive_status[ i ];
 	}
 	if( m_bSmallMode )
 	{
@@ -378,7 +378,7 @@ DriveButton(
 	}
 	else
 	{
-		for( int i = 0; i < MAX_DRIVES; i++ )
+		for( int i = 0; i < SIO_MAX_DRIVES; i++ )
 		{
 			if( nButtonID == m_pDiskData[ i ].nButtonID ) 
 			{
@@ -424,7 +424,7 @@ StatusSelChange(
 	}
 	else
 	{
-		for( int i = 0; i < MAX_DRIVES; i++ )
+		for( int i = 0; i < SIO_MAX_DRIVES; i++ )
 		{
 			if( nComboID == m_pDiskData[ i ].nComboID )
 			{
@@ -447,7 +447,7 @@ StatusSelChange(
 		}
 		case 1: /* Combo box indicates "Read/Write" */
 		{
-			if( usRealMode == ReadOnly )
+			if( usRealMode == SIO_READ_ONLY )
 			{
 				switch( unDiskInf )
 				{
@@ -498,7 +498,7 @@ StatusSelChange(
 						_close( fd );
 					}
 				}
-				usRealMode = ReadOnly;
+				usRealMode = SIO_READ_ONLY;
 			}
 			else
 				DisplayMessage( GetSafeHwnd(), IDS_DRIVE_MSG5, 0, MB_ICONINFORMATION | MB_OK );
@@ -544,7 +544,7 @@ KillfocusEditDrive(
 	}
 	else
 	{
-		for( int i = 0; i < MAX_DRIVES; i++ )
+		for( int i = 0; i < SIO_MAX_DRIVES; i++ )
 		{
 			if( nEditID == m_pDiskData[ i ].nEditID )
 			{
@@ -621,7 +621,7 @@ void
 CDriveDlg::
 OnClearAll()
 {
-	for( int i = 0; i < MAX_DRIVES; i++ )
+	for( int i = 0; i < SIO_MAX_DRIVES; i++ )
 	{
 		m_pDiskData[ i ].usStatus = Off;
 		strcpy( m_pDiskData[ i ].szNewName, "Off" );
@@ -685,7 +685,7 @@ ReceiveFocused()
 	CWnd *pWnd    = GetFocus();
 	UINT  nCtrlID = pWnd ? pWnd->GetDlgCtrlID() : 0;
 
-	for( int i = 0; i < MAX_DRIVES; i++ )
+	for( int i = 0; i < SIO_MAX_DRIVES; i++ )
 	{
 		/* Receive the edit contents again. A user could use 'Enter' or 'Alt-O'
 		   and then all changes made in the last edited control would be lost */
@@ -715,7 +715,7 @@ OnOK()
 	   handling this when the user uses accelerators */
 	ReceiveFocused();
 
-	for( int i = 0; i < MAX_DRIVES; i++ )
+	for( int i = 0; i < SIO_MAX_DRIVES; i++ )
 	{
 		if( m_pDiskData[ i ].usStatus == Off )
 		{
@@ -739,7 +739,7 @@ OnOK()
 			if( strcmp( szFileName, "Empty" ) != 0 &&
 				strcmp( szFileName, "Off" ) != 0 )
 			{
-				if( !SIO_Mount( i + 1, szFileName, m_pDiskData[ i ].usStatus == ReadOnly ) )
+				if( !SIO_Mount( i + 1, szFileName, m_pDiskData[ i ].usStatus == SIO_READ_ONLY ) )
 				{
 					/* There was an error with SIO mounting */
 					strcpy( m_pDiskData[ i ].pszName, "Empty" );
@@ -748,9 +748,9 @@ OnOK()
 			}
 			bChanged = TRUE;
 		}
-		if( m_pDiskData[ i ].usStatus != drive_status[ i ] )
+		if( m_pDiskData[ i ].usStatus != SIO_drive_status[ i ] )
 		{
-			drive_status[ i ] = m_pDiskData[ i ].usStatus;
+			SIO_drive_status[ i ] = m_pDiskData[ i ].usStatus;
 			bChanged = TRUE;
 		}
 	}

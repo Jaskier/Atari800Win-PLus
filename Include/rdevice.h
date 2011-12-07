@@ -43,7 +43,7 @@ enum {
 /* Exported methods */
 
 void RDevice_Frame        ( void );		/* Call before Atari800_Frame() */
-void RDevice_UpdatePatches( void );		/* Call before or after Atari800_UpdatePatches */
+void RDevice_UpdatePatches( void );		/* Call before or after ESC_UpdatePatches */
 void RDevice_Exit         ( void );		/* Call in Atari_Exit() */
 int  RDevice_LoadLibrary  ( PHANDLE pHandle );
 void RDevice_FreeLibrary  ( void );

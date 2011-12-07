@@ -29,7 +29,7 @@ extern int INPUT_key_consol;	/* Start, Select and Option keys */
 #define	INPUT_STICK_FORWARD	0x0e
 #define	INPUT_STICK_UR		0x06
 
-/* joy_autofire values */
+/* INPUT_joy_autofire values */
 #define INPUT_AUTOFIRE_OFF	0
 #define INPUT_AUTOFIRE_FIRE	1	/* Fire dependent */
 #define INPUT_AUTOFIRE_CONT	2	/* Continuous */

@@ -865,9 +865,9 @@ Input_Initialise(
 	for( i = 0; i < MAX_ATARI_JOYPORTS; i++ )
 	{
 		if( _IsFlagSet( g_Input.Joy.ulAutoSticks, 1 << i ) )
-			joy_autofire[ i ] = g_Input.Joy.nAutoMode;
+			INPUT_joy_autofire[ i ] = g_Input.Joy.nAutoMode;
 		else
-			joy_autofire[ i ] = AUTOFIRE_OFF;
+			INPUT_joy_autofire[ i ] = INPUT_AUTOFIRE_OFF;
 	}
 	nframes = 0;
 
@@ -1013,7 +1013,7 @@ Input_ReadJoystick(
 		ServeDInputError( IDS_DIERR_ACQUIRE, DIERR_NOTACQUIRED, FALSE );
 	}
 
-	if( MACHINE_5200 == machine_type )
+	if( Atari800_MACHINE_5200 == Atari800_machine_type )
 	{
 		for( i = 0; i < MAX_ATARI_JOYPORTS; i++ )
 			s_anTrig[ i ] = _IsFlagSet( js.rgbButtons[ i ], 0x80 ) ? 0 : 1;
@@ -1150,7 +1150,7 @@ Atari_Keyboard( void )
 	}
 	if( AKEY_NONE != g_Input.Key.nNewKey )
 	{
-		if( MACHINE_5200 == machine_type )
+		if( Atari800_MACHINE_5200 == Atari800_machine_type )
 		{
 			switch( g_Input.Key.nNewKey )
 			{
@@ -1327,7 +1327,7 @@ Input_UpdateMouse( void )
 		}
 		/* The mouse emulation is now fully supported by the Atari800 kernel */
 		if( _IsFlagSet( g_Input.ulState, IS_CAPTURE_MOUSE ) &&
-			MOUSE_OFF != mouse_mode )
+			INPUT_MOUSE_OFF != INPUT_mouse_mode )
 		{
 			POINT pt;
 			GetCursorPos( &pt ); /* Read the pointer position */
@@ -1384,7 +1384,7 @@ Input_ResetMouse(
 
 		SetCursorPos( s_nCurrentMouseX, s_nCurrentMouseY );
 
-		if( MOUSE_PAD != mouse_mode )
+		if( INPUT_MOUSE_PAD != INPUT_mouse_mode )
 		{
 			INPUT_CenterMousePointer();
 		}
@@ -1424,7 +1424,7 @@ Input_ToggleMouseCapture( void )
 		g_Screen.nShowCursor = 1;
 	}
 	WriteRegDWORD( NULL, REG_INPUT_STATE, g_Input.ulState );
-	WriteRegDWORD( NULL, REG_MOUSE_MODE, mouse_mode );
+	WriteRegDWORD( NULL, REG_MOUSE_MODE, INPUT_mouse_mode );
 
 } /* #OF# Input_ToggleMouseCapture */
 
@@ -2074,7 +2074,7 @@ Input_RefreshBounds(
 		ClipCursor( NULL );
 		ClipCursor( &s_rcViewBounds );
 		/* Initialise the mouse emulation settings */
-		Input_ResetMouse( TRUE );//MOUSE_JOY == g_Input.nMouseMode && MACHINE_5200 == machine_type );
+		Input_ResetMouse( TRUE );//INPUT_MOUSE_JOY == g_Input.nMouseMode && Atari800_MACHINE_5200 == Atari800_machine_type );
 	}
 } /* #OF# Input_RefreshBounds */
 

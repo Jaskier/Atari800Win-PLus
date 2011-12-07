@@ -463,14 +463,14 @@ WriteRegDrives(
 	_RegWriteString( hkKey, REG_HD4, atari_h_dir[3] );
 	_RegWriteString( hkKey, REG_HDE_PATH, g_szHardExePath );
 
-	_RegWriteString( hkKey, REG_DRIVE1, sio_filename[ 0 ] );
-	_RegWriteString( hkKey, REG_DRIVE2, sio_filename[ 1 ] );
-	_RegWriteString( hkKey, REG_DRIVE3, sio_filename[ 2 ] );
-	_RegWriteString( hkKey, REG_DRIVE4, sio_filename[ 3 ] );
-	_RegWriteString( hkKey, REG_DRIVE5, sio_filename[ 4 ] );
-	_RegWriteString( hkKey, REG_DRIVE6, sio_filename[ 5 ] );
-	_RegWriteString( hkKey, REG_DRIVE7, sio_filename[ 6 ] );
-	_RegWriteString( hkKey, REG_DRIVE8, sio_filename[ 7 ] );
+	_RegWriteString( hkKey, REG_DRIVE1, SIO_filename[ 0 ] );
+	_RegWriteString( hkKey, REG_DRIVE2, SIO_filename[ 1 ] );
+	_RegWriteString( hkKey, REG_DRIVE3, SIO_filename[ 2 ] );
+	_RegWriteString( hkKey, REG_DRIVE4, SIO_filename[ 3 ] );
+	_RegWriteString( hkKey, REG_DRIVE5, SIO_filename[ 4 ] );
+	_RegWriteString( hkKey, REG_DRIVE6, SIO_filename[ 5 ] );
+	_RegWriteString( hkKey, REG_DRIVE7, SIO_filename[ 6 ] );
+	_RegWriteString( hkKey, REG_DRIVE8, SIO_filename[ 7 ] );
 
 	_RegWriteString( hkKey, REG_EXE_PATH, atari_exe_dir );
 	_RegWriteString( hkKey, REG_FILE_STATE, atari_state_dir );
@@ -499,27 +499,27 @@ WriteAtari800Registry(
 		DisplayMessage( NULL, IDS_REG_OPEN_ERROR, 0, MB_ICONSTOP | MB_OK );
 		return;
 	}
-	_RegWriteNumber( hkKey, REG_REFRESH_RATE,        Atari800_refresh_rate                  );
-	_RegWriteNumber( hkKey, REG_MACHINE_TYPE,        machine_type                  );
-	_RegWriteNumber( hkKey, REG_TV_MODE,             Atari800_tv_mode                       );
-	_RegWriteNumber( hkKey, REG_HD_READ_ONLY,        h_read_only                  );
-	_RegWriteNumber( hkKey, REG_DISABLE_BASIC,       disable_basic                 );
-	_RegWriteNumber( hkKey, REG_ENABLE_SIO_PATCH,    enable_sio_patch              );
-	_RegWriteNumber( hkKey, REG_ENABLE_H_PATCH,      enable_h_patch                );
-	_RegWriteNumber( hkKey, REG_ENABLE_P_PATCH,      enable_p_patch                );
-	_RegWriteNumber( hkKey, REG_ENABLE_R_PATCH,      enable_r_patch                );
+	_RegWriteNumber( hkKey, REG_REFRESH_RATE,        Atari800_refresh_rate         );
+	_RegWriteNumber( hkKey, REG_MACHINE_TYPE,        Atari800_machine_type         );
+	_RegWriteNumber( hkKey, REG_TV_MODE,             Atari800_tv_mode              );
+	_RegWriteNumber( hkKey, REG_HD_READ_ONLY,        h_read_only                   );
+	_RegWriteNumber( hkKey, REG_DISABLE_BASIC,       Atari800_disable_basic        );
+	_RegWriteNumber( hkKey, REG_ENABLE_SIO_PATCH,    ESC_enable_sio_patch          );
+	_RegWriteNumber( hkKey, REG_ENABLE_H_PATCH,      Devices_enable_h_patch        );
+	_RegWriteNumber( hkKey, REG_ENABLE_P_PATCH,      Devices_enable_p_patch        );
+	_RegWriteNumber( hkKey, REG_ENABLE_R_PATCH,      Devices_enable_r_patch        );
 	_RegWriteNumber( hkKey, REG_ENABLE_RTIME,        rtime_enabled                 );
-	_RegWriteNumber( hkKey, REG_ENABLE_STEREO,       stereo_enabled                );
-	_RegWriteNumber( hkKey, REG_ARTIF_MODE,          global_artif_mode             );
-	_RegWriteNumber( hkKey, REG_CART_TYPE,           cart_type                     );
+	_RegWriteNumber( hkKey, REG_ENABLE_STEREO,       POKEYSND_stereo_enabled       );
+	_RegWriteNumber( hkKey, REG_ARTIF_MODE,          ANTIC_artif_mode              );
+	_RegWriteNumber( hkKey, REG_CART_TYPE,           CARTRIDGE_type                );
 	_RegWriteString( hkKey, REG_ROM_OSA,             CFG_osa_filename              );
 	_RegWriteString( hkKey, REG_ROM_OSB,             CFG_osb_filename              );
 	_RegWriteString( hkKey, REG_ROM_XLXE,            CFG_xlxe_filename             );
 	_RegWriteString( hkKey, REG_ROM_5200,            CFG_5200_filename             );
-	_RegWriteString( hkKey, REG_ROM_BASIC,           CFG_basic_filename          );
+	_RegWriteString( hkKey, REG_ROM_BASIC,           CFG_basic_filename            );
 	_RegWriteString( hkKey, REG_FILE_TAPE,           cassette_filename             );
 	_RegWriteString( hkKey, REG_PRINT_COMMAND,       print_command                 );
-	_RegWriteNumber( hkKey, REG_MOUSE_MODE,          mouse_mode                    );
+	_RegWriteNumber( hkKey, REG_MOUSE_MODE,          INPUT_mouse_mode              );
 	_RegWriteNumber( hkKey, REG_MOUSE_PORT,          mouse_port                    );
 	_RegWriteNumber( hkKey, REG_MOUSE_SPEED,         mouse_speed                   );
 	_RegWriteNumber( hkKey, REG_POT_MIN,             mouse_pot_min                 );
@@ -567,9 +567,9 @@ WriteAtari800Registry(
 	_RegWriteNumber( hkKey, REG_REFRESH_DOUBLEWND,   g_Misc.Refresh.nDoubleWnd     );
 	_RegWriteNumber( hkKey, REG_REFRESH_FULLSPEED,   g_Misc.Refresh.nFullSpeed     );
 	_RegWriteNumber( hkKey, REG_SPEED_PERCENT,       g_Misc.nSpeedPercent          );
-	_RegWriteNumber( hkKey, REG_RAMSIZE_OSA,         g_anRamSize[ MACHINE_OSA  ]   );
-	_RegWriteNumber( hkKey, REG_RAMSIZE_OSB,         g_anRamSize[ MACHINE_OSB  ]   );
-	_RegWriteNumber( hkKey, REG_RAMSIZE_XLXE,        g_anRamSize[ MACHINE_XLXE ]   );
+	_RegWriteNumber( hkKey, REG_RAMSIZE_OSA,         g_anRamSize[ Atari800_MACHINE_OSA  ]   );
+	_RegWriteNumber( hkKey, REG_RAMSIZE_OSB,         g_anRamSize[ Atari800_MACHINE_OSB  ]   );
+	_RegWriteNumber( hkKey, REG_RAMSIZE_XLXE,        g_anRamSize[ Atari800_MACHINE_XLXE ]   );
 	_RegWriteNumber( hkKey, REG_CURRENT_REV,         s_nVersion                    );
 #ifdef WIN_NETWORK_GAMES
 	_RegWriteNumber( hkKey, REG_KAILLERA_STATE,      g_Kaillera.ulState            );
@@ -616,22 +616,22 @@ InitialiseRegistry(
 			}
 		}
 	}
-	global_artif_mode             = 0;
-	machine_type                  = MACHINE_XLXE;
-	Atari800_tv_mode                       = Atari800_TV_PAL;
+	ANTIC_artif_mode              = 0;
+	Atari800_machine_type         = Atari800_MACHINE_XLXE;
+	Atari800_tv_mode              = Atari800_TV_PAL;
 	Atari800_refresh_rate         = 1;
 	h_read_only                   = 1;
-	disable_basic                 = 1;
+	Atari800_disable_basic        = 1;
 	rtime_enabled                 = 1;
-	enable_sio_patch              = 1;
-	enable_h_patch                = 0;
-	enable_p_patch                = 0;
-	enable_r_patch                = 0;
-	stereo_enabled                = 0;
-	cart_type                     = CARTRIDGE_NONE;
+	ESC_enable_sio_patch          = 1;
+	Devices_enable_h_patch        = 0;
+	Devices_enable_p_patch        = 0;
+	Devices_enable_r_patch        = 0;
+	POKEYSND_stereo_enabled       = 0;
+	CARTRIDGE_type                = CARTRIDGE_NONE;
 	joy_block_opposite_directions = 1;
 	joy_multijoy                  = 0;
-	mouse_mode                    = DEF_MOUSE_MODE;
+	INPUT_mouse_mode              = DEF_MOUSE_MODE;
 	mouse_port                    = DEF_MOUSE_PORT;
 	mouse_speed                   = DEF_MOUSE_SPEED;
 	mouse_pot_min                 = DEF_POT_MIN;
@@ -639,9 +639,9 @@ InitialiseRegistry(
 	mouse_joy_inertia             = DEF_JOY_INERTIA;
 	mouse_pen_ofs_h               = DEF_PEN_OFFSET_X;
 	mouse_pen_ofs_v               = DEF_PEN_OFFSET_Y;
-	g_anRamSize[ MACHINE_OSA  ]   = DEF_RAMSIZE_OSA;
-	g_anRamSize[ MACHINE_OSB  ]   = DEF_RAMSIZE_OSB;
-	g_anRamSize[ MACHINE_XLXE ]   = DEF_RAMSIZE_XLXE;
+	g_anRamSize[ Atari800_MACHINE_OSA  ]   = DEF_RAMSIZE_OSA;
+	g_anRamSize[ Atari800_MACHINE_OSB  ]   = DEF_RAMSIZE_OSB;
+	g_anRamSize[ Atari800_MACHINE_XLXE ]   = DEF_RAMSIZE_XLXE;
 	g_Misc.ulState                = DEF_MISC_STATE;
 	g_Misc.ulDontShow             = DEF_DONT_SHOW_FLAGS;
 	g_Misc.Cheat.ulCollisions     = DEF_CHEAT_COLLISIONS;
@@ -726,10 +726,10 @@ InitialiseRegistry(
 
 	strcpy( print_command, DEF_PRINT_COMMAND );
 
-	for( i = 0; i < MAX_DRIVES; i++ )
+	for( i = 0; i < SIO_MAX_DRIVES; i++ )
 	{
-		strcpy( sio_filename[ i ], "Off" ) ;
-		drive_status[ i ] = Off;
+		strcpy( SIO_filename[ i ], "Off" ) ;
+		SIO_drive_status[ i ] = Off;
 	}
 
 	WriteAtari800Registry();
@@ -764,19 +764,19 @@ ReadRegPaths(
 	bFail |= _RegReadString( hkKey, REG_ROM_OSB,       CFG_osb_filename,   DEFAULT_OSB,    MAX_PATH );
 	bFail |= _RegReadString( hkKey, REG_ROM_XLXE,      CFG_xlxe_filename,  DEFAULT_OXL,    MAX_PATH );
 	bFail |= _RegReadString( hkKey, REG_ROM_5200,      CFG_5200_filename,  DEFAULT_O52,    MAX_PATH );
-	bFail |= _RegReadString( hkKey, REG_FILE_TAPE,     cassette_filename,    DEFAULT_TAP,    FILENAME_MAX - 1 );
-	bFail |= _RegReadString( hkKey, REG_FILE_STATE,    atari_state_dir,      DEFAULT_A8S,    MAX_PATH );
-	bFail |= _RegReadString( hkKey, REG_EXE_PATH,      atari_exe_dir,        PATH_NONE,      MAX_PATH );
-	bFail |= _RegReadString( hkKey, REG_HD1,           atari_h_dir[0],         DEFAULT_HDD,    MAX_PATH );
-	bFail |= _RegReadString( hkKey, REG_HD2,           atari_h_dir[1],         DEFAULT_HDD,    MAX_PATH );
-	bFail |= _RegReadString( hkKey, REG_HD3,           atari_h_dir[2],         DEFAULT_HDD,    MAX_PATH );
-	bFail |= _RegReadString( hkKey, REG_HD4,           atari_h_dir[3],         DEFAULT_HDD,    MAX_PATH );
-	bFail |= _RegReadString( hkKey, REG_HDE_PATH,      g_szHardExePath,      DEFAULT_H_PATH, FILENAME_MAX - 1 );
-	bFail |= _RegReadString( hkKey, REG_FILE_TEMPLATE, g_szTemplateFile,     DEFAULT_A8K,    MAX_PATH );
-	bFail |= _RegReadString( hkKey, REG_FILE_PALETTE,  g_szPaletteFile,      DEFAULT_ACT,    MAX_PATH );
-	bFail |= _RegReadString( hkKey, REG_FILE_AUTOBOOT, g_szAutobootFile,     FILE_NONE,      MAX_PATH );
-	bFail |= _RegReadString( hkKey, REG_ROM_CURRENT,   g_szCurrentRom,       FILE_NONE,      MAX_PATH );
-	bFail |= _RegReadString( hkKey, REG_ROM_OTHER,     g_szOtherRom,         FILE_NONE,      MAX_PATH );
+	bFail |= _RegReadString( hkKey, REG_FILE_TAPE,     cassette_filename,  DEFAULT_TAP,    FILENAME_MAX - 1 );
+	bFail |= _RegReadString( hkKey, REG_FILE_STATE,    atari_state_dir,    DEFAULT_A8S,    MAX_PATH );
+	bFail |= _RegReadString( hkKey, REG_EXE_PATH,      atari_exe_dir,      PATH_NONE,      MAX_PATH );
+	bFail |= _RegReadString( hkKey, REG_HD1,           atari_h_dir[0],     DEFAULT_HDD,    MAX_PATH );
+	bFail |= _RegReadString( hkKey, REG_HD2,           atari_h_dir[1],     DEFAULT_HDD,    MAX_PATH );
+	bFail |= _RegReadString( hkKey, REG_HD3,           atari_h_dir[2],     DEFAULT_HDD,    MAX_PATH );
+	bFail |= _RegReadString( hkKey, REG_HD4,           atari_h_dir[3],     DEFAULT_HDD,    MAX_PATH );
+	bFail |= _RegReadString( hkKey, REG_HDE_PATH,      g_szHardExePath,    DEFAULT_H_PATH, FILENAME_MAX - 1 );
+	bFail |= _RegReadString( hkKey, REG_FILE_TEMPLATE, g_szTemplateFile,   DEFAULT_A8K,    MAX_PATH );
+	bFail |= _RegReadString( hkKey, REG_FILE_PALETTE,  g_szPaletteFile,    DEFAULT_ACT,    MAX_PATH );
+	bFail |= _RegReadString( hkKey, REG_FILE_AUTOBOOT, g_szAutobootFile,   FILE_NONE,      MAX_PATH );
+	bFail |= _RegReadString( hkKey, REG_ROM_CURRENT,   g_szCurrentRom,     FILE_NONE,      MAX_PATH );
+	bFail |= _RegReadString( hkKey, REG_ROM_OTHER,     g_szOtherRom,       FILE_NONE,      MAX_PATH );
 
 	RegCloseKey( hkKey );
 
@@ -810,22 +810,22 @@ ReadRegDrives(
 		return;
 	}
 
-	for( i = 0; i < MAX_DRIVES; i++ )
+	for( i = 0; i < SIO_MAX_DRIVES; i++ )
 	{
-		if ( drive_status[ i ] ==  Off || drive_status[ i ] == NoDisk ) {
-			bFail |= _RegReadString( hkKey, reg_drives[i], sio_filename[ i ], "Off", MAX_PATH );
+		if ( SIO_drive_status[ i ] ==  Off || SIO_drive_status[ i ] == NoDisk ) {
+			bFail |= _RegReadString( hkKey, reg_drives[i], SIO_filename[ i ], "Off", MAX_PATH );
 
-			if( *sio_filename[ i ] == '\0' )
-				strcpy( sio_filename[ i ], "Off" );
+			if( *SIO_filename[ i ] == '\0' )
+				strcpy( SIO_filename[ i ], "Off" );
 
-			if( strcmp( sio_filename[ i ], "Off" ) == 0 )
-				drive_status[ i ] = Off;
-			else if( strcmp( sio_filename[ i ], "Empty" ) == 0 )
-					drive_status[ i ] = NoDisk;
+			if( strcmp( SIO_filename[ i ], "Off" ) == 0 )
+				SIO_drive_status[ i ] = Off;
+			else if( strcmp( SIO_filename[ i ], "Empty" ) == 0 )
+					SIO_drive_status[ i ] = NoDisk;
 			else {
-				strcpy( szFileName, sio_filename[ i ] );
+				strcpy( szFileName, SIO_filename[ i ] );
 				if( !SIO_Mount( i + 1, szFileName, _IsFlagSet(g_Misc.ulState, MS_DRIVE_READONLY) ) )
-					Log_print( "Disk File %s not found", sio_filename[ i ] );
+					Log_print( "Disk File %s not found", SIO_filename[ i ] );
 			}
 		}
 	}
@@ -900,22 +900,22 @@ HandleRegistry( void )
 		else
 		{
 			bFail |= _RegReadString( hkKey, REG_PRINT_COMMAND,       print_command,                 DEF_PRINT_COMMAND, PRINT_CMD_LENGTH );
-			bFail |= _RegReadNumber( hkKey, REG_MACHINE_TYPE,        machine_type,                  MACHINE_XLXE            );
-			bFail |= _RegReadNumber( hkKey, REG_TV_MODE,             Atari800_tv_mode,                       Atari800_TV_PAL         );
-			bFail |= _RegReadNumber( hkKey, REG_CART_TYPE,           cart_type,                     CARTRIDGE_NONE               );
-			bFail |= _RegReadNumber( hkKey, REG_DISABLE_BASIC,       disable_basic,                 1                       );
+			bFail |= _RegReadNumber( hkKey, REG_MACHINE_TYPE,        Atari800_machine_type,         Atari800_MACHINE_XLXE            );
+			bFail |= _RegReadNumber( hkKey, REG_TV_MODE,             Atari800_tv_mode,              Atari800_TV_PAL         );
+			bFail |= _RegReadNumber( hkKey, REG_CART_TYPE,           CARTRIDGE_type,                CARTRIDGE_NONE          );
+			bFail |= _RegReadNumber( hkKey, REG_DISABLE_BASIC,       Atari800_disable_basic,        1                       );
 			bFail |= _RegReadNumber( hkKey, REG_REFRESH_RATE,        refresh_rate,                  1                       );
-			bFail |= _RegReadNumber( hkKey, REG_HD_READ_ONLY,        h_read_only,                  1                       );
+			bFail |= _RegReadNumber( hkKey, REG_HD_READ_ONLY,        h_read_only,                   1                       );
 			bFail |= _RegReadNumber( hkKey, REG_ENABLE_RTIME,        rtime_enabled,                 1                       );
-			bFail |= _RegReadNumber( hkKey, REG_ENABLE_SIO_PATCH,    enable_sio_patch,              1                       );
-			bFail |= _RegReadNumber( hkKey, REG_ENABLE_H_PATCH,      enable_h_patch,                0                       );
-			bFail |= _RegReadNumber( hkKey, REG_ENABLE_P_PATCH,      enable_p_patch,                0                       );
-			bFail |= _RegReadNumber( hkKey, REG_ENABLE_R_PATCH,      enable_r_patch,                0                       );
-			bFail |= _RegReadNumber( hkKey, REG_ENABLE_STEREO,       stereo_enabled,                0                       );
-			bFail |= _RegReadNumber( hkKey, REG_ARTIF_MODE,          global_artif_mode,             0                       );
+			bFail |= _RegReadNumber( hkKey, REG_ENABLE_SIO_PATCH,    ESC_enable_sio_patch,          1                       );
+			bFail |= _RegReadNumber( hkKey, REG_ENABLE_H_PATCH,      Devices_enable_h_patch,        0                       );
+			bFail |= _RegReadNumber( hkKey, REG_ENABLE_P_PATCH,      Devices_enable_p_patch,        0                       );
+			bFail |= _RegReadNumber( hkKey, REG_ENABLE_R_PATCH,      Devices_enable_r_patch,        0                       );
+			bFail |= _RegReadNumber( hkKey, REG_ENABLE_STEREO,       POKEYSND_stereo_enabled,       0                       );
+			bFail |= _RegReadNumber( hkKey, REG_ARTIF_MODE,          ANTIC_artif_mode,              0                       );
 			bFail |= _RegReadNumber( hkKey, REG_BLOCK_OPPOSITE,      joy_block_opposite_directions, 1                       );
 			bFail |= _RegReadNumber( hkKey, REG_MULTI_JOY,           joy_multijoy,                  0                       );
-			bFail |= _RegReadNumber( hkKey, REG_MOUSE_MODE,          mouse_mode,                    DEF_MOUSE_MODE          );
+			bFail |= _RegReadNumber( hkKey, REG_MOUSE_MODE,          INPUT_mouse_mode,              DEF_MOUSE_MODE          );
 			bFail |= _RegReadNumber( hkKey, REG_MOUSE_PORT,          mouse_port,                    DEF_MOUSE_PORT          );
 			bFail |= _RegReadNumber( hkKey, REG_MOUSE_SPEED,         mouse_speed,                   DEF_MOUSE_SPEED         );
 			bFail |= _RegReadNumber( hkKey, REG_POT_MIN,             mouse_pot_min,                 DEF_POT_MIN             );
@@ -923,9 +923,9 @@ HandleRegistry( void )
 			bFail |= _RegReadNumber( hkKey, REG_JOY_INERTIA,         mouse_joy_inertia,             DEF_JOY_INERTIA         );
 			bFail |= _RegReadNumber( hkKey, REG_PEN_XOFFSET,         mouse_pen_ofs_h,               DEF_PEN_OFFSET_X        );
 			bFail |= _RegReadNumber( hkKey, REG_PEN_YOFFSET,         mouse_pen_ofs_v,               DEF_PEN_OFFSET_Y        );
-			bFail |= _RegReadNumber( hkKey, REG_RAMSIZE_OSA,         g_anRamSize[ MACHINE_OSA ],    DEF_RAMSIZE_OSA         );
-			bFail |= _RegReadNumber( hkKey, REG_RAMSIZE_OSB,         g_anRamSize[ MACHINE_OSB ],    DEF_RAMSIZE_OSB         );
-			bFail |= _RegReadNumber( hkKey, REG_RAMSIZE_XLXE,        g_anRamSize[ MACHINE_XLXE ],   DEF_RAMSIZE_XLXE        );
+			bFail |= _RegReadNumber( hkKey, REG_RAMSIZE_OSA,         g_anRamSize[ Atari800_MACHINE_OSA ],    DEF_RAMSIZE_OSA         );
+			bFail |= _RegReadNumber( hkKey, REG_RAMSIZE_OSB,         g_anRamSize[ Atari800_MACHINE_OSB ],    DEF_RAMSIZE_OSB         );
+			bFail |= _RegReadNumber( hkKey, REG_RAMSIZE_XLXE,        g_anRamSize[ Atari800_MACHINE_XLXE ],   DEF_RAMSIZE_XLXE        );
 			bFail |= _RegReadNumber( hkKey, REG_ARROWS_MODE,         g_Input.Key.nArrowsMode,       DEF_ARROWS_MODE         );
 			bFail |= _RegReadNumber( hkKey, REG_SCREEN_STATE,        g_Screen.ulState,              DEF_SCREEN_STATE        );
 			bFail |= _RegReadNumber( hkKey, REG_STRETCH_MODE,        g_Screen.nStretchMode,         DEF_STRETCH_MODE        );
@@ -987,8 +987,8 @@ HandleRegistry( void )
 			if( !ReadRegKeyset( hkKey, KEYS_B_JOYSTICK ) )
 				bFail = TRUE;
 
-			show_disk_led = _IsFlagSet( g_Misc.ulState, MS_SHOW_DRIVE_LED ) ? 1 : 0;
-			show_sector_counter = _IsFlagSet( g_Misc.ulState, MS_SHOW_SECTOR_COUNTER ) ? 1 : 0;
+			Screen_show_disk_led = _IsFlagSet( g_Misc.ulState, MS_SHOW_DRIVE_LED ) ? 1 : 0;
+			Screen_show_sector_counter = _IsFlagSet( g_Misc.ulState, MS_SHOW_SECTOR_COUNTER ) ? 1 : 0;
 		}
 	}
 	RegCloseKey( hkKey );

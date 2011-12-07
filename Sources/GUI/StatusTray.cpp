@@ -166,7 +166,7 @@ UINT
    Resource ID of the bitmap */
 GetDiskBmpID()
 {
-	return (enable_sio_patch ? IDB_SB_DISK_E : IDB_SB_DISK_D);
+	return (ESC_enable_sio_patch ? IDB_SB_DISK_E : IDB_SB_DISK_D);
 
 } /* #OF# GetDiskBmpID */
 
@@ -196,8 +196,8 @@ GetMouseBmpID()
 	};
 
 	return nBmpID[ _IsFlagSet( g_Input.ulState, IS_CAPTURE_MOUSE ) ?
-						mouse_mode :
-						mouse_mode + 10 ];
+						INPUT_mouse_mode :
+						INPUT_mouse_mode + 10 ];
 } /* #OF# GetMouseBmpID */
 
 /*========================================================
@@ -211,8 +211,8 @@ UINT
    Resource ID of the bitmap */
 GetAutofireBmpID()
 {
-	return (g_Input.Joy.nAutoMode == AUTOFIRE_FIRE ? IDB_SB_AUTOFIRE1_E :
-		   (g_Input.Joy.nAutoMode == AUTOFIRE_CONT ? IDB_SB_AUTOFIRE2_E : IDB_SB_AUTOFIRE_D));
+	return (g_Input.Joy.nAutoMode == INPUT_AUTOFIRE_FIRE ? IDB_SB_AUTOFIRE1_E :
+		   (g_Input.Joy.nAutoMode == INPUT_AUTOFIRE_CONT ? IDB_SB_AUTOFIRE2_E : IDB_SB_AUTOFIRE_D));
 
 } /* #OF# GetAutofireBmpID */
 

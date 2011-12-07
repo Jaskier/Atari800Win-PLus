@@ -13,6 +13,7 @@ File    : RomImagesBase.cpp
 #include "FileService.h"
 #include "FileSmallDlg.h"
 #include "RomImagesBase.h"
+#include "cfg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

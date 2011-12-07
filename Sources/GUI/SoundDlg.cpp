@@ -250,7 +250,7 @@ OnInitDialog()
 	m_nSoundLatency  = g_Sound.nLatency;
 	m_nSoundQuality  = g_Sound.nQuality;
 	m_bDigitized     = g_Sound.nDigitized;
-	m_bEnableStereo  = stereo_enabled;
+	m_bEnableStereo  = POKEYSND_stereo_enabled;
 
 	SetDlgState();
 
@@ -566,7 +566,7 @@ OnOK()
 	ReceiveFocused();
 
 	/* Check if the video recording should be stopped */
-	if(	m_nSoundRate != g_Sound.nRate || m_bEnableStereo != (BOOL)stereo_enabled )
+	if(	m_nSoundRate != g_Sound.nRate || m_bEnableStereo != (BOOL)POKEYSND_stereo_enabled )
 	{
 		if( _IsFlagSet( g_Misc.ulState, MS_VIDEO_AND_SOUND ) ) /* When streaming video with sound */
 			bCommit = StreamWarning( IDS_WARN_RECORD_SNDOUT, SRW_VIDEO_STREAM );
@@ -574,7 +574,7 @@ OnOK()
 	if( bCommit )
 	{
 		if( m_nSoundRate    != g_Sound.nRate        ||
-			m_bEnableStereo != (BOOL)stereo_enabled ||
+			m_bEnableStereo != (BOOL)POKEYSND_stereo_enabled ||
 			m_ulSoundState  != g_Sound.ulState      ||
 			m_nSkipUpdate   != g_Sound.nSkipUpdate  ||
 			m_nSoundLatency != g_Sound.nLatency     ||
@@ -627,10 +627,10 @@ OnOK()
 
 //			m_bModeChanged = TRUE;
 		}
-		if( m_bEnableStereo != (BOOL)stereo_enabled )
+		if( m_bEnableStereo != (BOOL)POKEYSND_stereo_enabled )
 		{
-			stereo_enabled = (int)m_bEnableStereo;
-			WriteRegDWORD( NULL, REG_ENABLE_STEREO, stereo_enabled );
+			POKEYSND_stereo_enabled = (int)m_bEnableStereo;
+			WriteRegDWORD( NULL, REG_ENABLE_STEREO, POKEYSND_stereo_enabled );
 
 			m_bModeChanged = TRUE;
 		}

@@ -49,9 +49,9 @@ static SLONG cassette_nextirqevent; /* timestamp of next irq in scanlines */
 char cassette_filename[FILENAME_MAX];
 static char cassette_description[CASSETTE_DESCRIPTION_MAX];
 static int cassette_current_blockbyte = 0;
-static int cassette_current_block;
+int cassette_current_block;
 static int cassette_max_blockbytes = 0;
-static int cassette_max_block = 0;
+int cassette_max_block = 0;
 static int cassette_savefile = FALSE;
 static int cassette_gapdelay = 0;	/* in ms, includes leader and all gaps */
 static int cassette_putdelay = 0;	/* in ms, delay since last putbyte */
