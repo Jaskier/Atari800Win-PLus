@@ -7,6 +7,7 @@
 
 #define CASSETTE_DESCRIPTION_MAX 256
 
+extern char cassette_description[CASSETTE_DESCRIPTION_MAX];
 extern int cassette_current_block;
 extern int cassette_max_block;
 extern char cassette_filename[FILENAME_MAX];

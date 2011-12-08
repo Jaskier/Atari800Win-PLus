@@ -38,14 +38,14 @@ static char THIS_FILE[] = __FILE__;
 
 static CDriveDlg::DiskData_t s_aDiskData[ SIO_MAX_DRIVES ] =
 {
-	{ SIO_filename[ 0 ], "Off", 0, 0, 0, Off },
-	{ SIO_filename[ 1 ], "Off", 0, 0, 0, Off },
-	{ SIO_filename[ 2 ], "Off", 0, 0, 0, Off },
-	{ SIO_filename[ 3 ], "Off", 0, 0, 0, Off },
-	{ SIO_filename[ 4 ], "Off", 0, 0, 0, Off },
-	{ SIO_filename[ 5 ], "Off", 0, 0, 0, Off },
-	{ SIO_filename[ 6 ], "Off", 0, 0, 0, Off },
-	{ SIO_filename[ 7 ], "Off", 0, 0, 0, Off }
+	{ SIO_filename[ 0 ], "Off", 0, 0, 0, SIO_OFF },
+	{ SIO_filename[ 1 ], "Off", 0, 0, 0, SIO_OFF },
+	{ SIO_filename[ 2 ], "Off", 0, 0, 0, SIO_OFF },
+	{ SIO_filename[ 3 ], "Off", 0, 0, 0, SIO_OFF },
+	{ SIO_filename[ 4 ], "Off", 0, 0, 0, SIO_OFF },
+	{ SIO_filename[ 5 ], "Off", 0, 0, 0, SIO_OFF },
+	{ SIO_filename[ 6 ], "Off", 0, 0, 0, SIO_OFF },
+	{ SIO_filename[ 7 ], "Off", 0, 0, 0, SIO_OFF }
 };
 
 
@@ -127,7 +127,7 @@ CheckSelectedDisk(
 
 	if( strcmp( pszDiskName, "Off" ) == 0 )
 	{
-		usResult = Off;
+		usResult = SIO_OFF;
 		unInfo = CSD_DRIVEOFF;
 	}
 	else
@@ -144,16 +144,16 @@ CheckSelectedDisk(
 					/* If there is an ATR image check header's writeprotect member */
 					if( fd >= 0 )
 					{
-						ATR_Header header;
+						AFILE_ATR_Header header;
 						_lseek( fd, 0L, SEEK_SET );
-						if( (-1 != _read( fd, &header, sizeof(ATR_Header) )) &&
-							header.magic1 == MAGIC1 && header.magic2 == MAGIC2 )
+						if( (-1 != _read( fd, &header, sizeof(AFILE_ATR_Header) )) &&
+							header.magic1 == AFILE_ATR_MAGIC1 && header.magic2 == AFILE_ATR_MAGIC2 )
 						{
 							if( !header.writeprotect )
 							{
 								unInfo = CSD_ATRREADWRITE;
 								if ( !_IsFlagSet( g_Misc.ulState, MS_DRIVE_READONLY) )
-									usResult = ReadWrite;
+									usResult = SIO_READ_WRITE;
 							}
 							else
 								unInfo = CSD_ATRREADONLY;
@@ -161,7 +161,7 @@ CheckSelectedDisk(
 						else
 						{
 							if (!_IsFlagSet(g_Misc.ulState, MS_DRIVE_READONLY))
-								usResult = ReadWrite;
+								usResult = SIO_READ_WRITE;
 							unInfo = CSD_XFDREADWRITE;
 						}
 						_close( fd );
@@ -175,7 +175,7 @@ CheckSelectedDisk(
 		}
 		else
 		{
-			usResult = NoDisk;
+			usResult = SIO_NO_DISK;
 			unInfo = CSD_NODISKIMAGE;
 		}
 	}
@@ -257,12 +257,12 @@ SetDlgState()
 			
 			switch( m_pDiskData[ i ].usStatus )
 			{
-				case Off:
+				case SIO_OFF:
 					pCombo->SetCurSel( 0 );
 					pEdit->SetReadOnly();
 					break;
 
-				case ReadWrite:
+				case SIO_READ_WRITE:
 					pCombo->SetCurSel( 1 );
 					pEdit->SetReadOnly( FALSE );
 					break;
@@ -272,7 +272,7 @@ SetDlgState()
 					pEdit->SetReadOnly( FALSE );
 					break;
 
-				case NoDisk:
+				case SIO_NO_DISK:
 					pCombo->SetCurSel( 3 );
 					pEdit->SetReadOnly( FALSE );
 					break;
@@ -442,7 +442,7 @@ StatusSelChange(
 	{
 		case 0: /* Combo box indicates "Off" */
 		{
-			m_pDiskData[ nDrive ].usStatus = Off;
+			m_pDiskData[ nDrive ].usStatus = SIO_OFF;
 			break;
 		}
 		case 1: /* Combo box indicates "Read/Write" */
@@ -464,7 +464,7 @@ StatusSelChange(
 								if( -1 != _lseek( fd, 15L, SEEK_SET ) &&
 									-1 != _write( fd, "\000", 1 ) )
 								{
-									usRealMode = ReadWrite;
+									usRealMode = SIO_READ_WRITE;
 								}
 								_close( fd );
 							}
@@ -476,7 +476,7 @@ StatusSelChange(
 						break;
 
 					default:
-						usRealMode = ReadWrite;
+						usRealMode = SIO_READ_WRITE;
 				}
 			}
 			m_pDiskData[ nDrive ].usStatus = usRealMode;
@@ -508,7 +508,7 @@ StatusSelChange(
 		}
 		case 3: /* Combo box indicates "No Disk" */
 		{
-			m_pDiskData[ nDrive ].usStatus = NoDisk;
+			m_pDiskData[ nDrive ].usStatus = SIO_NO_DISK;
 			break;
 		}
 	}
@@ -623,7 +623,7 @@ OnClearAll()
 {
 	for( int i = 0; i < SIO_MAX_DRIVES; i++ )
 	{
-		m_pDiskData[ i ].usStatus = Off;
+		m_pDiskData[ i ].usStatus = SIO_OFF;
 		strcpy( m_pDiskData[ i ].szNewName, "Off" );
 	}
 	SetDlgState();
@@ -717,11 +717,11 @@ OnOK()
 
 	for( int i = 0; i < SIO_MAX_DRIVES; i++ )
 	{
-		if( m_pDiskData[ i ].usStatus == Off )
+		if( m_pDiskData[ i ].usStatus == SIO_OFF )
 		{
 			strcpy( szFileName, "Off" );
 		}
-		else if( m_pDiskData[ i ].usStatus == NoDisk )
+		else if( m_pDiskData[ i ].usStatus == SIO_NO_DISK )
 		{
 			strcpy( szFileName, "Empty" );
 		}
@@ -743,7 +743,7 @@ OnOK()
 				{
 					/* There was an error with SIO mounting */
 					strcpy( m_pDiskData[ i ].pszName, "Empty" );
-					m_pDiskData[ i ].usStatus = NoDisk;
+					m_pDiskData[ i ].usStatus = SIO_NO_DISK;
 				}
 			}
 			bChanged = TRUE;

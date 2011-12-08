@@ -188,8 +188,8 @@ OnInitDialog()
 	m_ulInputState   = g_Input.ulState;
 	m_ulAutoSticks   = g_Input.Joy.ulAutoSticks;
 	m_nAutoMode      = g_Input.Joy.nAutoMode;
-	m_nBlockOpposite = joy_block_opposite_directions;
-	m_nMultiJoy      = joy_multijoy;
+	m_nBlockOpposite = INPUT_joy_block_opposite_directions;
+	m_nMultiJoy      = INPUT_joy_multijoy;
 
 	m_bSmallMode = _IsFlagSet( g_Screen.ulState, SM_ATTR_SMALL_DLG );
 
@@ -578,15 +578,15 @@ OnOK()
 		g_Input.Joy.ulAutoSticks = m_ulAutoSticks;
 		WriteRegDWORD( NULL, REG_AUTOFIRE_STICKS, g_Input.Joy.ulAutoSticks );
 	}
-	if( m_nBlockOpposite != joy_block_opposite_directions )
+	if( m_nBlockOpposite != INPUT_joy_block_opposite_directions )
 	{
-		joy_block_opposite_directions = m_nBlockOpposite;
-		WriteRegDWORD( NULL, REG_BLOCK_OPPOSITE, joy_block_opposite_directions );
+		INPUT_joy_block_opposite_directions = m_nBlockOpposite;
+		WriteRegDWORD( NULL, REG_BLOCK_OPPOSITE, INPUT_joy_block_opposite_directions );
 	}
-	if( m_nMultiJoy != joy_multijoy )
+	if( m_nMultiJoy != INPUT_joy_multijoy )
 	{
-		joy_multijoy = m_nMultiJoy;
-		WriteRegDWORD( NULL, REG_MULTI_JOY, joy_multijoy );
+		INPUT_joy_multijoy = m_nMultiJoy;
+		WriteRegDWORD( NULL, REG_MULTI_JOY, INPUT_joy_multijoy );
 	}
 
 	for( int i = 0; i < MAX_ATARI_JOYPORTS; i++ )

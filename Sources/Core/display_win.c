@@ -836,7 +836,7 @@ Screen_UseAtariPalette(
 			for( i = 0; i < PAL_ENTRIES_NO; i++ )
 			{
 				/* Get color value from kernel table */
-				nRGB = colortable[ i ];
+				nRGB = Colours_table[ i ];
 
 				s_lpbmi->bmiColors[ i ].rgbRed      = s_pe[ i ].peRed   = (nRGB & 0x00ff0000) >> 16;
 				s_lpbmi->bmiColors[ i ].rgbGreen    = s_pe[ i ].peGreen = (nRGB & 0x0000ff00) >> 8;
@@ -1674,7 +1674,7 @@ Screen_InitialiseDisplay(
 		for( i = 0; i < PAL_ENTRIES_NO; i++ )
 		{
 			/* Get color value from kernel table */
-			nRGB = colortable[ i ];
+			nRGB = Colours_table[ i ];
 
 			s_lpbmi->bmiColors[ i ].rgbRed      = s_pe[ i ].peRed   = (nRGB & 0x00ff0000) >> 16;
 			s_lpbmi->bmiColors[ i ].rgbGreen    = s_pe[ i ].peGreen = (nRGB & 0x0000ff00) >> 8;
@@ -2245,7 +2245,7 @@ Screen_PrepareInterp(
 		for( i = 0; i < PAL_ENTRIES_NO; i++ )
 		{
 			/* Get color value from kernel table */
-			nRGB = colortable[ i ];
+			nRGB = Colours_table[ i ];
 
 			lpPal->palPalEntry[ i ].peRed   = (nRGB & 0x00ff0000) >> 16;
 			lpPal->palPalEntry[ i ].peGreen = (nRGB & 0x0000ff00) >> 8;

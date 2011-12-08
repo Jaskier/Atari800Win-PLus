@@ -1377,7 +1377,7 @@ Misc_ExecutePrintCmd(
 	{
 		char szPrintCmd[ PRINT_CMD_LENGTH + 1 ];
 
-		sprintf( szPrintCmd, print_command, pszPrintFile );
+		sprintf( szPrintCmd, Devices_print_command, pszPrintFile );
 		if( !ExecuteCmd( szPrintCmd, FALSE ) )
 			bResult = FALSE;
 	}

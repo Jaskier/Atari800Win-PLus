@@ -413,12 +413,12 @@ OnOK()
 		_strncpy( szPostfix, &m_szDiskName[ strlen( m_szDiskName ) - 4 ], 5 );
 		if( _stricmp( szPostfix, ".atr" ) == 0 )
 		{
-			/* There is the definition of ATR_Header structure in atari.h */
-			struct ATR_Header atrHeader;
+			/* There is the definition of AFILE_ATR_Header structure in atari.h */
+			struct AFILE_ATR_Header atrHeader;
 
-			ZeroMemory( &atrHeader, sizeof(ATR_Header) );
-			atrHeader.magic1       = MAGIC1;
-			atrHeader.magic2       = MAGIC2;
+			ZeroMemory( &atrHeader, sizeof(AFILE_ATR_Header) );
+			atrHeader.magic1       = AFILE_ATR_MAGIC1;
+			atrHeader.magic2       = AFILE_ATR_MAGIC2;
 			atrHeader.secsizelo    =  unBytesPerSector   & 0x00ff;
 			atrHeader.secsizehi    = (unBytesPerSector   & 0xff00) >> 8;
 			atrHeader.seccountlo   =  LOWORD(unImageLen) & 0x00ff;
@@ -426,7 +426,7 @@ OnOK()
 			atrHeader.hiseccountlo =  HIWORD(unImageLen) & 0x00ff;
 			atrHeader.hiseccounthi = (HIWORD(unImageLen) & 0xff00) >> 8;
 
-			fwrite( &atrHeader, sizeof(ATR_Header), 1, pfImage );
+			fwrite( &atrHeader, sizeof(AFILE_ATR_Header), 1, pfImage );
 		}
 		/* Build an empty body of the image */
 		for( int i = 0; i < (int)unImageLen; i++ )

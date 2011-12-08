@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "atari.h"				/* for ATR_Header structure */
+#include "atari.h"				/* for AFILE_ATR_Header structure */
 #include "xfd2atr.h"
 
 
@@ -62,7 +62,7 @@ int XFD2ATR_Open(char *xfdName)
 /* Convert an open XFD file to an ATR file */
 int XFD2ATR_Convert(char *atrName, int bootType)
 {
-	struct ATR_Header atrHeader;
+	struct AFILE_ATR_Header atrHeader;
 	char buffer[768];
 	int bootSectorCount;
 	int bootSize;
@@ -94,8 +94,8 @@ int XFD2ATR_Convert(char *atrName, int bootType)
 		return XFD2ATR_ERR_ATR_FILE;
 	/* Write the header */
 	memset(&atrHeader, 0, sizeof(atrHeader));
-	atrHeader.magic1 = MAGIC1;
-	atrHeader.magic2 = MAGIC2;
+	atrHeader.magic1 = AFILE_ATR_MAGIC1;
+	atrHeader.magic2 = AFILE_ATR_MAGIC2;
 	atrHeader.seccountlo = imagePara & 0xff;
 	atrHeader.seccounthi = (imagePara >> 8) & 0xff;
 	atrHeader.secsizelo = sectorSize & 0xff;

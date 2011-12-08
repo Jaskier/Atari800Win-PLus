@@ -31,10 +31,10 @@ static char THIS_FILE[] = __FILE__;
 
 static CHarddiskDlg::DriveData_t s_aDriveData[ HD_DRIVES_NO ] =
 {
-	{ atari_h_dir[0], "", IDC_HARDDISK_EDIT1, REG_HD1 },
-	{ atari_h_dir[1], "", IDC_HARDDISK_EDIT2, REG_HD2 },
-	{ atari_h_dir[2], "", IDC_HARDDISK_EDIT3, REG_HD3 },
-	{ atari_h_dir[3], "", IDC_HARDDISK_EDIT4, REG_HD4 }
+	{ Devices_atari_h_dir[0], "", IDC_HARDDISK_EDIT1, REG_HD1 },
+	{ Devices_atari_h_dir[1], "", IDC_HARDDISK_EDIT2, REG_HD2 },
+	{ Devices_atari_h_dir[2], "", IDC_HARDDISK_EDIT3, REG_HD3 },
+	{ Devices_atari_h_dir[3], "", IDC_HARDDISK_EDIT4, REG_HD4 }
 };
 
 

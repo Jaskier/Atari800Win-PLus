@@ -155,10 +155,10 @@ OnInitDialog()
 	m_nEnableHPatch   = Devices_enable_h_patch;
 	m_nEnablePPatch   = Devices_enable_p_patch;
 	m_nEnableRPatch   = Devices_enable_r_patch;
-	m_nHardReadOnly   = h_read_only;
-	m_nEnableRTime    = rtime_enabled;
+	m_nHardReadOnly   = Devices_h_read_only;
+	m_nEnableRTime    = RTIME_enabled;
 
-	_strncpy( m_szPrintCommand, print_command, PRINT_CMD_LENGTH );
+	_strncpy( m_szPrintCommand, Devices_print_command, PRINT_CMD_LENGTH );
 
 	SetDlgState();
 
@@ -347,7 +347,7 @@ OnOK()
 	ReceiveFocused();
 
 	/* Check if the video recording should be stopped */
-	if( m_nEnableRTime != rtime_enabled )
+	if( m_nEnableRTime != RTIME_enabled )
 	{
 		bCommit = StreamWarning( IDS_WARN_RECORD_SYSTEM, SRW_VIDEO_STREAM );
 	}
@@ -389,15 +389,15 @@ OnOK()
 			RDevice_UpdatePatches();
 			ESC_UpdatePatches();
 		}
-		if( m_nHardReadOnly != h_read_only )
+		if( m_nHardReadOnly != Devices_h_read_only )
 		{
-			h_read_only = m_nHardReadOnly;
-			WriteRegDWORD( NULL, REG_HD_READ_ONLY, h_read_only );
+			Devices_h_read_only = m_nHardReadOnly;
+			WriteRegDWORD( NULL, REG_HD_READ_ONLY, Devices_h_read_only );
 		}
-		if( m_nEnableRTime != rtime_enabled )
+		if( m_nEnableRTime != RTIME_enabled )
 		{
-			rtime_enabled = m_nEnableRTime;
-			WriteRegDWORD( NULL, REG_ENABLE_RTIME, rtime_enabled );
+			RTIME_enabled = m_nEnableRTime;
+			WriteRegDWORD( NULL, REG_ENABLE_RTIME, RTIME_enabled );
 
 			m_bReboot = TRUE;
 		}
@@ -414,10 +414,10 @@ OnOK()
 
 		if( *m_szPrintCommand == '\0' )
 			strcpy( m_szPrintCommand, DEF_PRINT_COMMAND );
-		if( _stricmp( m_szPrintCommand, print_command ) != 0 )
+		if( _stricmp( m_szPrintCommand, Devices_print_command ) != 0 )
 		{
-			_strncpy( print_command, m_szPrintCommand, PRINT_CMD_LENGTH );
-			WriteRegString( NULL, REG_PRINT_COMMAND, print_command );
+			_strncpy( Devices_print_command, m_szPrintCommand, PRINT_CMD_LENGTH );
+			WriteRegString( NULL, REG_PRINT_COMMAND, Devices_print_command );
 		}
 		CCommonDlg::OnOK();
 	}

@@ -4,6 +4,8 @@
 #include <stdio.h> /* FILENAME_MAX */
 #include "atari.h" /* UWORD */
 
+#define DEFAULT_H_PATH  "H1:>DOS;>DOS"
+
 int Devices_Initialise(int *argc, char *argv[]);
 int Devices_PatchOS(void);
 void Devices_Frame(void);

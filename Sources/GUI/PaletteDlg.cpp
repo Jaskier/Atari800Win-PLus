@@ -122,7 +122,7 @@ PreparePalette(
 		   is an appropriate option checked off */
 		_IsPathAvailable( pszPaletteFile ) )
 	{
-		if( !Palette_Read( pszPaletteFile ) )
+		if( !COLOURS_EXTERNAL_Read( pszPaletteFile ) )
 		{
 			DisplayMessage( GetSafeHwnd(), IDS_ERROR_ACT_READ, 0, MB_ICONEXCLAMATION | MB_OK );
 			strcpy( pszPaletteFile, FILE_NONE );
@@ -195,7 +195,7 @@ PaintPalette(
 	/* Copy entries */
 	for( int i = 0; i < PAL_ENTRIES_NO; i++ )
 	{
-		nRGB = colortable[ i ];
+		nRGB = Colours_table[ i ];
 		
 		lpPal->palPalEntry[ i ].peRed   = (nRGB & 0x00ff0000) >> 16;
 		lpPal->palPalEntry[ i ].peGreen = (nRGB & 0x0000ff00) >> 8;
@@ -275,7 +275,7 @@ RestorePalette()
 		nRGB |= (dipInfo.pBitmapInfo->bmiColors[ i ].rgbGreen & 0xff) <<  8;
 		nRGB |= (dipInfo.pBitmapInfo->bmiColors[ i ].rgbBlue  & 0xff);
 
-		colortable[ i ] = nRGB;
+		Colours_table[ i ] = nRGB;
 	}
 } /* #OF# CPaletteDlg::RestorePalette */
 

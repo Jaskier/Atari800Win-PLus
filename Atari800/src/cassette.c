@@ -47,7 +47,7 @@ static SLONG cassette_savetime;	    /* helper for cas save */
 static SLONG cassette_nextirqevent; /* timestamp of next irq in scanlines */
 
 char cassette_filename[FILENAME_MAX];
-static char cassette_description[CASSETTE_DESCRIPTION_MAX];
+char cassette_description[CASSETTE_DESCRIPTION_MAX];
 static int cassette_current_blockbyte = 0;
 int cassette_current_block;
 static int cassette_max_blockbytes = 0;

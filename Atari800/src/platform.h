@@ -34,8 +34,8 @@ void PLATFORM_ConfigSave(FILE *fp);
 
 #ifdef SUPPORTS_PLATFORM_PALETTEUPDATE
 /* This function updates the palette */
-/* If the platform does a conversion of colortable when it initialises
- * and the user changes colortable (such as changing from PAL to NTSC)
+/* If the platform does a conversion of Colours_table when it initialises
+ * and the user changes Colours_table (such as changing from PAL to NTSC)
  * then this function should update the platform palette */
 void PLATFORM_PaletteUpdate(void);
 #endif

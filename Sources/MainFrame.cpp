@@ -483,7 +483,7 @@ CMainFrame()
 
 	Palette_Generate( g_Screen.Pal.nBlackLevel, g_Screen.Pal.nWhiteLevel, g_Screen.Pal.nColorShift );
 	if( _IsFlagSet( g_Misc.ulState, MS_USE_EXT_PALETTE ) &&
-		!Palette_Read( g_szPaletteFile ) )
+		!COLOURS_EXTERNAL_Read( g_szPaletteFile ) )
 	{
 		_ClrFlag( g_Misc.ulState, MS_USE_EXT_PALETTE );
 		DisplayMessage( NULL, IDS_ERROR_NO_PALETTE, 0, MB_ICONEXCLAMATION | MB_OK, g_szPaletteFile );

@@ -169,13 +169,13 @@ OnInitDialog()
 
 	m_ulInputState = g_Input.ulState;
 	m_nMouseMode   = INPUT_mouse_mode;
-	m_nMousePort   = mouse_port;
-	m_nMouseSpeed  = mouse_speed;
-	m_nPotMin      = mouse_pot_min;
-	m_nPotMax      = mouse_pot_max;
-	m_nJoyInertia  = mouse_joy_inertia;
-	m_nPenOffsetX  = mouse_pen_ofs_h;
-	m_nPenOffsetY  = mouse_pen_ofs_v;
+	m_nMousePort   = INPUT_mouse_port;
+	m_nMouseSpeed  = INPUT_mouse_speed;
+	m_nPotMin      = INPUT_mouse_pot_min;
+	m_nPotMax      = INPUT_mouse_pot_max;
+	m_nJoyInertia  = INPUT_mouse_joy_inertia;
+	m_nPenOffsetX  = INPUT_mouse_pen_ofs_h;
+	m_nPenOffsetY  = INPUT_mouse_pen_ofs_v;
 
 	SetDlgState();
 
@@ -502,40 +502,40 @@ OnOK()
 		/* Update main window's indicator */
 		UpdateIndicator( ID_INDICATOR_MSE );
 	}
-	if( m_nMousePort != mouse_port )
+	if( m_nMousePort != INPUT_mouse_port )
 	{
-		mouse_port = m_nMousePort;
-		WriteRegDWORD( NULL, REG_MOUSE_PORT, mouse_port );
+		INPUT_mouse_port = m_nMousePort;
+		WriteRegDWORD( NULL, REG_MOUSE_PORT, INPUT_mouse_port );
 	}
-	if( m_nMouseSpeed != mouse_speed )
+	if( m_nMouseSpeed != INPUT_mouse_speed )
 	{
-		mouse_speed = m_nMouseSpeed;
-		WriteRegDWORD( NULL, REG_MOUSE_SPEED, mouse_speed );
+		INPUT_mouse_speed = m_nMouseSpeed;
+		WriteRegDWORD( NULL, REG_MOUSE_SPEED, INPUT_mouse_speed );
 	}
-	if( m_nPotMin != mouse_pot_min )
+	if( m_nPotMin != INPUT_mouse_pot_min )
 	{
-		mouse_pot_min = m_nPotMin;
-		WriteRegDWORD( NULL, REG_POT_MIN, mouse_pot_min );
+		INPUT_mouse_pot_min = m_nPotMin;
+		WriteRegDWORD( NULL, REG_POT_MIN, INPUT_mouse_pot_min );
 	}
-	if( m_nPotMax != mouse_pot_max )
+	if( m_nPotMax != INPUT_mouse_pot_max )
 	{
-		mouse_pot_max = m_nPotMax;
-		WriteRegDWORD( NULL, REG_POT_MAX, mouse_pot_max );
+		INPUT_mouse_pot_max = m_nPotMax;
+		WriteRegDWORD( NULL, REG_POT_MAX, INPUT_mouse_pot_max );
 	}
-	if( m_nJoyInertia != mouse_joy_inertia )
+	if( m_nJoyInertia != INPUT_mouse_joy_inertia )
 	{
-		mouse_joy_inertia = m_nJoyInertia;
-		WriteRegDWORD( NULL, REG_JOY_INERTIA, mouse_joy_inertia );
+		INPUT_mouse_joy_inertia = m_nJoyInertia;
+		WriteRegDWORD( NULL, REG_JOY_INERTIA, INPUT_mouse_joy_inertia );
 	}
-	if( m_nPenOffsetX != mouse_pen_ofs_h )
+	if( m_nPenOffsetX != INPUT_mouse_pen_ofs_h )
 	{
-		mouse_pen_ofs_h = m_nPenOffsetX;
-		WriteRegDWORD( NULL, REG_PEN_XOFFSET, mouse_pen_ofs_h );
+		INPUT_mouse_pen_ofs_h = m_nPenOffsetX;
+		WriteRegDWORD( NULL, REG_PEN_XOFFSET, INPUT_mouse_pen_ofs_h );
 	}
-	if( m_nPenOffsetY != mouse_pen_ofs_v )
+	if( m_nPenOffsetY != INPUT_mouse_pen_ofs_v )
 	{
-		mouse_pen_ofs_v = m_nPenOffsetY;
-		WriteRegDWORD( NULL, REG_PEN_YOFFSET, mouse_pen_ofs_v );
+		INPUT_mouse_pen_ofs_v = m_nPenOffsetY;
+		WriteRegDWORD( NULL, REG_PEN_YOFFSET, INPUT_mouse_pen_ofs_v );
 	}
 
 	if( m_ulInputState != g_Input.ulState )

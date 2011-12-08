@@ -472,8 +472,6 @@ static UBYTE Devices_RemoveDirectory(const char *filename)
 
 /* H: device emulation --------------------------------------------------- */
 
-#define DEFAULT_H_PATH  "H1:>DOS;>DOS"
-
 /* emulator debugging mode */
 static int devbug = FALSE;
 

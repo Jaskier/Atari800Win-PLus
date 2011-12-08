@@ -109,7 +109,7 @@ OnInitDialog()
        That's why we have to enlarge dialog window size here. */
 	SetWindowPos( NULL, 0, 0, rcDlg.Width() + 60, rcDlg.Height() + 80, SWP_NOMOVE );
 	
-	SetDlgItemText( IDC_ERRORLOG_EDIT, (const char *)memory_log );
+	SetDlgItemText( IDC_ERRORLOG_EDIT, (const char *)Log_buffer );
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
