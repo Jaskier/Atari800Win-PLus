@@ -38,7 +38,7 @@ static CCartridgeTypeDlg::CartTypeInfo_t s_aCartTypeInfo[] =
 	{ "Express 64 KB cartridge",          CARTRIDGE_EXP_64,      64,   IDS_CART_EXP_64      },
 	{ "Diamond 64 KB cartridge",          CARTRIDGE_DIAMOND_64,  64,   IDS_CART_DIAMOND_64  },
 	{ "SpartaDOS X 64 KB cartridge",      CARTRIDGE_SDX_64,      64,   IDS_CART_SDX_64      },
-//	{ "SpartaDOS X 128 KB cartridge",     CARTRIDGE_SDX_128,     128,  IDS_CART_SDX_128     }, TODO !!!
+	{ "SpartaDOS X 128 KB cartridge",     CARTRIDGE_SDX_128,     128,  IDS_CART_SDX_128     },
 	{ "XEGS 32 KB cartridge",             CARTRIDGE_XEGS_32,     32,   IDS_CART_XEGS_32     },
 	{ "XEGS 64 KB cartridge",             CARTRIDGE_XEGS_64,     64,   IDS_CART_XEGS_64     },
 	{ "XEGS 128 KB cartridge",            CARTRIDGE_XEGS_128,    128,  IDS_CART_XEGS_128    },

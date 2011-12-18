@@ -91,10 +91,10 @@ static void Device_GetFilename(void)
 	int offset = 0;
 	int devnam = TRUE;
 
-	bufadr = (dGetByte(ICBAHZ) << 8) | dGetByte(ICBALZ);
+	bufadr = (MEMORY_dGetByte(Devices_ICBAHZ) << 8) | MEMORY_dGetByte(Devices_ICBALZ);
 
-	while (Device_isvalid(dGetByte(bufadr))) {
-		int byte = dGetByte(bufadr);
+	while (Device_isvalid(MEMORY_dGetByte(bufadr))) {
+		int byte = MEMORY_dGetByte(bufadr);
 
 		if (!devnam) {
 			if (isupper(byte))
@@ -115,7 +115,7 @@ static void Device_GetFilename(void)
 
    Changes by Piotr Fusik <fox@scene.pl>:
    - removed fid in xio_34 (was unused)
-   - Peek -> dGetByte, Poke -> dPutByte
+   - Peek -> MEMORY_dGetByte, Poke -> MEMORY_dPutByte
    - Device_* functions renamed to match devices.c naming convention
    - connection info written to Atari800 log, not c:\\Atari800Log.txt
 */
@@ -169,7 +169,7 @@ void xio_34(void)
 
 /* Controls handshake lines DTR, RTS, SD */
 
-	temp = dGetByte(ICAX1Z);
+	temp = MEMORY_dGetByte(Devices_ICAX1Z);
 
 	if (temp & 128) {
 		if (temp & 64) {
@@ -184,23 +184,23 @@ void xio_34(void)
 			}
 		}
 	}
-	regA = 1;
-	regY = 1;
-	ClrN;
+	CPU_regA = 1;
+	CPU_regY = 1;
+	CPU_ClrN;
 
-	dPutByte(747,0);
+	MEMORY_dPutByte(747,0);
 }
 
 void xio_36(void)
 {
 /* Sets baud, stop bits, and ready monitoring. */
 
-	r_cd = dGetByte(ICAX2Z);
+	r_cd = MEMORY_dGetByte(Devices_ICAX2Z);
 
-	regA = 1;
-	regY = 1;
-	ClrN;
-	dPutByte(747,0);
+	CPU_regA = 1;
+	CPU_regY = 1;
+	CPU_ClrN;
+	MEMORY_dPutByte(747,0);
 }
 
 
@@ -209,13 +209,13 @@ void xio_38(void)
 {
 /* Translation and parity */
 
-	r_tr = dGetByte(ICAX1Z);
-	r_tr_to = dGetByte(ICAX2Z);
+	r_tr = MEMORY_dGetByte(Devices_ICAX1Z);
+	r_tr_to = MEMORY_dGetByte(Devices_ICAX2Z);
 
-	regA = 1;
-	regY = 1;
-	ClrN;
-	dPutByte(747,0);
+	CPU_regA = 1;
+	CPU_regY = 1;
+	CPU_ClrN;
+	MEMORY_dPutByte(747,0);
 }
 
 void xio_40(void)
@@ -225,13 +225,13 @@ void xio_40(void)
 
 /*
 		if(connected == 0)
-			dPutByte(747,0);
+			MEMORY_dPutByte(747,0);
 */
 
-	dPutByte(747,0);
-	regA = 1;
-	regY = 1;
-	ClrN;
+	MEMORY_dPutByte(747,0);
+	CPU_regA = 1;
+	CPU_regY = 1;
+	CPU_ClrN;
 	concurrent = 1;
 }
 
@@ -259,9 +259,9 @@ WSADATA stWSAData;
 		}
 	}
 
-	temp = dGetByte(ICAX1Z);
-	mode = dGetByte(0x30a);
-	PORT = (int) dGetByte(regX + 0x340 + 11);
+	temp = MEMORY_dGetByte(Devices_ICAX1Z);
+	mode = MEMORY_dGetByte(0x30a);
+	PORT = (int) MEMORY_dGetByte(CPU_regX + 0x340 + 11);
 	if (temp == 8 && PORT > 0)
 	{
 		Log_print("R: request to dial-out intercepted.");
@@ -273,10 +273,10 @@ WSADATA stWSAData;
 		if (hostlookup == NULL)
 		{
 			Log_print("ERROR! Cannot resolve %s.", ahost);
-			dPutByte(747,0);
-			regA = 170;
-			regY = 170;
-			SetN;
+			MEMORY_dPutByte(747,0);
+			CPU_regA = 170;
+			CPU_regY = 170;
+			CPU_SetN;
 			return;
 		}
 		Log_print("Resolve successful.");
@@ -289,10 +289,10 @@ WSADATA stWSAData;
 		if ((newsock = WSSOCKET(AF_INET, SOCK_STREAM, 0)) == -1)
 		{
 			Log_print("Socket connect error.");
-			dPutByte(747, 0);
-			regA = 170;
-			regY = 170;
-			SetN;
+			MEMORY_dPutByte(747, 0);
+			CPU_regA = 170;
+			CPU_regY = 170;
+			CPU_SetN;
 			return;
 		}
 		in.sin_family = AF_INET;
@@ -308,10 +308,10 @@ WSADATA stWSAData;
 		if (retval == -1)
 		{
 			Log_print("Connect error.");
-			dPutByte(747, 0);
-			regA = 170;
-			regY = 170;
-			SetN;
+			MEMORY_dPutByte(747, 0);
+			CPU_regA = 170;
+			CPU_regY = 170;
+			CPU_SetN;
 			return;
 		}
 
@@ -319,28 +319,28 @@ WSADATA stWSAData;
 		WSIOCTLSOCKET(sock, FIONBIO, (u_long FAR*)&argp);
 		connected = 1;
 		concurrent = 1;
-		dPutByte(747, 0);
-		regA = 1;
-		regY = 1;
-		ClrN;
+		MEMORY_dPutByte(747, 0);
+		CPU_regA = 1;
+		CPU_regY = 1;
+		CPU_ClrN;
 		return;
 
 	}
 
-	dPutByte(747,0);
-	regA = 1;
-	regY = 1;
-	ClrN;
+	MEMORY_dPutByte(747,0);
+	CPU_regA = 1;
+	CPU_regY = 1;
+	CPU_ClrN;
 
 }
 
 void Device_RHCLOS(void)
 {
-	dPutByte(747,0);
+	MEMORY_dPutByte(747,0);
 	bufend = 0;
-	regA = 1;
-	regY = 1;
-	ClrN;
+	CPU_regA = 1;
+	CPU_regY = 1;
+	CPU_ClrN;
 	concurrent = 0;
 }
 
@@ -349,12 +349,12 @@ void Device_RHREAD(void)
 	char j;
 
 	if (bufend > 0) {
-		regA = bufout[1];
-		regY = 1;
-		ClrN;
+		CPU_regA = bufout[1];
+		CPU_regY = 1;
+		CPU_ClrN;
 
 		bufend--;
-		dPutByte(747,bufend);
+		MEMORY_dPutByte(747,bufend);
 
 		j = 1;
 
@@ -368,10 +368,10 @@ void Device_RHREAD(void)
 		if (r_tr == 32) { /* no translation */
 		} else {
 			/* light translation */
-			if (regA == 13) {
-				regA = 155;
-			} else if (regA == 10) {
-				regA = 32;
+			if (CPU_regA == 13) {
+				CPU_regA = 155;
+			} else if (CPU_regA == 10) {
+				CPU_regA = 32;
 			}
 		}
 		return;
@@ -385,42 +385,42 @@ void Device_RHWRIT(void)
 	if (connected != 0) {
 			if (r_tr == 32) { /* no translation */
 			} else {
-				if (regA == 155) {
-					regA = 13;
-					retval = WSSEND(newsock, &regA, 1, 0);
-					regA = 1;
-					regY = 1;
-					ClrN;
-					dPutByte(749, 0);
+				if (CPU_regA == 155) {
+					CPU_regA = 13;
+					retval = WSSEND(newsock, &CPU_regA, 1, 0);
+					CPU_regA = 1;
+					CPU_regY = 1;
+					CPU_ClrN;
+					MEMORY_dPutByte(749, 0);
 					return;
 				}
 			}
-			if (regA == 255)
-				retval = WSSEND(newsock, &regA, 1, 0); /* IAC escape sequence */
+			if (CPU_regA == 255)
+				retval = WSSEND(newsock, &CPU_regA, 1, 0); /* IAC escape sequence */
 
 
-		retval = WSSEND(newsock, &regA, 1, 0); /* returns -1 if disconnected */
+		retval = WSSEND(newsock, &CPU_regA, 1, 0); /* returns -1 if disconnected */
 		if (retval == -1) {
 			Log_print("Error on R: write.");
-			dPutByte(749,0);
-			regA = 1;
-			regY = 1;
-			ClrN;
+			MEMORY_dPutByte(749,0);
+			CPU_regA = 1;
+			CPU_regY = 1;
+			CPU_ClrN;
 
 
 		} else {
-			dPutByte(749,0);
-			regA = 1;
-			regY = 1;
-			ClrN;
+			MEMORY_dPutByte(749,0);
+			CPU_regA = 1;
+			CPU_regY = 1;
+			CPU_ClrN;
 		}
-		dPutByte(749,0); /* bytes waiting to be sent */
+		MEMORY_dPutByte(749,0); /* bytes waiting to be sent */
 		return;
 	}
-	dPutByte(749,0);
-	regA = 1;
-	regY = 1;
-	ClrN;
+	MEMORY_dPutByte(749,0);
+	CPU_regA = 1;
+	CPU_regY = 1;
+	CPU_ClrN;
 }
 
 void Device_RHSTAT(void)
@@ -436,9 +436,9 @@ void Device_RHSTAT(void)
 	time_t lTime;
 
 /* are we connected? */
-	regA = 1;
-	regY = 1;
-	ClrN;
+	CPU_regA = 1;
+	CPU_regY = 1;
+	CPU_ClrN;
 
 	if (connected == 0) {
 
@@ -518,7 +518,7 @@ void Device_RHSTAT(void)
 
 			strcat(bufout,"\r\n_CONNECT 2400\r\n");
 			bufend = 17;
-			dPutByte(747,17);
+			MEMORY_dPutByte(747,17);
 			WSCLOSESOCKET(sock);
 			return;
 		}
@@ -533,37 +533,37 @@ void Device_RHSTAT(void)
 				if (one == 255) {
 					bufend++;
 					bufout[bufend] = one;
-					dPutByte(747,bufend);
-					regA = 1;
-					regY = 1;
-					ClrN;
+					MEMORY_dPutByte(747,bufend);
+					CPU_regA = 1;
+					CPU_regY = 1;
+					CPU_ClrN;
 					return;
 				} else {
 					while ((bytesread = WSRECV(newsock, &one, 1, 0))==0) {
 					}
 
-					regA = 1;
-					regY = 1;
-					ClrN;
+					CPU_regA = 1;
+					CPU_regY = 1;
+					CPU_ClrN;
 					return;
 				}
 			} else {
 				bufend++;
 				bufout[bufend] = one;
-				dPutByte(747,bufend);
-				regA = 1;
-				regY = 1;
-				ClrN;
+				MEMORY_dPutByte(747,bufend);
+				CPU_regA = 1;
+				CPU_regY = 1;
+				CPU_ClrN;
 				return;
 			}
 
 		}
 	} else {
 		if (concurrent == 0 && connected == 1) {
-			dPutByte(747,12);
-			regA = 1;
-			regY = 1;
-			ClrN;
+			MEMORY_dPutByte(747,12);
+			CPU_regA = 1;
+			CPU_regY = 1;
+			CPU_ClrN;
 			return;
 		}
 	}
@@ -571,13 +571,13 @@ void Device_RHSTAT(void)
 
 void Device_RHSPEC(void)
 {
-	r_in = dGetByte(ICCOMZ);
+	r_in = MEMORY_dGetByte(Devices_ICCOMZ);
 /*
 	Log_print( "R: device special" );
 
-	Log_print("ICCOMZ =");
+	Log_print("Devices_ICCOMZ =");
 	Log_print("%d",r_in);
-	Log_print("^^ in ICCOMZ");
+	Log_print("^^ in Devices_ICCOMZ");
 */
 
 	switch (r_in) {
@@ -598,9 +598,9 @@ void Device_RHSPEC(void)
 		break;
 	}
 /*
-	regA = 1;
-	regY = 1;
-	ClrN;
+	CPU_regA = 1;
+	CPU_regY = 1;
+	CPU_ClrN;
 */
 
 }
@@ -621,7 +621,7 @@ static UWORD r_entry_address = 0;
 void RDevice_Frame(void)
 {
 	if (Devices_enable_r_patch)
-		r_entry_address = Device_UpdateHATABSEntry('R', r_entry_address, R_TABLE_ADDRESS);
+		r_entry_address = Devices_UpdateHATABSEntry('R', r_entry_address, R_TABLE_ADDRESS);
 }
 
 /* call before or after ESC_UpdatePatches */
@@ -631,38 +631,38 @@ void RDevice_UpdatePatches(void)
 		/* change memory attributex for the area, where we put
 		   R: handler table and patches */
 #ifndef PAGED_ATTRIB
-		SetROM(R_DEVICE_BEGIN, R_DEVICE_END);
+		MEMORY_SetROM(R_DEVICE_BEGIN, R_DEVICE_END);
 #else
 #pragma message ("R: device not working yet")
 #endif
 		/* set handler table */
-		dPutWord(R_TABLE_ADDRESS + DEVICE_TABLE_OPEN, R_PATCH_OPEN - 1);
-		dPutWord(R_TABLE_ADDRESS + DEVICE_TABLE_CLOS, R_PATCH_CLOS - 1);
-		dPutWord(R_TABLE_ADDRESS + DEVICE_TABLE_READ, R_PATCH_READ - 1);
-		dPutWord(R_TABLE_ADDRESS + DEVICE_TABLE_WRIT, R_PATCH_WRIT - 1);
-		dPutWord(R_TABLE_ADDRESS + DEVICE_TABLE_STAT, R_PATCH_STAT - 1);
-		dPutWord(R_TABLE_ADDRESS + DEVICE_TABLE_SPEC, R_PATCH_SPEC - 1);
+		MEMORY_dPutWord(R_TABLE_ADDRESS + Devices_TABLE_OPEN, R_PATCH_OPEN - 1);
+		MEMORY_dPutWord(R_TABLE_ADDRESS + Devices_TABLE_CLOS, R_PATCH_CLOS - 1);
+		MEMORY_dPutWord(R_TABLE_ADDRESS + Devices_TABLE_READ, R_PATCH_READ - 1);
+		MEMORY_dPutWord(R_TABLE_ADDRESS + Devices_TABLE_WRIT, R_PATCH_WRIT - 1);
+		MEMORY_dPutWord(R_TABLE_ADDRESS + Devices_TABLE_STAT, R_PATCH_STAT - 1);
+		MEMORY_dPutWord(R_TABLE_ADDRESS + Devices_TABLE_SPEC, R_PATCH_SPEC - 1);
 		/* set patches */
-		Atari800_AddEscRts(R_PATCH_OPEN, ESC_RHOPEN, Device_RHOPEN);
-		Atari800_AddEscRts(R_PATCH_CLOS, ESC_RHCLOS, Device_RHCLOS);
-		Atari800_AddEscRts(R_PATCH_READ, ESC_RHREAD, Device_RHREAD);
-		Atari800_AddEscRts(R_PATCH_WRIT, ESC_RHWRIT, Device_RHWRIT);
-		Atari800_AddEscRts(R_PATCH_STAT, ESC_RHSTAT, Device_RHSTAT);
-		Atari800_AddEscRts(R_PATCH_SPEC, ESC_RHSPEC, Device_RHSPEC);
+		ESC_AddEscRts(R_PATCH_OPEN, ESC_RHOPEN, Device_RHOPEN);
+		ESC_AddEscRts(R_PATCH_CLOS, ESC_RHCLOS, Device_RHCLOS);
+		ESC_AddEscRts(R_PATCH_READ, ESC_RHREAD, Device_RHREAD);
+		ESC_AddEscRts(R_PATCH_WRIT, ESC_RHWRIT, Device_RHWRIT);
+		ESC_AddEscRts(R_PATCH_STAT, ESC_RHSTAT, Device_RHSTAT);
+		ESC_AddEscRts(R_PATCH_SPEC, ESC_RHSPEC, Device_RHSPEC);
 		/* R: in HATABS will be added next frame by Devices_Frame */
 	}
 	else {	/* disable R: device */
 		/* remove R: entry from HATABS */
-		Device_RemoveHATABSEntry('R', r_entry_address, R_TABLE_ADDRESS);
+		Devices_RemoveHATABSEntry('R', r_entry_address, R_TABLE_ADDRESS);
 		/* remove patches */
-		Atari800_RemoveEsc(ESC_RHOPEN);
-		Atari800_RemoveEsc(ESC_RHCLOS);
-		Atari800_RemoveEsc(ESC_RHREAD);
-		Atari800_RemoveEsc(ESC_RHWRIT);
-		Atari800_RemoveEsc(ESC_RHSTAT);
-		Atari800_RemoveEsc(ESC_RHSPEC);
+		ESC_Remove(ESC_RHOPEN);
+		ESC_Remove(ESC_RHCLOS);
+		ESC_Remove(ESC_RHREAD);
+		ESC_Remove(ESC_RHWRIT);
+		ESC_Remove(ESC_RHSTAT);
+		ESC_Remove(ESC_RHSPEC);
 		/* fill memory area used for table and patches with 0xff */
-		dFillMem(R_DEVICE_BEGIN, 0xff, R_DEVICE_END - R_DEVICE_BEGIN + 1);
+		MEMORY_dFillMem(R_DEVICE_BEGIN, 0xff, R_DEVICE_END - R_DEVICE_BEGIN + 1);
 	}
 }
 

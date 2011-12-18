@@ -63,7 +63,9 @@ private:
 	int   m_nBlackLevel;
 	int   m_nWhiteLevel;
 	int   m_nSaturation;
-	int   m_nColorShift;
+	int   m_nContrast;
+	int	  m_nBrightness;
+	int   m_nGamma;
 	BOOL  m_bExitPass;
 
 // Generated message map functions
@@ -76,8 +78,12 @@ protected:
 	afx_msg void OnKillfocusWhiteLevel();
 	afx_msg void OnDeltaposSaturationSpin(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnKillfocusSaturation();
-	afx_msg void OnDeltaposShiftSpin(NMHDR* pNMHDR, LRESULT* pResult);
-	afx_msg void OnKillfocusColorShift();
+	afx_msg void OnDeltaposContrastSpin(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnKillfocusContrast();
+	afx_msg void OnDeltaposBrightnessSpin(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnKillfocusBrightness();
+	afx_msg void OnDeltaposGammaSpin(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnKillfocusGamma();
 	afx_msg void OnBrowse();
 	afx_msg void OnKillfocusEdit();
 	afx_msg void OnUseExternal();

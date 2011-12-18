@@ -26,6 +26,7 @@ File    : registry.c
 #include "sound_win.h"
 #include "registry.h"
 #include "screen.h"
+#include "cfg.h"
 
 #ifdef WIN_NETWORK_GAMES
 #include "kaillera.h"
@@ -543,7 +544,9 @@ WriteAtari800Registry(
 	_RegWriteNumber( hkKey, REG_COLOR_BLACK,         g_Screen.Pal.nBlackLevel      );
 	_RegWriteNumber( hkKey, REG_COLOR_WHITE,         g_Screen.Pal.nWhiteLevel      );
 	_RegWriteNumber( hkKey, REG_COLOR_SATURATION,    g_Screen.Pal.nSaturation      );
-	_RegWriteNumber( hkKey, REG_COLOR_SHIFT,         g_Screen.Pal.nColorShift      );
+	_RegWriteNumber( hkKey, REG_COLOR_CONTRAST,      g_Screen.Pal.nContrast        );
+	_RegWriteNumber( hkKey, REG_COLOR_BRIGHTNESS,    g_Screen.Pal.nBrightness      );
+	_RegWriteNumber( hkKey, REG_COLOR_GAMMA,         g_Screen.Pal.nGamma           );
 	_RegWriteNumber( hkKey, REG_SOUND_STATE,         g_Sound.ulState               );
 	_RegWriteNumber( hkKey, REG_SOUND_RATE,          g_Sound.nRate                 );
 	_RegWriteNumber( hkKey, REG_SOUND_VOLUME,        g_Sound.nVolume               );
@@ -670,7 +673,9 @@ InitialiseRegistry(
 	g_Screen.Pal.nBlackLevel      = DEF_CLR_BLACK_LEVEL;
 	g_Screen.Pal.nWhiteLevel      = DEF_CLR_WHITE_LEVEL;
 	g_Screen.Pal.nSaturation      = DEF_CLR_SATURATION;
-	g_Screen.Pal.nColorShift      = DEF_CLR_SHIFT;
+	g_Screen.Pal.nContrast        = DEF_CLR_CONTRAST;
+	g_Screen.Pal.nBrightness      = DEF_CLR_BRIGHTNESS;
+	g_Screen.Pal.nGamma           = DEF_CLR_GAMMA;
 #ifdef WIN_NETWORK_GAMES
 	g_Kaillera.ulState            = DEF_KAILLERA_STATE;
 	g_Kaillera.nLocalPort         = DEF_KAILLERA_LOCAL_PORT;
@@ -729,7 +734,7 @@ InitialiseRegistry(
 	for( i = 0; i < SIO_MAX_DRIVES; i++ )
 	{
 		strcpy( SIO_filename[ i ], "Off" ) ;
-		SIO_drive_status[ i ] = Off;
+		SIO_drive_status[ i ] = SIO_OFF;
 	}
 
 	WriteAtari800Registry();
@@ -812,16 +817,16 @@ ReadRegDrives(
 
 	for( i = 0; i < SIO_MAX_DRIVES; i++ )
 	{
-		if ( SIO_drive_status[ i ] ==  Off || SIO_drive_status[ i ] == NoDisk ) {
+		if ( SIO_drive_status[ i ] ==  SIO_OFF || SIO_drive_status[ i ] == SIO_NO_DISK ) {
 			bFail |= _RegReadString( hkKey, reg_drives[i], SIO_filename[ i ], "Off", MAX_PATH );
 
 			if( *SIO_filename[ i ] == '\0' )
 				strcpy( SIO_filename[ i ], "Off" );
 
 			if( strcmp( SIO_filename[ i ], "Off" ) == 0 )
-				SIO_drive_status[ i ] = Off;
+				SIO_drive_status[ i ] = SIO_OFF;
 			else if( strcmp( SIO_filename[ i ], "Empty" ) == 0 )
-					SIO_drive_status[ i ] = NoDisk;
+					SIO_drive_status[ i ] = SIO_NO_DISK;
 			else {
 				strcpy( szFileName, SIO_filename[ i ] );
 				if( !SIO_Mount( i + 1, szFileName, _IsFlagSet(g_Misc.ulState, MS_DRIVE_READONLY) ) )
@@ -904,7 +909,7 @@ HandleRegistry( void )
 			bFail |= _RegReadNumber( hkKey, REG_TV_MODE,             Atari800_tv_mode,              Atari800_TV_PAL         );
 			bFail |= _RegReadNumber( hkKey, REG_CART_TYPE,           CARTRIDGE_type,                CARTRIDGE_NONE          );
 			bFail |= _RegReadNumber( hkKey, REG_DISABLE_BASIC,       Atari800_disable_basic,        1                       );
-			bFail |= _RegReadNumber( hkKey, REG_REFRESH_RATE,        refresh_rate,                  1                       );
+			bFail |= _RegReadNumber( hkKey, REG_REFRESH_RATE,        Atari800_refresh_rate,         1                       );
 			bFail |= _RegReadNumber( hkKey, REG_HD_READ_ONLY,        Devices_h_read_only,           1                       );
 			bFail |= _RegReadNumber( hkKey, REG_ENABLE_RTIME,        RTIME_enabled,                 1                       );
 			bFail |= _RegReadNumber( hkKey, REG_ENABLE_SIO_PATCH,    ESC_enable_sio_patch,          1                       );
@@ -934,7 +939,9 @@ HandleRegistry( void )
 			bFail |= _RegReadNumber( hkKey, REG_COLOR_BLACK,         g_Screen.Pal.nBlackLevel,      DEF_CLR_BLACK_LEVEL     );
 			bFail |= _RegReadNumber( hkKey, REG_COLOR_WHITE,         g_Screen.Pal.nWhiteLevel,      DEF_CLR_WHITE_LEVEL     );
 			bFail |= _RegReadNumber( hkKey, REG_COLOR_SATURATION,    g_Screen.Pal.nSaturation,      DEF_CLR_SATURATION      );
-			bFail |= _RegReadNumber( hkKey, REG_COLOR_SHIFT,         g_Screen.Pal.nColorShift,      DEF_CLR_SHIFT           );
+			bFail |= _RegReadNumber( hkKey, REG_COLOR_CONTRAST,      g_Screen.Pal.nContrast,        DEF_CLR_CONTRAST        );
+			bFail |= _RegReadNumber( hkKey, REG_COLOR_BRIGHTNESS,    g_Screen.Pal.nBrightness,      DEF_CLR_BRIGHTNESS      );
+			bFail |= _RegReadNumber( hkKey, REG_COLOR_GAMMA,         g_Screen.Pal.nGamma,           DEF_CLR_GAMMA           );
 			bFail |= _RegReadNumber( hkKey, REG_SOUND_STATE,         g_Sound.ulState,               DEF_SOUND_STATE         );
 			bFail |= _RegReadNumber( hkKey, REG_SOUND_RATE,          g_Sound.nRate,                 DEF_SOUND_RATE          );
 			bFail |= _RegReadNumber( hkKey, REG_SOUND_VOLUME,        g_Sound.nVolume,               DEF_SOUND_VOL           );

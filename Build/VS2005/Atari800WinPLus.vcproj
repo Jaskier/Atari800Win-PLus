@@ -2236,5 +2236,9 @@
 		</Filter>
 	</Files>
 	<Globals>
+		<Global
+			Name="RESOURCE_FILE"
+			Value="\Atari800WinPLus\Res\Atari800Win.rc"
+		/>
 	</Globals>
 </VisualStudioProject>

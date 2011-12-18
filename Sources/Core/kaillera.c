@@ -772,7 +772,7 @@ Kaillera_Frame( void )
 					{
 						POKEY_SetRandomCounter( s_anPlayValues[ 0 ] );
 					}
-					xpos = 0;
+					ANTIC_xpos = 0;
 				}
 				if( 0 == s_nPlayerNo )
 				{
@@ -946,7 +946,7 @@ GetJoystickMask(
 {
 	ULONG nValue = 0;
 
-	if( STICK_CENTRE != Input_GetStick( nPort ) )
+	if( INPUT_STICK_CENTRE != Input_GetStick( nPort ) )
 	{
 		_SetStick( Input_GetStick( nPort ), nValue );
 		_SetCtrl( KA_CTRL_STICK, nValue ); 
@@ -976,7 +976,7 @@ SetJoystickMask(
 {
 	if( -1 != nPort )
 	{
-		Input_SetStick( nPort, _TstCtrl( nValue, KA_CTRL_STICK ) ? _GetStick( nValue ) : STICK_CENTRE );
+		Input_SetStick( nPort, _TstCtrl( nValue, KA_CTRL_STICK ) ? _GetStick( nValue ) : INPUT_STICK_CENTRE );
 		Input_SetTrig ( nPort, _TstCtrl( nValue, KA_CTRL_TRIG  ) ? _GetTrig ( nValue ) /* Not really necessary */ : NO_TRIG );
 	}
 } /* #OF# SetJoystickMask */
@@ -994,7 +994,7 @@ GetKeyboardMask( void )
 {
 	ULONG nValue = 0;
 
-	if( CONSOL_NONE != g_Input.Key.nConsol )
+	if( INPUT_CONSOL_NONE != g_Input.Key.nConsol )
 	{
 		_SetConsole( g_Input.Key.nConsol, nValue );
 		_SetCtrl( KA_CTRL_CONSOLE, nValue ); 
@@ -1026,9 +1026,9 @@ SetKeyboardMask(
 	ULONG nValue /* #IN# Portion of Kaillera buffer */
 )
 {
-	key_consol = _TstCtrl( nValue, KA_CTRL_CONSOLE ) ? _GetConsole( nValue ) : CONSOL_NONE;
+	INPUT_key_consol = _TstCtrl( nValue, KA_CTRL_CONSOLE ) ? _GetConsole( nValue ) : INPUT_CONSOL_NONE;
 	INPUT_key_code   = _TstCtrl( nValue, KA_CTRL_KEY     ) ? _GetKey    ( nValue ) : AKEY_NONE;
-	key_shift  = _TstCtrl( nValue, KA_CTRL_SHIFT   ) ? _GetShift  ( nValue ) /* Not really necessary */ : NO_SHIFT;
+	INPUT_key_shift  = _TstCtrl( nValue, KA_CTRL_SHIFT   ) ? _GetShift  ( nValue ) /* Not really necessary */ : NO_SHIFT;
 
 } /* #OF# SetKeyboardMask */
 

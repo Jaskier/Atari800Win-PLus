@@ -70,7 +70,7 @@ struct InputCtrl_t g_Input =
 		AKEY_NONE,
 		0,
 		0,
-		CONSOL_NONE,
+		INPUT_CONSOL_NONE,
 		0,
 		s_anExtKeys,
 		s_anKBTable
@@ -512,20 +512,20 @@ static int   s_nCurrentMouseY = 0;
 static int   s_anStick   [ MAX_ATARI_JOYPORTS ];
 static int   s_anTrig    [ MAX_ATARI_JOYPORTS ];
 
-static int   s_anKeystick[ NUM_KBJOY_DEVICES ] = { STICK_CENTRE, STICK_CENTRE, STICK_CENTRE, STICK_CENTRE };
+static int   s_anKeystick[ NUM_KBJOY_DEVICES ] = { INPUT_STICK_CENTRE, INPUT_STICK_CENTRE, INPUT_STICK_CENTRE, INPUT_STICK_CENTRE };
 static int   s_anKeytrig [ NUM_KBJOY_DEVICES ] = { 1, 1, 1, 1 };
 
 static const int s_anStickTable[ NUM_KBJOY_KEYS - 1 ] =
 {
-	STICK_UL,
-	STICK_FORWARD,
-	STICK_UR,
-	STICK_RIGHT,
-	STICK_LR,
-	STICK_BACK,
-	STICK_LL,
-	STICK_LEFT,
-	STICK_CENTRE
+	INPUT_STICK_UL,
+	INPUT_STICK_FORWARD,
+	INPUT_STICK_UR,
+	INPUT_STICK_RIGHT,
+	INPUT_STICK_LR,
+	INPUT_STICK_BACK,
+	INPUT_STICK_LL,
+	INPUT_STICK_LEFT,
+	INPUT_STICK_CENTRE
 };
 
 static BOOL DI_GetErrorString( HRESULT hResult, LPSTR pszErrorBuff, DWORD dwError );
@@ -600,17 +600,17 @@ Input_ResetKeys( void )
 	int i;
 	for( i = 0; i < NUM_KBJOY_DEVICES; i++ )
 	{
-		s_anKeystick[ i ] = STICK_CENTRE;
+		s_anKeystick[ i ] = INPUT_STICK_CENTRE;
 		s_anKeytrig [ i ] = 1;
 	}
 	g_Input.Key.nCurrentKey = g_Input.Key.nNewKey = AKEY_NONE;
 	g_Input.Key.nCurrentVK  = g_Input.Key.nNewVK  = 0;
-	g_Input.Key.nConsol     = CONSOL_NONE;
+	g_Input.Key.nConsol     = INPUT_CONSOL_NONE;
 	g_Input.Key.nControl    = 0;
 	g_Input.Key.nShift      = 0;
 
-	key_consol = g_Input.Key.nConsol;
-	key_shift  = g_Input.Key.nShift;
+	INPUT_key_consol = g_Input.Key.nConsol;
+	INPUT_key_shift  = g_Input.Key.nShift;
 
 } /* #OF# Input_ResetKeys */
 
@@ -635,7 +635,7 @@ Input_Reset( void )
 	for( i = 0; i < MAX_ATARI_JOYPORTS; i++ )
 	{
 		s_anTrig [ i ] = 1;
-		s_anStick[ i ] = STICK_CENTRE;
+		s_anStick[ i ] = INPUT_STICK_CENTRE;
 	}
 } /* #OF# Input_Reset */
 
@@ -869,7 +869,7 @@ Input_Initialise(
 		else
 			INPUT_joy_autofire[ i ] = INPUT_AUTOFIRE_OFF;
 	}
-	nframes = 0;
+	Atari800_nframes = 0;
 
 	/* Initialise the DirectInput devices */
 	if( bInitDInput )
@@ -991,7 +991,7 @@ Input_ReadJoystick(
 	HRESULT hResult;
 
 	if( nStickNum >= MAX_INPUT_DEVICES || !s_alpJoyPorts[ nStickNum ] )
-		return STICK_CENTRE;
+		return INPUT_STICK_CENTRE;
 
 	/* Poll the joystick to read the current state */
 	IDirectInputDevice2_Poll( s_alpJoyPorts[ nStickNum ] );
@@ -1083,37 +1083,37 @@ Input_ReadJoystick(
 	if( js.lX < 0 )
 	{
 		if( js.lY < 0 )
-			nStickVal |= STICK_UL;
+			nStickVal |= INPUT_STICK_UL;
 		else
 		if( js.lY > 0 )
-			nStickVal |= STICK_LL;
+			nStickVal |= INPUT_STICK_LL;
 		else
 		if( js.lY == 0 )
-			nStickVal |= STICK_LEFT;
+			nStickVal |= INPUT_STICK_LEFT;
 	}
 	else
 	if( js.lX > 0 )
 	{
 		if( js.lY < 0 )
-			nStickVal |= STICK_UR;
+			nStickVal |= INPUT_STICK_UR;
 		else
 		if( js.lY > 0 )
-			nStickVal |= STICK_LR;
+			nStickVal |= INPUT_STICK_LR;
 		else
 		if( js.lY == 0 )
-			nStickVal |= STICK_RIGHT;
+			nStickVal |= INPUT_STICK_RIGHT;
 	}
 	else
 	if( js.lX == 0 )
 	{
 		if( js.lY < 0 )
-			nStickVal |= STICK_FORWARD;
+			nStickVal |= INPUT_STICK_FORWARD;
 		else
 		if( js.lY > 0 )
-			nStickVal |= STICK_BACK;
+			nStickVal |= INPUT_STICK_BACK;
 		else
 		if( js.lY == 0 )
-			nStickVal |= STICK_CENTRE;
+			nStickVal |= INPUT_STICK_CENTRE;
 	}
 	s_anStick[ nStickNum ] = nStickVal;
 
@@ -1261,7 +1261,7 @@ Input_UpdateJoystick( void )
 			}
 			else
 			{
-				s_anStick[ i ] = STICK_CENTRE;
+				s_anStick[ i ] = INPUT_STICK_CENTRE;
 				s_anTrig [ i ] = 1;
 			}
 		}
@@ -1354,8 +1354,8 @@ Input_UpdateMouse( void )
 				s_nCurrentMouseY = pt.y = s_rcViewBounds.bottom - 2;
 				SetCursorPos( pt.x, pt.y );
 			}
-			mouse_delta_x = pt.x - s_nCurrentMouseX;
-			mouse_delta_y = pt.y - s_nCurrentMouseY;
+			INPUT_mouse_delta_x = pt.x - s_nCurrentMouseX;
+			INPUT_mouse_delta_y = pt.y - s_nCurrentMouseY;
 
 			s_nCurrentMouseX = pt.x;
 			s_nCurrentMouseY = pt.y;
@@ -1377,7 +1377,7 @@ Input_ResetMouse(
 {
 	if( bCenter )
 	{
-		mouse_delta_x = mouse_delta_y = 0;
+		INPUT_mouse_delta_x = INPUT_mouse_delta_y = 0;
 
 		s_nCurrentMouseX = s_rcViewBounds.left + (s_rcViewBounds.right - s_rcViewBounds.left) / 2;
 		s_nCurrentMouseY = s_rcViewBounds.top + (s_rcViewBounds.bottom - s_rcViewBounds.top) / 2;
@@ -1444,30 +1444,30 @@ Atari_Set_CONSOL(
 	switch( nNewConsol )
 	{
 		case AKEY_OPTIONDWN:
-			_ClrFlag( g_Input.Key.nConsol, CONSOL_OPTION );
+			_ClrFlag( g_Input.Key.nConsol, INPUT_CONSOL_OPTION );
 			break;
 
 		case AKEY_SELECTDWN:
-			_ClrFlag( g_Input.Key.nConsol, CONSOL_SELECT );
+			_ClrFlag( g_Input.Key.nConsol, INPUT_CONSOL_SELECT );
 			break;
 
 		case AKEY_STARTDWN:
-			_ClrFlag( g_Input.Key.nConsol, CONSOL_START );
+			_ClrFlag( g_Input.Key.nConsol, INPUT_CONSOL_START );
 			break;
 
 		case AKEY_OPTIONUP:
-			_SetFlag( g_Input.Key.nConsol, CONSOL_OPTION );
+			_SetFlag( g_Input.Key.nConsol, INPUT_CONSOL_OPTION );
 			break;
 
 		case AKEY_SELECTUP:
-			_SetFlag( g_Input.Key.nConsol, CONSOL_SELECT );
+			_SetFlag( g_Input.Key.nConsol, INPUT_CONSOL_SELECT );
 			break;
 
 		case AKEY_STARTUP:
-			_SetFlag( g_Input.Key.nConsol, CONSOL_START );
+			_SetFlag( g_Input.Key.nConsol, INPUT_CONSOL_START );
 			break;
 	}
-	key_consol = g_Input.Key.nConsol;
+	INPUT_key_consol = g_Input.Key.nConsol;
 
 } /* #OF# Atari_Set_CONSOL */
 
@@ -1537,13 +1537,13 @@ ServeKBJoystickDown(
 					for( j = 0; j < NUM_KBJOY_KEYS - 1/* The last is KEYSET_FIRE */; j++ )
 						if( wp == g_Input.Joy.anKeysets[ nIDevice ][ j ] )
 						{
-							if( s_anStickTable[ j ] != STICK_CENTRE )
+							if( s_anStickTable[ j ] != INPUT_STICK_CENTRE )
 							{
 								/* We have to clear some bits according to chosen direction */
 								s_anKeystick[ nIDevice ] &= s_anStickTable[ j ];
 							}
 							else
-								s_anKeystick[ nIDevice ] |= STICK_CENTRE;
+								s_anKeystick[ nIDevice ] |= INPUT_STICK_CENTRE;
 
 							bResult = TRUE;
 							/* The key has been found */
@@ -1656,7 +1656,7 @@ ToggleKeyDown(
 	switch( wp )
 	{
 		case VK_SHIFT:
-			key_shift = g_Input.Key.nShift = 1;
+			INPUT_key_shift = g_Input.Key.nShift = 1;
 			return TRUE;
 
 		case VK_CONTROL:
@@ -1704,7 +1704,7 @@ ToggleKeyUp(
 	switch( wp )
 	{
 		case VK_SHIFT:
-			key_shift = g_Input.Key.nShift = 0;
+			INPUT_key_shift = g_Input.Key.nShift = 0;
 			return TRUE;
 
 		case VK_CONTROL:
@@ -1868,7 +1868,7 @@ Input_SysKeyUp(
 		int i;
 		for( i = 0; i < NUM_KBJOY_DEVICES; i++ )
 		{
-			s_anKeystick[ i ] = STICK_CENTRE;
+			s_anKeystick[ i ] = INPUT_STICK_CENTRE;
 			s_anKeytrig [ i ] = 1;
 		}
 	}

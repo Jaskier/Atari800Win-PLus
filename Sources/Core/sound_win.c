@@ -396,10 +396,10 @@ Sound_Initialise(
 		s_pSoundBuffer[ i ] = s_nSilenceData;
 	
 	/* Initialize the kernel sound machine */
-	Pokey_sound_init( FREQ_17_EXACT,
-					  (uint16)g_Sound.nRate,
-					  (uint8)nChannels,
-					  (n16BitSnd ? SND_BIT16 : 0) | (POKEYSND_stereo_enabled ? SND_STEREO : 0),
+	POKEYSND_Init( POKEYSND_FREQ_17_EXACT,
+					  (UWORD)g_Sound.nRate,
+					  (UBYTE)nChannels,
+					  (n16BitSnd ? POKEYSND_BIT16 : 0),
 					  bClearRegs );
 
 	/* Set this up for PCM, 1/2 channels, 8/16 bits unsigned samples */
@@ -629,14 +629,14 @@ Sound_SetQuality(
 	if( nQuality > 1 )
 	{
 		/* Michael Borisov's High Fidelity Pokey emulation */
-		Pokey_set_mzquality( (nQuality - 2) % 3 ); /* 0 for the fastest rendering */
-		enable_new_pokey = 1;
+		POKEYSND_SetMzQuality( (nQuality - 2) % 3 ); /* 0 for the fastest rendering */
+		POKEYSND_enable_new_pokey = 1;
 
 		_TRACE1("mz sound quality: %d\n", (nQuality - 2) % 3);
 	}
 	else
 		/* Ron Fries' old Pokey emulation */
-		enable_new_pokey = 0;
+		POKEYSND_enable_new_pokey = 0;
 
 } /* #OF# Sound_SetQuality */
 

@@ -33,6 +33,7 @@ File    : misc_win.c
 #include "sound_win.h"
 #include "input_win.h"
 #include "misc_win.h"
+#include "cfg.h"
 
 #ifdef WIN_NETWORK_GAMES
 #include "kaillera.h"
@@ -110,20 +111,20 @@ Function : Misc_UpdateCollisions
 =========================================================*/
 void Misc_UpdateCollisions() {
 	if (g_Misc.ulState & MS_DISABLE_COLLISIONS) {
-		collisions_mask_missile_playfield = g_Misc.Cheat.ulCollisions &
+		GTIA_collisions_mask_missile_playfield = g_Misc.Cheat.ulCollisions &
 											DC_MISSILE_PLAYFIELD ? 0 : 0x0f;
-		collisions_mask_player_playfield = g_Misc.Cheat.ulCollisions &
+		GTIA_collisions_mask_player_playfield = g_Misc.Cheat.ulCollisions &
 											DC_PLAYER_PLAYFIELD ? 0 : 0x0f;
-		collisions_mask_missile_player = g_Misc.Cheat.ulCollisions &
+		GTIA_collisions_mask_missile_player = g_Misc.Cheat.ulCollisions &
 											DC_MISSILE_PLAYER ? 0 : 0x0f;
-		collisions_mask_player_player = g_Misc.Cheat.ulCollisions &
+		GTIA_collisions_mask_player_player = g_Misc.Cheat.ulCollisions &
 											DC_PLAYER_PLAYER ? 0 : 0x0f;
 	}
 	else {
-		collisions_mask_missile_playfield = 0x0f;
-		collisions_mask_player_playfield = 0x0f;
-		collisions_mask_missile_player = 0x0f;
-		collisions_mask_player_player = 0x0f;
+		GTIA_collisions_mask_missile_playfield = 0x0f;
+		GTIA_collisions_mask_player_playfield = 0x0f;
+		GTIA_collisions_mask_missile_player = 0x0f;
+		GTIA_collisions_mask_player_player = 0x0f;
 	}
 }
 
@@ -202,50 +203,6 @@ Misc_GetSystemInfo(
 	return TRUE;
 
 } /* #OF# Misc_GetSystemInfo */
-
-/*========================================================
-Function : ReadDisabledROMs
-=========================================================*/
-/* #FN#
-   Reads ROM files from disk instead from state image */
-int
-/* #AS#
-   TRUE if succeeded, otherwise FALSE */
-ReadDisabledROMs( void )
-{
-	int	nRomFile;
-
-	nRomFile = _open( CFG_basic_filename, O_BINARY | O_RDONLY, 0777 );
-	if( nRomFile == -1 )
-	{
-		Log_print( "Could not open %s for reading.", CFG_basic_filename );
-		return FALSE;
-	}
-
-	if( _read( nRomFile, atari_basic, 8192 ) < 8192 )
-	{
-		Log_print( "Could not read all of atari basic from %s.", CFG_basic_filename );
-		return FALSE;
-	}
-	_close( nRomFile );
-
-	nRomFile = _open( CFG_xlxe_filename, O_BINARY | O_RDONLY, 0777 );
-	if( nRomFile == -1 )
-	{
-		Log_print( "Could not open %s for reading.", CFG_xlxe_filename );
-		return FALSE;
-	}
-
-	if( _read( nRomFile, atari_os, 16384 ) < 16384 )
-	{
-		Log_print( "Could not read entire atari ROM from %s.", CFG_xlxe_filename );
-		return FALSE;
-	}
-	_close( nRomFile );
-
-	return TRUE;
-
-} /* #OF# ReadDisabledROMs */
 
 /*========================================================
 Function : prepend_tmpfile_path
@@ -454,18 +411,18 @@ Misc_CheckAttractCounter( void )
 {
 	static int nPreviousCounter = 0;
 
-	if( dGetByte( 0x4D ) == (UBYTE)(nPreviousCounter + (dGetByte( 0x14 ) == 0)) )
+	if( MEMORY_dGetByte( 0x4D ) == (UBYTE)(nPreviousCounter + (MEMORY_dGetByte( 0x14 ) == 0)) )
 	{
 		if( --g_Misc.nAttractCounter <= 0 )
 		{
-			dPutByte( 0x4D, 0 );
+			MEMORY_dPutByte( 0x4D, 0 );
 			g_Misc.nAttractCounter = ATTRACT_CHECK_FRAMES;
 		}
 	}
 	else
 		g_Misc.nAttractCounter = ATTRACT_CHECK_FRAMES;
 
-	nPreviousCounter = dGetByte( 0x4D );
+	nPreviousCounter = MEMORY_dGetByte( 0x4D );
 
 } /* #OF# Misc_CheckAttractCounter */
 
@@ -482,7 +439,7 @@ MonitorThreadProc(
 	LPVOID lpParam
 )
 {
-	return monitor();
+	return MONITOR_Run();
 
 } /* #OF# MonitorThreadProc */
 
@@ -552,7 +509,7 @@ Misc_LaunchMonitor( void )
 	}
 	else
 		/* We had few luck to create an additional thread */
-		dwExitCode = monitor();
+		dwExitCode = MONITOR_Run();
 
 	/* Enable the main window */
 	EnableWindow( g_hMainWnd, TRUE );

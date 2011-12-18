@@ -65,7 +65,9 @@ struct ScreenCtrl_t g_Screen =
 		DEF_CLR_BLACK_LEVEL,
 		DEF_CLR_WHITE_LEVEL,
 		DEF_CLR_SATURATION,
-		DEF_CLR_SHIFT,
+		DEF_CLR_CONTRAST,
+		DEF_CLR_BRIGHTNESS,
+		DEF_CLR_GAMMA,
 		TRUE
 	}
 };
@@ -288,7 +290,7 @@ AtariPlot(
 	if( !_IsFlagSet( g_ulAtariState, ATARI_RUNNING ) )
 		return;
 
-	get_charset( szCharset );
+	MEMORY_GetCharset( szCharset );
 
 	ptr = &pScreen[ 32 ]; //[24 * Screen_WIDTH + 32 ];
 
@@ -1168,10 +1170,10 @@ SetupWindowedDisplay( void )
 	s_rcSource.right  = ATARI_VIS_WIDTH;
 	s_rcSource.bottom = Screen_HEIGHT;
 
-	screen_visible_x1 = ATARI_HORZ_CLIP;
-	screen_visible_x2 = ATARI_HORZ_CLIP + ATARI_VIS_WIDTH;
-	screen_visible_y1 = 0;
-	screen_visible_y2 = Screen_HEIGHT;
+	Screen_visible_x1 = ATARI_HORZ_CLIP;
+	Screen_visible_x2 = ATARI_HORZ_CLIP + ATARI_VIS_WIDTH;
+	Screen_visible_y1 = 0;
+	Screen_visible_y2 = Screen_HEIGHT;
 
 	s_lpbmi->bmiHeader.biWidth  =  ATARI_VIS_WIDTH;
 	s_lpbmi->bmiHeader.biHeight = -Screen_HEIGHT;	/* Negative because we are a top-down bitmap */
@@ -1286,10 +1288,10 @@ SetupFullScreenDisplay( void )
 		s_rcSource.right  = Screen_WIDTH - s_rcSource.left;
 		s_rcSource.bottom = Screen_HEIGHT - s_rcSource.top;
 
-		screen_visible_x1 = s_rcSource.left;
-		screen_visible_x2 = s_rcSource.right;
-		screen_visible_y1 = s_rcSource.top;
-		screen_visible_y2 = s_rcSource.bottom;
+		Screen_visible_x1 = s_rcSource.left;
+		Screen_visible_x2 = s_rcSource.right;
+		Screen_visible_y1 = s_rcSource.top;
+		Screen_visible_y2 = s_rcSource.bottom;
 
 		_SetFlag( g_Screen.ulState, SM_ATTR_SMALL_DLG | SM_ATTR_NO_MENU );
 	}
@@ -1311,10 +1313,10 @@ SetupFullScreenDisplay( void )
 		s_rcSource.right  = Screen_WIDTH - s_rcSource.left;
 		s_rcSource.bottom = Screen_HEIGHT;
 
-		screen_visible_x1 = s_rcSource.left;
-		screen_visible_x2 = s_rcSource.right;
-		screen_visible_y1 = s_rcSource.top;
-		screen_visible_y2 = s_rcSource.bottom;
+		Screen_visible_x1 = s_rcSource.left;
+		Screen_visible_x2 = s_rcSource.right;
+		Screen_visible_y1 = s_rcSource.top;
+		Screen_visible_y2 = s_rcSource.bottom;
 
 		_SetFlag( g_Screen.ulState, SM_ATTR_SMALL_DLG | SM_ATTR_NO_MENU );
 	}
@@ -1336,10 +1338,10 @@ SetupFullScreenDisplay( void )
 		s_rcSource.right  = Screen_WIDTH - s_rcSource.left;
 		s_rcSource.bottom = Screen_HEIGHT - s_rcSource.top;
 
-		screen_visible_x1 = s_rcSource.left;
-		screen_visible_x2 = s_rcSource.right;
-		screen_visible_y1 = s_rcSource.top;
-		screen_visible_y2 = s_rcSource.bottom;
+		Screen_visible_x1 = s_rcSource.left;
+		Screen_visible_x2 = s_rcSource.right;
+		Screen_visible_y1 = s_rcSource.top;
+		Screen_visible_y2 = s_rcSource.bottom;
 
 		_SetFlag( g_Screen.ulState, SM_ATTR_SMALL_DLG | SM_ATTR_STRETCHED | SM_ATTR_NO_MENU );
 
@@ -1379,10 +1381,10 @@ SetupFullScreenDisplay( void )
 		s_rcSource.right  = Screen_WIDTH - ATARI_HORZ_CLIP;
 		s_rcSource.bottom = Screen_HEIGHT;
 
-		screen_visible_x1 = s_rcSource.left;
-		screen_visible_x2 = s_rcSource.right;
-		screen_visible_y1 = s_rcSource.top;
-		screen_visible_y2 = s_rcSource.bottom;
+		Screen_visible_x1 = s_rcSource.left;
+		Screen_visible_x2 = s_rcSource.right;
+		Screen_visible_y1 = s_rcSource.top;
+		Screen_visible_y2 = s_rcSource.bottom;
 
 		_SetFlag( g_Screen.ulState, SM_ATTR_SMALL_DLG );
 	}
@@ -1404,10 +1406,10 @@ SetupFullScreenDisplay( void )
 		s_rcSource.right  = Screen_WIDTH - ATARI_HORZ_CLIP;
 		s_rcSource.bottom = Screen_HEIGHT;
 
-		screen_visible_x1 = s_rcSource.left;
-		screen_visible_x2 = s_rcSource.right;
-		screen_visible_y1 = s_rcSource.top;
-		screen_visible_y2 = s_rcSource.bottom;
+		Screen_visible_x1 = s_rcSource.left;
+		Screen_visible_x2 = s_rcSource.right;
+		Screen_visible_y1 = s_rcSource.top;
+		Screen_visible_y2 = s_rcSource.bottom;
 	}
 	else
 	if( _IsFlagSet( g_Screen.ulState, SM_FRES_640_400 ) )
@@ -1427,10 +1429,10 @@ SetupFullScreenDisplay( void )
 		s_rcSource.right  = Screen_WIDTH - s_rcSource.left;
 		s_rcSource.bottom = Screen_HEIGHT - s_rcSource.top;
 
-		screen_visible_x1 = s_rcSource.left;
-		screen_visible_x2 = s_rcSource.right;
-		screen_visible_y1 = s_rcSource.top;
-		screen_visible_y2 = s_rcSource.bottom;
+		Screen_visible_x1 = s_rcSource.left;
+		Screen_visible_x2 = s_rcSource.right;
+		Screen_visible_y1 = s_rcSource.top;
+		Screen_visible_y2 = s_rcSource.bottom;
 
 		_SetFlag( g_Screen.ulState, SM_ATTR_STRETCHED | SM_ATTR_NO_MENU );
 
@@ -1470,10 +1472,10 @@ SetupFullScreenDisplay( void )
 		s_rcSource.right  = Screen_WIDTH - s_rcSource.left;
 		s_rcSource.bottom = Screen_HEIGHT;
 
-		screen_visible_x1 = s_rcSource.left;
-		screen_visible_x2 = s_rcSource.right;
-		screen_visible_y1 = s_rcSource.top;
-		screen_visible_y2 = s_rcSource.bottom;
+		Screen_visible_x1 = s_rcSource.left;
+		Screen_visible_x2 = s_rcSource.right;
+		Screen_visible_y1 = s_rcSource.top;
+		Screen_visible_y2 = s_rcSource.bottom;
 
 		_SetFlag( g_Screen.ulState, SM_ATTR_STRETCHED | SM_ATTR_NO_MENU );
 
@@ -1512,10 +1514,10 @@ SetupFullScreenDisplay( void )
 		s_rcSource.right  = Screen_WIDTH - ATARI_HORZ_CLIP;
 		s_rcSource.bottom = Screen_HEIGHT;
 
-		screen_visible_x1 = s_rcSource.left;
-		screen_visible_x2 = s_rcSource.right;
-		screen_visible_y1 = s_rcSource.top;
-		screen_visible_y2 = s_rcSource.bottom;
+		Screen_visible_x1 = s_rcSource.left;
+		Screen_visible_x2 = s_rcSource.right;
+		Screen_visible_y1 = s_rcSource.top;
+		Screen_visible_y2 = s_rcSource.bottom;
 
 		_SetFlag( g_Screen.ulState, SM_ATTR_STRETCHED );
 
@@ -1554,10 +1556,10 @@ SetupFullScreenDisplay( void )
 		s_rcSource.right  = Screen_WIDTH - ATARI_HORZ_CLIP;
 		s_rcSource.bottom = Screen_HEIGHT;
 
-		screen_visible_x1 = s_rcSource.left;
-		screen_visible_x2 = s_rcSource.right;
-		screen_visible_y1 = s_rcSource.top;
-		screen_visible_y2 = s_rcSource.bottom;
+		Screen_visible_x1 = s_rcSource.left;
+		Screen_visible_x2 = s_rcSource.right;
+		Screen_visible_y1 = s_rcSource.top;
+		Screen_visible_y2 = s_rcSource.bottom;
 
 		_SetFlag( g_Screen.ulState, SM_ATTR_STRETCHED );
 

@@ -12,6 +12,7 @@ File    : PaletteDlg.cpp
 #include "Helpers.h"
 #include "FileService.h"
 #include "PaletteDlg.h"
+#include "cfg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -26,10 +27,14 @@ static char THIS_FILE[] = __FILE__;
 #define MAX_BLACK			255
 #define MIN_WHITE			0
 #define MAX_WHITE			255
-#define MIN_INTENSITY		0
-#define MAX_INTENSITY		255
-#define MIN_SHIFT			0
-#define MAX_SHIFT			255
+#define MIN_SATURATION		(int)(COLOURS_SATURATION_MIN * 100)
+#define MAX_SATURATION		(int)(COLOURS_SATURATION_MAX * 100)
+#define MIN_CONTRAST		(int)(COLOURS_CONTRAST_MIN * 100)
+#define MAX_CONTRAST		(int)(COLOURS_CONTRAST_MAX * 100)
+#define MIN_BRIGHTNESS		(int)(COLOURS_BRIGHTNESS_MIN * 100)
+#define MAX_BRIGHTNESS		(int)(COLOURS_BRIGHTNESS_MAX * 100)
+#define MIN_GAMMA			(int)(COLOURS_GAMMA_MIN * 100)
+#define MAX_GAMMA			(int)(COLOURS_GAMMA_MAX * 100)
 
 #define BAR_LINES_NO		16
 #define BAR_ENTRIES_NO		(PAL_ENTRIES_NO / BAR_LINES_NO)
@@ -45,8 +50,12 @@ BEGIN_MESSAGE_MAP(CPaletteDlg, CCommonDlg)
 	ON_EN_KILLFOCUS(IDC_PALETTE_WHITELEVEL, OnKillfocusWhiteLevel)
 	ON_NOTIFY(UDN_DELTAPOS, IDC_PALETTE_SATURATIONSPIN, OnDeltaposSaturationSpin)
 	ON_EN_KILLFOCUS(IDC_PALETTE_SATURATION, OnKillfocusSaturation)
-	ON_NOTIFY(UDN_DELTAPOS, IDC_PALETTE_SHIFTSPIN, OnDeltaposShiftSpin)
-	ON_EN_KILLFOCUS(IDC_PALETTE_COLORSHIFT, OnKillfocusColorShift)
+	ON_NOTIFY(UDN_DELTAPOS, IDC_PALETTE_CONTRASTSPIN, OnDeltaposContrastSpin)
+	ON_EN_KILLFOCUS(IDC_PALETTE_CONTRAST, OnKillfocusContrast)
+	ON_NOTIFY(UDN_DELTAPOS, IDC_PALETTE_BRIGHTNESSSPIN, OnDeltaposBrightnessSpin)
+	ON_EN_KILLFOCUS(IDC_PALETTE_BRIGHTNESS, OnKillfocusBrightness)
+	ON_NOTIFY(UDN_DELTAPOS, IDC_PALETTE_GAMMASPIN, OnDeltaposGammaSpin)
+	ON_EN_KILLFOCUS(IDC_PALETTE_GAMMA, OnKillfocusGamma)
 	ON_BN_CLICKED(IDC_PALETTE_APPLYADJUSTMENT, OnApplyAdjustment)
 	ON_BN_CLICKED(IDC_PALETTE_BROWSE, OnBrowse)
 	ON_EN_KILLFOCUS(IDC_PALETTE_EDIT, OnKillfocusEdit)
@@ -122,7 +131,7 @@ PreparePalette(
 		   is an appropriate option checked off */
 		_IsPathAvailable( pszPaletteFile ) )
 	{
-		if( !COLOURS_EXTERNAL_Read( pszPaletteFile ) )
+		if( !Palette_Read( pszPaletteFile ) )
 		{
 			DisplayMessage( GetSafeHwnd(), IDS_ERROR_ACT_READ, 0, MB_ICONEXCLAMATION | MB_OK );
 			strcpy( pszPaletteFile, FILE_NONE );
@@ -134,12 +143,12 @@ PreparePalette(
 	}
 
 	if ( !bResult )
-		Palette_Generate( m_nBlackLevel, m_nWhiteLevel, m_nColorShift );
+		Palette_Generate( m_nBlackLevel, m_nWhiteLevel, m_nSaturation, m_nContrast, m_nBrightness, m_nGamma );
 
 	/* Should we generate or format an external palette? */
 	if( _IsFlagSet( m_ulMiscState, MS_TRANS_LOADED_PAL ) )
 	{
-		Palette_Adjust( m_nBlackLevel, m_nWhiteLevel, m_nSaturation );
+		Palette_Adjust( m_nBlackLevel, m_nWhiteLevel, m_nSaturation, m_nContrast, m_nBrightness, m_nGamma );
 	}
 
 	/* Palette bar is drawn in windowed modes only */
@@ -306,14 +315,12 @@ SetDlgState()
 	_SetChkBttn( IDC_PALETTE_USEEXTERNAL,      _IsFlagSet( m_ulMiscState, MS_USE_EXT_PALETTE ) );
 	_EnableCtrl( IDC_PALETTE_USEEXTERNAL,      bPalette );
 
-	_EnableCtrl( IDC_PALETTE_COLORSHIFT,       !_IsFlagSet( m_ulMiscState, MS_USE_EXT_PALETTE ) );
-	_EnableCtrl( IDC_PALETTE_COLORSHIFT_LABEL, !_IsFlagSet( m_ulMiscState, MS_USE_EXT_PALETTE ) );
-	_EnableCtrl( IDC_PALETTE_SHIFTSPIN,        !_IsFlagSet( m_ulMiscState, MS_USE_EXT_PALETTE ) );
-
 	SetDlgItemInt( IDC_PALETTE_BLACKLEVEL, m_nBlackLevel, FALSE );
 	SetDlgItemInt( IDC_PALETTE_WHITELEVEL, m_nWhiteLevel, FALSE );
 	SetDlgItemInt( IDC_PALETTE_SATURATION, m_nSaturation, FALSE );
-	SetDlgItemInt( IDC_PALETTE_COLORSHIFT, m_nColorShift, FALSE );
+	SetDlgItemInt( IDC_PALETTE_CONTRAST,   m_nContrast,   FALSE );
+	SetDlgItemInt( IDC_PALETTE_BRIGHTNESS, m_nBrightness, FALSE );
+	SetDlgItemInt( IDC_PALETTE_GAMMA,      m_nGamma,      FALSE );
 
 	SetDlgItemText( IDC_PALETTE_EDIT, m_szPaletteFile );
 
@@ -341,7 +348,9 @@ OnInitDialog()
 	m_nBlackLevel = g_Screen.Pal.nBlackLevel;
 	m_nWhiteLevel = g_Screen.Pal.nWhiteLevel;
 	m_nSaturation = g_Screen.Pal.nSaturation;
-	m_nColorShift = g_Screen.Pal.nColorShift;
+	m_nContrast   = g_Screen.Pal.nContrast;
+	m_nBrightness = g_Screen.Pal.nBrightness;
+	m_nGamma      = g_Screen.Pal.nGamma;
 
 	_strncpy( m_szPaletteFile, g_szPaletteFile, MAX_PATH );
 
@@ -471,7 +480,7 @@ OnDeltaposSaturationSpin(
 	LRESULT *pResult /* #OUT# */
 )
 {
-	_DeltaposSpin( pNMHDR, IDC_PALETTE_SATURATION, m_nSaturation, MIN_INTENSITY, MAX_INTENSITY );
+	_DeltaposSpin( pNMHDR, IDC_PALETTE_SATURATION, m_nSaturation, MIN_SATURATION, MAX_SATURATION );
 	/* Read the palette from a file or/and format it */
 	PreparePalette( m_szPaletteFile );
 
@@ -490,7 +499,7 @@ void
 CPaletteDlg::
 OnKillfocusSaturation()
 {
-	_KillfocusSpin( IDC_PALETTE_SATURATION, m_nSaturation, MIN_INTENSITY, MAX_INTENSITY );
+	_KillfocusSpin( IDC_PALETTE_SATURATION, m_nSaturation, MIN_SATURATION, MAX_SATURATION );
 	if( !m_bExitPass )
 		/* Read the palette from a file or/and format it */
 		PreparePalette( m_szPaletteFile );
@@ -498,7 +507,7 @@ OnKillfocusSaturation()
 } /* #OF# CPaletteDlg::OnKillfocusSaturation */
 
 /*========================================================
-Method   : CPaletteDlg::OnDeltaposShiftSpin
+Method   : CPaletteDlg::OnDeltaposContrastSpin
 =========================================================*/
 /* #FN#
    Sets a state of the object regarding to an appropriate spin control */
@@ -506,21 +515,21 @@ void
 /* #AS#
    Nothing */
 CPaletteDlg::
-OnDeltaposShiftSpin(
+OnDeltaposContrastSpin(
 	NMHDR   *pNMHDR, /* #IN#  */
 	LRESULT *pResult /* #OUT# */
 )
 {
-	_DeltaposSpin( pNMHDR, IDC_PALETTE_COLORSHIFT, m_nColorShift, MIN_SHIFT, MAX_SHIFT );
+	_DeltaposSpin( pNMHDR, IDC_PALETTE_CONTRAST, m_nContrast, MIN_CONTRAST, MAX_CONTRAST );
 	/* Read the palette from a file or/and format it */
 	PreparePalette( m_szPaletteFile );
 
 	*pResult = 0;
 
-} /* #OF# CPaletteDlg::OnDeltaposShiftSpin */
+} /* #OF# CPaletteDlg::OnDeltaposContrastSpin */
 
 /*========================================================
-Method   : CPaletteDlg::OnKillfocusColorShift
+Method   : CPaletteDlg::OnKillfocusContrast
 =========================================================*/
 /* #FN#
    Sets a state of the object regarding to an appropriate edit control */
@@ -528,14 +537,94 @@ void
 /* #AS#
    Nothing */
 CPaletteDlg::
-OnKillfocusColorShift()
+OnKillfocusContrast()
 {
-	_KillfocusSpin( IDC_PALETTE_COLORSHIFT, m_nColorShift, MIN_SHIFT, MAX_SHIFT );
+	_KillfocusSpin( IDC_PALETTE_CONTRAST, m_nContrast, MIN_CONTRAST, MAX_CONTRAST );
 	if( !m_bExitPass )
 		/* Read the palette from a file or/and format it */
 		PreparePalette( m_szPaletteFile );
 
-} /* #OF# CPaletteDlg::OnKillfocusColorShift */
+} /* #OF# CPaletteDlg::OnKillfocusContrast */
+
+/*========================================================
+Method   : CPaletteDlg::OnDeltaposBrightnessSpin
+=========================================================*/
+/* #FN#
+   Sets a state of the object regarding to an appropriate spin control */
+void
+/* #AS#
+   Nothing */
+CPaletteDlg::
+OnDeltaposBrightnessSpin(
+	NMHDR   *pNMHDR, /* #IN#  */
+	LRESULT *pResult /* #OUT# */
+)
+{
+	_DeltaposSpin( pNMHDR, IDC_PALETTE_BRIGHTNESS, m_nBrightness, MIN_BRIGHTNESS, MAX_BRIGHTNESS );
+	/* Read the palette from a file or/and format it */
+	PreparePalette( m_szPaletteFile );
+
+	*pResult = 0;
+
+} /* #OF# CPaletteDlg::OnDeltaposBrightnessSpin */
+
+/*========================================================
+Method   : CPaletteDlg::OnKillfocusBrightness
+=========================================================*/
+/* #FN#
+   Sets a state of the object regarding to an appropriate edit control */
+void
+/* #AS#
+   Nothing */
+CPaletteDlg::
+OnKillfocusBrightness()
+{
+	_KillfocusSpin( IDC_PALETTE_BRIGHTNESS, m_nBrightness, MIN_BRIGHTNESS, MAX_BRIGHTNESS );
+	if( !m_bExitPass )
+		/* Read the palette from a file or/and format it */
+		PreparePalette( m_szPaletteFile );
+
+} /* #OF# CPaletteDlg::OnKillfocusBrightness */
+
+/*========================================================
+Method   : CPaletteDlg::OnDeltaposGammaSpin
+=========================================================*/
+/* #FN#
+   Sets a state of the object regarding to an appropriate spin control */
+void
+/* #AS#
+   Nothing */
+CPaletteDlg::
+OnDeltaposGammaSpin(
+	NMHDR   *pNMHDR, /* #IN#  */
+	LRESULT *pResult /* #OUT# */
+)
+{
+	_DeltaposSpin( pNMHDR, IDC_PALETTE_GAMMA, m_nGamma, MIN_GAMMA, MAX_GAMMA );
+	/* Read the palette from a file or/and format it */
+	PreparePalette( m_szPaletteFile );
+
+	*pResult = 0;
+
+} /* #OF# CPaletteDlg::OnDeltaposGammaSpin */
+
+/*========================================================
+Method   : CPaletteDlg::OnKillfocusGamma
+=========================================================*/
+/* #FN#
+   Sets a state of the object regarding to an appropriate edit control */
+void
+/* #AS#
+   Nothing */
+CPaletteDlg::
+OnKillfocusGamma()
+{
+	_KillfocusSpin( IDC_PALETTE_GAMMA, m_nGamma, MIN_GAMMA, MAX_GAMMA );
+	if( !m_bExitPass )
+		/* Read the palette from a file or/and format it */
+		PreparePalette( m_szPaletteFile );
+
+} /* #OF# CPaletteDlg::OnKillfocusGamma */
 
 /*========================================================
 Method   : CPaletteDlg::OnUseExternal
@@ -653,8 +742,14 @@ ReceiveFocused()
 		case IDC_PALETTE_SATURATION:
 			OnKillfocusSaturation();
 			break;
-		case IDC_PALETTE_COLORSHIFT:
-			OnKillfocusColorShift();
+		case IDC_PALETTE_CONTRAST:
+			OnKillfocusContrast();
+			break;
+		case IDC_PALETTE_BRIGHTNESS:
+			OnKillfocusBrightness();
+			break;
+		case IDC_PALETTE_GAMMA:
+			OnKillfocusGamma();
 			break;
 		case IDC_PALETTE_EDIT:
 			OnKillfocusEdit();
@@ -703,10 +798,22 @@ OnOK()
 		WriteRegDWORD( NULL, REG_COLOR_SATURATION, g_Screen.Pal.nSaturation );
 		bChanged = TRUE;
 	}
-	if( m_nColorShift != g_Screen.Pal.nColorShift )
+	if( m_nContrast != g_Screen.Pal.nContrast )
 	{
-		g_Screen.Pal.nColorShift = m_nColorShift;
-		WriteRegDWORD( NULL, REG_COLOR_SHIFT, g_Screen.Pal.nColorShift );
+		g_Screen.Pal.nContrast = m_nContrast;
+		WriteRegDWORD( NULL, REG_COLOR_CONTRAST, g_Screen.Pal.nContrast );
+		bChanged = TRUE;
+	}
+	if( m_nBrightness != g_Screen.Pal.nBrightness )
+	{
+		g_Screen.Pal.nBrightness = m_nBrightness;
+		WriteRegDWORD( NULL, REG_COLOR_BRIGHTNESS, g_Screen.Pal.nBrightness );
+		bChanged = TRUE;
+	}
+	if( m_nGamma != g_Screen.Pal.nGamma )
+	{
+		g_Screen.Pal.nGamma = m_nGamma;
+		WriteRegDWORD( NULL, REG_COLOR_GAMMA, g_Screen.Pal.nGamma );
 		bChanged = TRUE;
 	}
 

@@ -1,5 +1,9 @@
 #ifndef CFG_H_
 #define CFG_H_
+
+#include <stdio.h>
+#include "util.h"
+
 /* Paths to ROM images. */
 extern char CFG_osa_filename[FILENAME_MAX];
 extern char CFG_osb_filename[FILENAME_MAX];
@@ -12,5 +16,9 @@ extern char CFG_basic_filename[FILENAME_MAX];
    If PARAM does not exist in CFG_STRINGS, returns value lower than 0.
    String comparison is case-insensitive. */
 int CFG_MatchTextParameter(char const *param, char const * const cfg_strings[], int cfg_strings_size);
+
+int Palette_Read(char *file);
+void Palette_Generate(int black, int white, int saturation, int contrast, int brightness, int gamma);
+void Palette_Adjust(int black, int white, int saturation, int contrast, int brightness, int gamma);
 
 #endif /* CFG_H_ */

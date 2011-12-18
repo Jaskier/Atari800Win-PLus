@@ -87,10 +87,12 @@ extern "C" {
 #define DEF_STRETCH_MODE			STRETCH_PIXELDOUBLING
 #define DEF_MEMORY_TYPE				MEMORY_SYSTEM
 #define DEF_REQUEST_RATE			0
-#define DEF_CLR_BLACK_LEVEL			0
-#define DEF_CLR_WHITE_LEVEL			240
-#define DEF_CLR_SATURATION			100
-#define DEF_CLR_SHIFT				30
+#define DEF_CLR_BLACK_LEVEL			16
+#define DEF_CLR_WHITE_LEVEL			235
+#define DEF_CLR_SATURATION			0
+#define DEF_CLR_CONTRAST			0
+#define DEF_CLR_BRIGHTNESS			0
+#define DEF_CLR_GAMMA				30
 
 #define PAL_ENTRIES_NO				256
 #define BLIT_EFFECTS_NO				3
@@ -162,7 +164,9 @@ struct ScreenCtrl_t
 		int  nBlackLevel;
 		int  nWhiteLevel;
 		int  nSaturation;
-		int  nColorShift;
+		int  nContrast;
+		int  nBrightness;
+		int  nGamma;
 		BOOL bUseSysCol;
 	} Pal;
 };

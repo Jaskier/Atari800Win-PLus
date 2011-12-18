@@ -21,7 +21,7 @@ extern "C" {
 
 /* Whenever any value is changed/deleted/added in this file,
    change CURRENT_REV */
-#define CURRENT_REV				19
+#define CURRENT_REV				20
 
 #define REG_MACHINE_TYPE		"sysMachineType"
 #define REG_RAMSIZE_OSA			"sysRamSizeOSA"
@@ -46,7 +46,9 @@ extern "C" {
 #define REG_COLOR_BLACK			"screenColorBlack"
 #define REG_COLOR_WHITE			"screenColorWhite"
 #define REG_COLOR_SATURATION	"screenColorSaturation"
-#define REG_COLOR_SHIFT			"screenColorShift"
+#define REG_COLOR_CONTRAST		"screenColorContrast"
+#define REG_COLOR_BRIGHTNESS	"screenColorBrightness"
+#define REG_COLOR_GAMMA			"screenColorGamma"
 #define REG_START_XPOS			"screenStartXPos"
 #define REG_START_YPOS			"screenStartYPos"
 

@@ -6,6 +6,7 @@
 
 #include "atari.h"				/* for AFILE_ATR_Header structure */
 #include "xfd2atr.h"
+#include "afile.h"
 
 
 /* Files */
