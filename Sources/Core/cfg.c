@@ -1,6 +1,7 @@
 #include "cfg.h"
 #include "colours.h"
 #include "colours_external.h"
+#include "monitor.h"
 
 char CFG_osa_filename[FILENAME_MAX] = Util_FILENAME_NOT_SET;
 char CFG_osb_filename[FILENAME_MAX] = Util_FILENAME_NOT_SET;
@@ -43,3 +44,21 @@ void Palette_Adjust(int black, int white, int saturation, int contrast, int brig
 	Colours_setup->gamma = gamma / 100;
 	Colours_Update();
 }
+
+int PLATFORM_Initialise(int *argc, char *argv[]) {
+	return TRUE;
+};
+
+int PLATFORM_Exit(int run_monitor) {
+	if (run_monitor && MONITOR_Run())
+		return TRUE;
+	return FALSE;
+};
+
+int PLATFORM_PORT(int num) {
+	return 0xff;
+};
+
+int PLATFORM_TRIG(int num) { 
+	return 1;
+};

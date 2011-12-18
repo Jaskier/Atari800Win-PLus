@@ -492,8 +492,8 @@ BOOL CAtari800WinApp::Emulate()
 		if( Input_GetStick( 0 ) != 0x0f || Input_GetStick( 1 ) != 0x0f ||
 			Input_GetTrig( 0 ) != 1 || Input_GetTrig( 1 ) != 1 )
 		{
-			TRACE2("[%05d:%03d]: ", nFrameCount, memory[ 20 ]);
-			TRACE2("rand: %07d, xpos: %02d, ", POKEY_GetRandomCounter(), xpos);
+			TRACE2("[%05d:%03d]: ", nFrameCount, MEMORY_mem[ 20 ]);
+			TRACE2("rand: %07d, xpos: %02d, ", POKEY_GetRandomCounter(), ANTIC_xpos);
 			TRACE2("joy1=0x%02x, joy2=0x%02x, ", Input_GetStick( 0 ), Input_GetStick( 1 ));
 			TRACE2("trig1=0x%02x, trig2=0x%02x\n", Input_GetTrig( 0 ), Input_GetTrig( 1 ));
 		}

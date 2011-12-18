@@ -964,26 +964,6 @@
 						/>
 					</FileConfiguration>
 				</File>
-				<File
-					RelativePath="..\..\Atari800\src\videomode.c"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-				</File>
 			</Filter>
 			<Filter
 				Name="Core"
@@ -1698,10 +1678,6 @@
 					RelativePath="..\..\Atari800\src\util.h"
 					>
 				</File>
-				<File
-					RelativePath="..\..\Atari800\src\videomode.h"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="Core"
@@ -1756,6 +1732,10 @@
 				</File>
 				<File
 					RelativePath="..\..\Include\sound_win.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\stdint.h"
 					>
 				</File>
 				<File

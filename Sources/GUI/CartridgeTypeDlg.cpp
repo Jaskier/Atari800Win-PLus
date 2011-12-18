@@ -149,7 +149,7 @@ CountTypes(
 	int nItems = 0;
 	int nIndex = 0;
 
-	ASSERT(CART_LAST_SUPPORTED == s_nCartTypeInfoNo);
+	ASSERT(CARTRIDGE_LAST_SUPPORTED == s_nCartTypeInfoNo);
 
 	for( int i = 0; i < s_nCartTypeInfoNo; i++ )
 	{
@@ -185,7 +185,7 @@ SetDlgState()
 	if( !m_bStateInit )
 	{
 		int nIndex = 0;
-		ASSERT(CART_LAST_SUPPORTED == s_nCartTypeInfoNo);
+		ASSERT(CARTRIDGE_LAST_SUPPORTED == s_nCartTypeInfoNo);
 
 		pCombo->ResetContent();
 		for( int i = 0; i < s_nCartTypeInfoNo; i++ )

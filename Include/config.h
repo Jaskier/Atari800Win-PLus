@@ -448,16 +448,16 @@
 #define STEREO_SOUND
 
 /* Can change video modes on the fly. */
-#define SUPPORTS_CHANGE_VIDEOMODE 1
+//#define SUPPORTS_CHANGE_VIDEOMODE 1
 
 /* Save additional config file options. */
-#define SUPPORTS_PLATFORM_CONFIGSAVE
+#undef SUPPORTS_PLATFORM_CONFIGSAVE
 
 /* Additional config file options. */
-#define SUPPORTS_PLATFORM_CONFIGURE
+#undef SUPPORTS_PLATFORM_CONFIGURE
 
 /* Update the Palette if it changed. */
-#define SUPPORTS_PLATFORM_PALETTEUPDATE 1
+//#define SUPPORTS_PLATFORM_PALETTEUPDATE 1
 
 /* Platform-specific sleep function. */
 #undef SUPPORTS_PLATFORM_SLEEP
@@ -469,7 +469,7 @@
 #undef SUPPORTS_SOUND_REINIT
 
 /* Define to use synchronized sound. */
-#define SYNCHRONIZED_SOUND
+#undef SYNCHRONIZED_SOUND
 
 /* Alternate system-wide config file for non-Unix OS. */
 #undef SYSTEM_WIDE_CFG_FILE

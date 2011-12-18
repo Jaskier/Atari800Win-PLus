@@ -1687,7 +1687,7 @@ Screen_InitialiseDisplay(
 	}
 
 	/* HiEnd modes */
-	InitLUTs();
+	hqxInit();
 	hqSource = malloc(ATARI_VIS_WIDTH * Screen_HEIGHT * 2);
 	hqTarget = malloc(ATARI_DOUBLE_VIS_WIDTH * ATARI_DOUBLE_HEIGHT * 4); // TRIPLE for hq3x
 	if( !hqlpbmi )
@@ -3281,7 +3281,7 @@ Screen_DDraw_Double_HiEnd( void )
 		c+=ATARI_FULL_HORZ_CLIP;
 	}
 
-	hq2x_32(hqSource, hqTarget, ATARI_VIS_WIDTH, Screen_HEIGHT, ATARI_DOUBLE_VIS_WIDTH * 4);
+	hq2x_32(hqSource, hqTarget, Screen_WIDTH, Screen_HEIGHT);
 
 	if( SUCCEEDED(hResult = DD_SurfaceGetDC( &hdc )) )
 	{
@@ -4214,7 +4214,7 @@ Screen_GDI_Double_HiEnd( void )
 		c+=ATARI_FULL_HORZ_CLIP;
 	}
 
-	hq2x_32(hqSource, hqTarget, ATARI_VIS_WIDTH, Screen_HEIGHT, ATARI_DOUBLE_VIS_WIDTH * 4);
+	hq2x_32(hqSource, hqTarget, Screen_WIDTH, Screen_HEIGHT);
 
 	StretchDIBits( g_Screen.hDC,
 				   0, 0, ATARI_DOUBLE_VIS_WIDTH, ATARI_DOUBLE_HEIGHT,

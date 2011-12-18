@@ -1,26 +1,19 @@
 #include "hq.h"
 
-int   LUT16to32[65536];
-int   RGBtoYUV[65536];
-int   YUV1, YUV2;
+uint32_t   RGBtoYUV[16777216];
+uint32_t   YUV1, YUV2;
 
-void InitLUTs(void)
+HQX_API void HQX_CALLCONV hqxInit(void)
 {
-  int i, j, k, r, g, b, Y, u, v;
-
-  for (i=0; i<65536; i++)
-    LUT16to32[i] = ((i & 0xF800) << 8) + ((i & 0x07E0) << 5) + ((i & 0x001F) << 3);
-
-  for (i=0; i<32; i++)
-  for (j=0; j<64; j++)
-  for (k=0; k<32; k++)
-  {
-    r = i << 3;
-    g = j << 2;
-    b = k << 3;
-    Y = (r + g + b) >> 2;
-    u = 128 + ((r - b) >> 2);
-    v = 128 + ((-r + 2*g -b)>>3);
-    RGBtoYUV[ (i << 11) + (j << 5) + k ] = (Y<<16) + (u<<8) + v;
-  }
+    /* Initalize RGB to YUV lookup table */
+    uint32_t c, r, g, b, y, u, v;
+    for (c = 0; c < 16777215; c++) {
+        r = (c & 0xFF0000) >> 16;
+        g = (c & 0x00FF00) >> 8;
+        b = c & 0x0000FF;
+        y = (uint32_t)(0.299*r + 0.587*g + 0.114*b);
+        u = (uint32_t)(-0.169*r - 0.331*g + 0.5*b) + 128;
+        v = (uint32_t)(0.5*r - 0.419*g - 0.081*b) + 128;
+        RGBtoYUV[c] = (y << 16) + (u << 8) + v;
+    }
 }

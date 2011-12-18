@@ -472,6 +472,9 @@ CMainFrame()
 	/* Assign functions to arrow keys */
 	Input_SetArrowKeys( g_Input.Key.nArrowsMode );
 
+	/* Initialize the Atari800 core */
+	Atari800_Initialise( &g_argc, g_argv );
+
 	/* Load keys template and external palette */
 	if( _IsFlagSet( g_Input.ulState, IS_KEY_USE_TEMPLATE ) &&
 		!CKeyTemplateDlg::ReadKeyTemplate( g_szTemplateFile, g_szTemplateDesc, g_Input.Key.anKBTable, GetSafeHwnd() ) )
@@ -1819,6 +1822,7 @@ OnAtariVideoSystem()
 	{
 		Atari800_tv_mode = (Atari800_TV_PAL == Atari800_tv_mode ? Atari800_TV_NTSC : Atari800_TV_PAL);
 		WriteRegDWORD( NULL, REG_TV_MODE, Atari800_tv_mode );
+		Colours_Update();
 
 		if( _IsFlagSet( g_Misc.ulState, MS_REBOOT_WHEN_VIDEO ) )
 		{

@@ -313,7 +313,7 @@ ModifyPlayValues( void )
 
 	if( WAIT_TIMEOUT == dwEventResult || WAIT_FAILED == dwEventResult )
 	{
-		_TRACE1("!-[%d] ModifyPlayValues::WAIT_TIMEOUT || WAIT_FAILED\n", memory[ 20 ]);
+		_TRACE1("!-[%d] ModifyPlayValues::WAIT_TIMEOUT || WAIT_FAILED\n", MEMORY_mem[ 20 ]);
 		return -1;
 	}
 	return s_nRecvPlayValues;

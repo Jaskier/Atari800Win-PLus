@@ -1,6 +1,10 @@
 #ifndef CFG_H_
 #define CFG_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdio.h>
 #include "util.h"
 
@@ -20,5 +24,9 @@ int CFG_MatchTextParameter(char const *param, char const * const cfg_strings[], 
 int Palette_Read(char *file);
 void Palette_Generate(int black, int white, int saturation, int contrast, int brightness, int gamma);
 void Palette_Adjust(int black, int white, int saturation, int contrast, int brightness, int gamma);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* CFG_H_ */
