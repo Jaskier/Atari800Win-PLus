@@ -112,6 +112,7 @@ struct RomTypeInfo_t
 
 /* Exported methods */
 
+void Atari_Initialise( int *argc, char *argv[] );
 void  Misc_ToggleFullSpeed    ( void );
 void  Misc_TogglePause        ( void );
 void  Misc_ToggleSIOPatch     ( void );

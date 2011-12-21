@@ -77,6 +77,7 @@ RestartEmulation(
 
 	/* Reinitialise an emulator kernel */
 	Atari800_Initialise( bIgnoreParams ? &argc : &g_argc, bIgnoreParams ? NULL : g_argv );
+	Atari_Initialise( bIgnoreParams ? &argc : &g_argc, bIgnoreParams ? NULL : g_argv );
 
 	if( /* Drag&Drop: don't worry about loosing the focus,
 		   the emulated Atari won't start in this case */

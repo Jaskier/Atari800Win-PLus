@@ -474,6 +474,7 @@ CMainFrame()
 
 	/* Initialize the Atari800 core */
 	Atari800_Initialise( &g_argc, g_argv );
+	Atari_Initialise( &g_argc, g_argv );
 
 	/* Load keys template and external palette */
 	if( _IsFlagSet( g_Input.ulState, IS_KEY_USE_TEMPLATE ) &&
@@ -535,9 +536,6 @@ CMainFrame()
 
 		CFileAssociationsBase::WriteRegFileExt( g_Misc.ulFileAssociations, szHomeDir, g_szCmdLine );
 	}
-	/* Initialize the Atari800 core */
-	Atari800_Initialise( &g_argc, g_argv );
-
 } /* #OF# CMainFrame::CMainFrame */
 
 /*========================================================
