@@ -89,10 +89,10 @@ extern "C" {
 #define DEF_REQUEST_RATE			0
 #define DEF_CLR_BLACK_LEVEL			16
 #define DEF_CLR_WHITE_LEVEL			235
-#define DEF_CLR_SATURATION			0
-#define DEF_CLR_CONTRAST			0
-#define DEF_CLR_BRIGHTNESS			0
-#define DEF_CLR_GAMMA				30
+#define DEF_CLR_SATURATION			50
+#define DEF_CLR_CONTRAST			50
+#define DEF_CLR_BRIGHTNESS			50
+#define DEF_CLR_GAMMA				65
 
 #define PAL_ENTRIES_NO				256
 #define BLIT_EFFECTS_NO				3

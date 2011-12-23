@@ -25,7 +25,7 @@ extern "C" {
 #define SS_16BIT_AUDIO					0x0008
 #define SS_NO_SOUND						0x0010
 
-#define DEF_SOUND_STATE					(SS_MM_SOUND | SS_CUSTOM_RATE | SS_16BIT_AUDIO)
+#define DEF_SOUND_STATE					(SS_DS_SOUND | SS_CUSTOM_RATE | SS_16BIT_AUDIO)
 #define DEF_SOUND_RATE					44100
 #define DEF_SOUND_VOL					0
 #define DEF_SKIP_UPDATE					2

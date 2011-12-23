@@ -28,20 +28,10 @@ int Palette_Read(char * file) {
 void Palette_Generate(int black, int white, int saturation, int contrast, int brightness, int gamma) {
 	Colours_setup->black_level = black;
 	Colours_setup->white_level = white;
-	Colours_setup->saturation = saturation / 100;
-	Colours_setup->contrast = contrast / 100;
-	Colours_setup->brightness = brightness / 100;
-	Colours_setup->gamma = gamma / 100;
-	Colours_Update();
-}
-
-void Palette_Adjust(int black, int white, int saturation, int contrast, int brightness, int gamma) {
-	Colours_setup->black_level = black;
-	Colours_setup->white_level = white;
-	Colours_setup->saturation = saturation / 100;
-	Colours_setup->contrast = contrast / 100;
-	Colours_setup->brightness = brightness / 100;
-	Colours_setup->gamma = gamma / 100;
+	Colours_setup->saturation = ((double)saturation - 50) / 50;
+	Colours_setup->contrast = ((double)contrast - 50) / 25;
+	Colours_setup->brightness = ((double) brightness - 50) / 25;
+	Colours_setup->gamma = ((double) gamma - 50) / 50;
 	Colours_Update();
 }
 

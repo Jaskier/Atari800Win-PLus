@@ -1688,8 +1688,8 @@ Screen_InitialiseDisplay(
 
 	/* HiEnd modes */
 	hqxInit();
-	hqSource = malloc(ATARI_VIS_WIDTH * Screen_HEIGHT * 2);
-	hqTarget = malloc(ATARI_DOUBLE_VIS_WIDTH * ATARI_DOUBLE_HEIGHT * 4); // TRIPLE for hq3x
+	hqSource = malloc(ATARI_VIS_WIDTH * Screen_HEIGHT * 4);
+	hqTarget = malloc(ATARI_VIS_WIDTH * Screen_HEIGHT * 4 * 4); // ONLY for hq2x
 	if( !hqlpbmi )
 	{
 		if( !(hqlpbmi = (LPBITMAPINFO)malloc( sizeof(BITMAPINFOHEADER) + sizeof(RGBQUAD) )) )
@@ -3266,22 +3266,22 @@ Screen_DDraw_Double_HiEnd( void )
 	HDC	hdc;
 	int i,j;
 	unsigned char *c = s_Buffer.pSource + ATARI_HORZ_CLIP;
-	unsigned short *s = (unsigned short *)hqSource;
+	unsigned long *s = (unsigned long *)hqSource;
 	unsigned short r,g,b;
 
 	for (j=0; j<Screen_HEIGHT; j++) {
 		for (i=0; i<ATARI_VIS_WIDTH; i++) {
-			r = s_lpbmi->bmiColors[ *c ].rgbRed   >> 3;
-			g = s_lpbmi->bmiColors[ *c ].rgbGreen >> 2;
-			b = s_lpbmi->bmiColors[ *c ].rgbBlue  >> 3;
-			*s = (r << 11) + (g << 5) + b;
+			r = s_lpbmi->bmiColors[ *c ].rgbRed;
+			g = s_lpbmi->bmiColors[ *c ].rgbGreen;
+			b = s_lpbmi->bmiColors[ *c ].rgbBlue;
+			*s = (r << 16) + (g << 8) + b;
 			c++;
 			s++;
 		}
 		c+=ATARI_FULL_HORZ_CLIP;
 	}
 
-	hq2x_32(hqSource, hqTarget, Screen_WIDTH, Screen_HEIGHT);
+	hq2x_32(hqSource, hqTarget, ATARI_VIS_WIDTH, Screen_HEIGHT);
 
 	if( SUCCEEDED(hResult = DD_SurfaceGetDC( &hdc )) )
 	{
@@ -4199,22 +4199,22 @@ Screen_GDI_Double_HiEnd( void )
 {
 	int i,j;
 	unsigned char *c = s_Buffer.pSource + ATARI_HORZ_CLIP;
-	unsigned short *s = (unsigned short *)hqSource;
+	unsigned long *s = (unsigned long *)hqSource;
 	unsigned short r,g,b;
 
 	for (j=0; j<Screen_HEIGHT; j++) {
 		for (i=0; i<ATARI_VIS_WIDTH; i++) {
-			r = s_lpbmi->bmiColors[ *c ].rgbRed   >> 3;
-			g = s_lpbmi->bmiColors[ *c ].rgbGreen >> 2;
-			b = s_lpbmi->bmiColors[ *c ].rgbBlue  >> 3;
-			*s = (r << 11) + (g << 5) + b;
+			r = s_lpbmi->bmiColors[ *c ].rgbRed;
+			g = s_lpbmi->bmiColors[ *c ].rgbGreen;
+			b = s_lpbmi->bmiColors[ *c ].rgbBlue;
+			*s = (r << 16) + (g << 8) + b;
 			c++;
 			s++;
 		}
 		c+=ATARI_FULL_HORZ_CLIP;
 	}
 
-	hq2x_32(hqSource, hqTarget, Screen_WIDTH, Screen_HEIGHT);
+	hq2x_32(hqSource, hqTarget, ATARI_VIS_WIDTH, Screen_HEIGHT);
 
 	StretchDIBits( g_Screen.hDC,
 				   0, 0, ATARI_DOUBLE_VIS_WIDTH, ATARI_DOUBLE_HEIGHT,

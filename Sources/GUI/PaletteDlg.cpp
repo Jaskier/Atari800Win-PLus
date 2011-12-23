@@ -27,14 +27,14 @@ static char THIS_FILE[] = __FILE__;
 #define MAX_BLACK			255
 #define MIN_WHITE			0
 #define MAX_WHITE			255
-#define MIN_SATURATION		(int)(COLOURS_SATURATION_MIN * 100)
-#define MAX_SATURATION		(int)(COLOURS_SATURATION_MAX * 100)
-#define MIN_CONTRAST		(int)(COLOURS_CONTRAST_MIN * 100)
-#define MAX_CONTRAST		(int)(COLOURS_CONTRAST_MAX * 100)
-#define MIN_BRIGHTNESS		(int)(COLOURS_BRIGHTNESS_MIN * 100)
-#define MAX_BRIGHTNESS		(int)(COLOURS_BRIGHTNESS_MAX * 100)
-#define MIN_GAMMA			(int)(COLOURS_GAMMA_MIN * 100)
-#define MAX_GAMMA			(int)(COLOURS_GAMMA_MAX * 100)
+#define MIN_SATURATION		0
+#define MAX_SATURATION		100
+#define MIN_CONTRAST		0
+#define MAX_CONTRAST		100
+#define MIN_BRIGHTNESS		0
+#define MAX_BRIGHTNESS		100
+#define MIN_GAMMA			0
+#define MAX_GAMMA			100
 
 #define BAR_LINES_NO		16
 #define BAR_ENTRIES_NO		(PAL_ENTRIES_NO / BAR_LINES_NO)
@@ -56,7 +56,6 @@ BEGIN_MESSAGE_MAP(CPaletteDlg, CCommonDlg)
 	ON_EN_KILLFOCUS(IDC_PALETTE_BRIGHTNESS, OnKillfocusBrightness)
 	ON_NOTIFY(UDN_DELTAPOS, IDC_PALETTE_GAMMASPIN, OnDeltaposGammaSpin)
 	ON_EN_KILLFOCUS(IDC_PALETTE_GAMMA, OnKillfocusGamma)
-	ON_BN_CLICKED(IDC_PALETTE_APPLYADJUSTMENT, OnApplyAdjustment)
 	ON_BN_CLICKED(IDC_PALETTE_BROWSE, OnBrowse)
 	ON_EN_KILLFOCUS(IDC_PALETTE_EDIT, OnKillfocusEdit)
 	ON_BN_CLICKED(IDC_PALETTE_USEEXTERNAL, OnUseExternal)
@@ -144,12 +143,6 @@ PreparePalette(
 
 	if ( !bResult )
 		Palette_Generate( m_nBlackLevel, m_nWhiteLevel, m_nSaturation, m_nContrast, m_nBrightness, m_nGamma );
-
-	/* Should we generate or format an external palette? */
-	if( _IsFlagSet( m_ulMiscState, MS_TRANS_LOADED_PAL ) )
-	{
-		Palette_Adjust( m_nBlackLevel, m_nWhiteLevel, m_nSaturation, m_nContrast, m_nBrightness, m_nGamma );
-	}
 
 	/* Palette bar is drawn in windowed modes only */
 	if( !m_bSmallMode )
@@ -310,7 +303,6 @@ SetDlgState()
 		_ClrFlag( m_ulMiscState, MS_USE_EXT_PALETTE );
 
 	/* Set up check buttons states and activity */
-	_SetChkBttn( IDC_PALETTE_APPLYADJUSTMENT,  _IsFlagSet( m_ulMiscState, MS_TRANS_LOADED_PAL ) );
 	_EnableCtrl( IDC_PALETTE_APPLYADJUSTMENT,  _IsFlagSet( m_ulMiscState, MS_USE_EXT_PALETTE ) );
 	_SetChkBttn( IDC_PALETTE_USEEXTERNAL,      _IsFlagSet( m_ulMiscState, MS_USE_EXT_PALETTE ) );
 	_EnableCtrl( IDC_PALETTE_USEEXTERNAL,      bPalette );
@@ -368,23 +360,6 @@ OnInitDialog()
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
 } /* #OF# CPaletteDlg::OnInitDialog */
-
-/*========================================================
-Method   : CPaletteDlg::OnApplyAdjustment
-=========================================================*/
-/* #FN#
-   Sets a state of the object regarding to an appropriate check box */
-void
-/* #AS#
-   Nothing */
-CPaletteDlg::
-OnApplyAdjustment()
-{
-	_ClickButton( IDC_PALETTE_APPLYADJUSTMENT, m_ulMiscState, MS_TRANS_LOADED_PAL );
-	/* Read the palette from a file or/and format it */
-	PreparePalette( m_szPaletteFile );
-
-} /* #OF# CPaletteDlg::OnApplyAdjustment */
 
 /*========================================================
 Method   : CPaletteDlg::OnDeltaposBlackSpin

@@ -23,7 +23,6 @@ int CFG_MatchTextParameter(char const *param, char const * const cfg_strings[], 
 
 int Palette_Read(char *file);
 void Palette_Generate(int black, int white, int saturation, int contrast, int brightness, int gamma);
-void Palette_Adjust(int black, int white, int saturation, int contrast, int brightness, int gamma);
 
 #ifdef __cplusplus
 }

@@ -18,7 +18,7 @@ File    : timing.c
 #include "timing.h"
 
 
-#define SLEEP_TIME_IN_MS		4
+#define SLEEP_TIME_IN_MS		3
 
 /* Public objects */
 
@@ -53,7 +53,7 @@ Timer_Reset( void )
 	s_ulDeltaT = lnTimeFreq.LowPart / (nSysFreq ? nSysFreq : 1);
 
 	s_nSleepThreshold = MulDiv( lnTimeFreq.LowPart, SLEEP_TIME_IN_MS + 1, 1000L );
-	s_ulAtariHWNextTime = 0L;
+	Timer_Start(FALSE);
 
 } /* #OF# Timer_Reset */
 
@@ -120,7 +120,7 @@ Timer_WaitForVBI( void )
 		while( lnTicks.LowPart > s_ulAtariHWNextTime && (s_ulAtariHWNextTime - lnTicks.LowPart < s_ulDeltaT) )
 		{
 			QueryPerformanceCounter( &lnTicks );
-			lSpareTicks = ULONG_MAX - lnTicks.LowPart;
+			lSpareTicks = ULONG_MAX - lnTicks.LowPart + 1;
 			_ASSERT(lSpareTicks <= (long)s_ulDeltaT);
 			if( lSpareTicks > s_nSleepThreshold )
 			{
@@ -158,7 +158,7 @@ Timer_WaitForVBI( void )
 	else
 	{
 		if( -lSpareTicks > (long)s_ulDeltaT )
-			s_ulAtariHWNextTime = lnTicks.LowPart + s_ulDeltaT;
+			s_ulAtariHWNextTime = lnTicks.LowPart + 1;
 		else
 			s_ulAtariHWNextTime += s_ulDeltaT;
 	}
