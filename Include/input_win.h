@@ -102,6 +102,8 @@ void Input_InstallKeyboardHook( BOOL bEnable );
 void Input_RefreshBounds      ( HWND hViewWnd, BOOL bClipCursor );
 /* This one is invoked directly by kernel */
 int  Atari_Keyboard           ( void );
+int  Atari_PORT				  ( int );
+int  Atari_TRIG				  ( int );
 
 #ifdef WIN_NETWORK_GAMES
 

@@ -28,10 +28,10 @@ extern "C" {
 #define DEF_SOUND_STATE					(SS_DS_SOUND | SS_CUSTOM_RATE | SS_16BIT_AUDIO)
 #define DEF_SOUND_RATE					44100
 #define DEF_SOUND_VOL					0
-#define DEF_SKIP_UPDATE					2
+#define DEF_SKIP_UPDATE					1
 #define DEF_SOUND_LATENCY				3
-#define DEF_SOUND_QUALITY				2
-#define DEF_SOUND_DIGITIZED				0
+#define DEF_SOUND_QUALITY				4
+#define DEF_SOUND_DIGITIZED				1
 
 /* Exported methods */
 

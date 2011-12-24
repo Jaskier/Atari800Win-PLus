@@ -24,7 +24,7 @@ static char THIS_FILE[] = __FILE__;
 #define MIN_SOUND_LATENCY	2
 #define MAX_SOUND_LATENCY	6
 #define MIN_SOUND_QUALITY	1
-#define MAX_SOUND_QUALITY	7
+#define MAX_SOUND_QUALITY	4
 
 #define DT_WAVEOUT			0
 #define DT_DIRECTX			1

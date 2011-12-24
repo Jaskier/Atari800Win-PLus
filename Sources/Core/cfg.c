@@ -2,6 +2,7 @@
 #include "colours.h"
 #include "colours_external.h"
 #include "monitor.h"
+#include "input_win.h"
 
 char CFG_osa_filename[FILENAME_MAX] = Util_FILENAME_NOT_SET;
 char CFG_osb_filename[FILENAME_MAX] = Util_FILENAME_NOT_SET;
@@ -46,9 +47,9 @@ int PLATFORM_Exit(int run_monitor) {
 };
 
 int PLATFORM_PORT(int num) {
-	return 0xff;
+	return Atari_PORT(num);
 };
 
 int PLATFORM_TRIG(int num) { 
-	return 1;
+	return Atari_TRIG(num);
 };

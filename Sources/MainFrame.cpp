@@ -472,6 +472,30 @@ CMainFrame()
 	/* Assign functions to arrow keys */
 	Input_SetArrowKeys( g_Input.Key.nArrowsMode );
 
+	/* Set appropriate memory size */
+	switch( Atari800_machine_type )
+	{
+		case Atari800_MACHINE_OSA:
+			MEMORY_ram_size = g_anRamSize[ Atari800_MACHINE_OSA ];
+			break;
+
+		case Atari800_MACHINE_OSB:
+			MEMORY_ram_size = g_anRamSize[ Atari800_MACHINE_OSB ];
+			break;
+
+		case Atari800_MACHINE_XLXE:
+			MEMORY_ram_size = g_anRamSize[ Atari800_MACHINE_XLXE ];
+			break;
+
+		case Atari800_MACHINE_5200:
+			MEMORY_ram_size = 16; /* Always 16 KB */
+			break;
+
+		default:
+			ASSERT(FALSE);
+			break;
+	}
+
 	/* Initialize the Atari800 core */
 	Atari800_Initialise( &g_argc, g_argv );
 	Atari_Initialise( &g_argc, g_argv );
@@ -497,29 +521,6 @@ CMainFrame()
 	if( g_Misc.ulState != ulMiscState )
 		WriteRegDWORD( NULL, REG_MISC_STATE, g_Misc.ulState );
 
-	/* Set appropriate memory size */
-	switch( Atari800_machine_type )
-	{
-		case Atari800_MACHINE_OSA:
-			MEMORY_ram_size = g_anRamSize[ Atari800_MACHINE_OSA ];
-			break;
-
-		case Atari800_MACHINE_OSB:
-			MEMORY_ram_size = g_anRamSize[ Atari800_MACHINE_OSB ];
-			break;
-
-		case Atari800_MACHINE_XLXE:
-			MEMORY_ram_size = g_anRamSize[ Atari800_MACHINE_XLXE ];
-			break;
-
-		case Atari800_MACHINE_5200:
-			MEMORY_ram_size = 16; /* Always 16 KB */
-			break;
-
-		default:
-			ASSERT(FALSE);
-			break;
-	}
 	/* Disable/enable task switching */
 	Input_EnableEscCapture( _IsFlagSet( g_Input.ulState, IS_CAPTURE_CTRLESC ) );
 

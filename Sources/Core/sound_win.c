@@ -389,7 +389,7 @@ Sound_Initialise(
 	Sound_SetQuality( g_Sound.nQuality );
 
 	/* Establish silence data */
-	s_nSilenceData = n16BitSnd ? 0x00 : 0x80;
+//	s_nSilenceData = n16BitSnd ? 0x00 : 0x80; // in 16bit sound silence is 0x8000, now is 0x8080
 
 	/* Clear the sound buffer */
 	for( i = s_nPlayFragNo * s_dwFragSize; i < s_nSaveFragNo * (int)s_dwFragSize; i++ )
@@ -637,6 +637,7 @@ Sound_SetQuality(
 	else
 		/* Ron Fries' old Pokey emulation */
 		POKEYSND_enable_new_pokey = 0;
+	POKEYSND_DoInit();
 
 } /* #OF# Sound_SetQuality */
 

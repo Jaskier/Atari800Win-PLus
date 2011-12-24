@@ -547,4 +547,7 @@
    code using `volatile' can become incorrect without. Disable with care. */
 #undef volatile
 
+/* pokey_update for Atari800Win PLus */
+#define POKEY_UPDATE
+
 #endif
