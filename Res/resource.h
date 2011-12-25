@@ -430,10 +430,9 @@
 #define IDC_PALETTE_BAR                 1538
 #define IDC_PALETTE_BROWSE              1539
 #define IDC_PALETTE_EDIT                1540
-#define IDC_PALETTE_APPLYADJUSTMENT     1541
-#define IDC_PALETTE_USEEXTERNAL         1542
-#define IDC_PALETTE_OK                  1543
-#define IDC_PALETTE_CANCEL              1544
+#define IDC_PALETTE_USEEXTERNAL         1541
+#define IDC_PALETTE_OK                  1542
+#define IDC_PALETTE_CANCEL              1543
 #define IDC_WIZARD_BACK                 1600
 #define IDC_WIZARD_NEXT                 1601
 #define IDC_WIZARD_FINISH               1602

@@ -158,7 +158,7 @@ OnInitDialog()
 	m_treeShell.SetFolderMode( m_bFoldersOnly );
 	m_treeShell.EnableImages();
 	m_treeShell.PopulateTree();
-	m_treeShell.TunnelTree( m_strSelectedPath );
+//	m_treeShell.TunnelTree( m_strSelectedPath );
 	m_treeShell.SetRedraw();
 
 	pEdit = (CEdit *)GetDlgItem( IDC_FILE_SMALL_EDIT );

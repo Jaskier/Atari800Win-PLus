@@ -22,7 +22,7 @@ extern char CFG_basic_filename[FILENAME_MAX];
 int CFG_MatchTextParameter(char const *param, char const * const cfg_strings[], int cfg_strings_size);
 
 int Palette_Read(char *file);
-void Palette_Generate(int black, int white, int saturation, int contrast, int brightness, int gamma);
+void Palette_Generate(int black, int white, int saturation, int contrast, int brightness, int gamma, int external);
 
 #ifdef __cplusplus
 }

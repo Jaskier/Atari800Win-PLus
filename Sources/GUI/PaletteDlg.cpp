@@ -134,6 +134,7 @@ PreparePalette(
 		{
 			DisplayMessage( GetSafeHwnd(), IDS_ERROR_ACT_READ, 0, MB_ICONEXCLAMATION | MB_OK );
 			strcpy( pszPaletteFile, FILE_NONE );
+			_ClrFlag( m_ulMiscState, MS_USE_EXT_PALETTE );
 		}
 		else
 		{
@@ -141,8 +142,7 @@ PreparePalette(
 		}
 	}
 
-	if ( !bResult )
-		Palette_Generate( m_nBlackLevel, m_nWhiteLevel, m_nSaturation, m_nContrast, m_nBrightness, m_nGamma );
+	Palette_Generate( m_nBlackLevel, m_nWhiteLevel, m_nSaturation, m_nContrast, m_nBrightness, m_nGamma, _IsFlagSet( m_ulMiscState, MS_USE_EXT_PALETTE ) );
 
 	/* Palette bar is drawn in windowed modes only */
 	if( !m_bSmallMode )
@@ -303,7 +303,6 @@ SetDlgState()
 		_ClrFlag( m_ulMiscState, MS_USE_EXT_PALETTE );
 
 	/* Set up check buttons states and activity */
-	_EnableCtrl( IDC_PALETTE_APPLYADJUSTMENT,  _IsFlagSet( m_ulMiscState, MS_USE_EXT_PALETTE ) );
 	_SetChkBttn( IDC_PALETTE_USEEXTERNAL,      _IsFlagSet( m_ulMiscState, MS_USE_EXT_PALETTE ) );
 	_EnableCtrl( IDC_PALETTE_USEEXTERNAL,      bPalette );
 

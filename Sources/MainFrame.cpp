@@ -510,14 +510,15 @@ CMainFrame()
 	if( g_Input.ulState != ulInputState )
 		WriteRegDWORD( NULL, REG_INPUT_STATE, g_Input.ulState );
 
-	Palette_Generate( g_Screen.Pal.nBlackLevel, g_Screen.Pal.nWhiteLevel, g_Screen.Pal.nSaturation, g_Screen.Pal.nContrast, g_Screen.Pal.nBrightness, g_Screen.Pal.nGamma );
 	if( _IsFlagSet( g_Misc.ulState, MS_USE_EXT_PALETTE ) &&
 		!Palette_Read( g_szPaletteFile ) )
 	{
 		_ClrFlag( g_Misc.ulState, MS_USE_EXT_PALETTE );
 		DisplayMessage( NULL, IDS_ERROR_NO_PALETTE, 0, MB_ICONEXCLAMATION | MB_OK, g_szPaletteFile );
-		Palette_Generate( g_Screen.Pal.nBlackLevel, g_Screen.Pal.nWhiteLevel, g_Screen.Pal.nSaturation, g_Screen.Pal.nContrast, g_Screen.Pal.nBrightness, g_Screen.Pal.nGamma );
 	}
+	Palette_Generate( g_Screen.Pal.nBlackLevel, g_Screen.Pal.nWhiteLevel, g_Screen.Pal.nSaturation, g_Screen.Pal.nContrast, 
+		g_Screen.Pal.nBrightness, g_Screen.Pal.nGamma, _IsFlagSet( g_Misc.ulState, MS_USE_EXT_PALETTE ) );
+
 	if( g_Misc.ulState != ulMiscState )
 		WriteRegDWORD( NULL, REG_MISC_STATE, g_Misc.ulState );
 
@@ -4268,7 +4269,8 @@ OnMiscClearAllSettings()
 			HandleRegistry();
 
 			/* Re-generate a default palette */
-			Palette_Generate( g_Screen.Pal.nBlackLevel, g_Screen.Pal.nWhiteLevel, g_Screen.Pal.nSaturation, g_Screen.Pal.nContrast, g_Screen.Pal.nBrightness, g_Screen.Pal.nGamma );
+			Palette_Generate( g_Screen.Pal.nBlackLevel, g_Screen.Pal.nWhiteLevel, g_Screen.Pal.nSaturation, g_Screen.Pal.nContrast, 
+				g_Screen.Pal.nBrightness, g_Screen.Pal.nGamma, _IsFlagSet( g_Misc.ulState, MS_USE_EXT_PALETTE ) );
 
 			/* Apply the changes to the main window */
 			Screen_UseAtariPalette( TRUE );
