@@ -244,7 +244,7 @@
 #define HAVE_STRTOL
 
 /* Define to 1 if you have the `system' function. */
-#undef HAVE_SYSTEM
+#define HAVE_SYSTEM
 
 /* Define to 1 if you have the <sys/dir.h> header file, and it defines `DIR'.
    */
@@ -546,8 +546,5 @@
 /* Define to empty if the keyword `volatile' does not work. Warning: valid
    code using `volatile' can become incorrect without. Disable with care. */
 #undef volatile
-
-/* pokey_update for Atari800Win PLus */
-#define POKEY_UPDATE
 
 #endif

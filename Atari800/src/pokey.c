@@ -55,7 +55,7 @@
 #include "votraxsnd.h"
 #endif
 
-#ifdef POKEY_UPDATE
+#ifdef __PLUS
 void pokey_update(void);
 #endif
 
@@ -444,7 +444,7 @@ void POKEY_Frame(void)
 
 void POKEY_Scanline(void)
 {
-#ifdef POKEY_UPDATE
+#ifdef __PLUS
 	pokey_update();
 #endif
 
