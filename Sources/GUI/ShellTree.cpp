@@ -154,7 +154,7 @@ FillTreeView(
 		/* Get the IEnumIDList object for the given folder */
 		hr = lpsf->EnumObjects( hwnd, SHCONTF_FOLDERS | SHCONTF_NONFOLDERS | SHCONTF_INCLUDEHIDDEN, &lpe );
 
-		if( SUCCEEDED(hr) )
+		if( S_OK == hr && lpe )
 		{
 			/* Enumerate throught the list of folder and non-folder objects */
 			while( S_OK == lpe->Next( 1, &lpi, &ulFetched ) )
