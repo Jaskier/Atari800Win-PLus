@@ -12,10 +12,23 @@ File    : sound_win.h
 
 #include <stdio.h>
 #include <mmsystem.h>
-
+#include <dsound.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+extern char				*s_pSoundBuffer;
+extern char				*s_pSaveCursor;
+extern volatile int		s_nPlayFragNo;
+extern volatile int		s_nSaveFragNo;
+extern int				s_nNumberOfFrags;
+extern int				s_nFramesPerFrag;
+extern int				s_nFrameCnt;
+extern int				s_nUpdateCnt;
+extern DWORD			s_dwFragSize;
+extern DWORD			s_dwFragPos;
+extern BOOL				s_bSoundIsPaused;
+extern LPDIRECTSOUNDBUFFER s_lpDSBuffer;
 
 /* Constants declarations */
 
@@ -29,7 +42,7 @@ extern "C" {
 #define DEF_SOUND_RATE					44100
 #define DEF_SOUND_VOL					0
 #define DEF_SKIP_UPDATE					1
-#define DEF_SOUND_LATENCY				3
+#define DEF_SOUND_LATENCY				2
 #define DEF_SOUND_QUALITY				4
 #define DEF_SOUND_DIGITIZED				1
 

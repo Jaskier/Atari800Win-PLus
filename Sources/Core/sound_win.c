@@ -34,7 +34,7 @@ File    : sound_win.c
 #define MM_FRAMES_PER_FRAG			2
 
 #define DS_NUMBER_OF_FRAGS			2 /* Do not change the value! */
-#define DS_FRAMES_PER_FRAG			3
+#define DS_FRAMES_PER_FRAG			2
 /* TIP:
    Frames per fragment = sound latency in frames at present,
    because the interval between play and save cursors equals 1
@@ -68,29 +68,29 @@ struct SoundCtrl_t g_Sound =
 static WAVEHDR      s_arrWaveHDR[ MM_NUMBER_OF_FRAGS ];
 static WAVEFORMATEX s_wfxWaveFormat;
 static HWAVEOUT     s_hWaveOut              = 0;
-static char        *s_pSoundBuffer          = NULL;
+char        *s_pSoundBuffer          = NULL;
 static char        *s_pPlayCursor           = NULL;
-static char        *s_pSaveCursor           = NULL;
-static volatile int s_nPlayFragNo           = MM_PLAY_FRAG_NO;
-static volatile int s_nSaveFragNo           = MM_SAVE_FRAG_NO;
-static int          s_nNumberOfFrags        = MM_NUMBER_OF_FRAGS;
-static int          s_nFramesPerFrag        = MM_FRAMES_PER_FRAG;
-static int          s_nFrameCnt             = 1;
+char        *s_pSaveCursor           = NULL;
+volatile int		s_nPlayFragNo           = MM_PLAY_FRAG_NO;
+volatile int		s_nSaveFragNo           = MM_SAVE_FRAG_NO;
+int          s_nNumberOfFrags        = MM_NUMBER_OF_FRAGS;
+int          s_nFramesPerFrag        = MM_FRAMES_PER_FRAG;
+int          s_nFrameCnt             = 1;
 static int          s_nUpdatesPerFrag       = Atari800_TV_PAL * MM_FRAMES_PER_FRAG / DEF_SKIP_UPDATE;
-static int          s_nUpdateCnt            = 1;
+int          s_nUpdateCnt            = 1;
 static int          s_nSkipUpdate           = DEF_SKIP_UPDATE;
 static DWORD        s_dwBufferSize          = 0;
-static DWORD        s_dwFragSize            = 0;
-static DWORD        s_dwFragPos             = 0;
+DWORD        s_dwFragSize            = 0;
+DWORD        s_dwFragPos             = 0;
 static int          s_n16BitSnd             = 0; // 0 for 8-bit sound, 1 for 16-bit one
 static UBYTE		s_nSilenceData          = 0x80;
 static DWORD        s_dwStartVolume         = 0;
-static BOOL         s_bSoundIsPaused        = TRUE;
+BOOL         s_bSoundIsPaused        = TRUE;
 
 static const GUID IID_IDirectSoundNotify = { 0xb0210783, 0x89cd, 0x11d0, { 0xaf, 0x08, 0x00, 0xa0, 0xc9, 0x25, 0xcd, 0x16 } };
 
 static LPDIRECTSOUND       s_lpDirectSound  = NULL;
-static LPDIRECTSOUNDBUFFER s_lpDSBuffer     = NULL;
+LPDIRECTSOUNDBUFFER s_lpDSBuffer     = NULL;
 static LPDIRECTSOUNDNOTIFY s_lpDSNotify     = NULL;
 static LPDSBPOSITIONNOTIFY s_lpDSNotifyPos  = NULL;
 static HANDLE              s_hNotifyThread  = NULL;
@@ -771,8 +771,6 @@ SndPlay_DSSound( void )
 {
 	if( ++s_nFrameCnt > s_nFramesPerFrag )
 	{
-		int nDelay = 50;
-
 		_ASSERT(s_dwFragPos <= s_dwFragSize);
 
 		if( s_dwFragPos < s_dwFragSize )
@@ -783,32 +781,6 @@ SndPlay_DSSound( void )
 
 		Video_SaveFrame( NULL, 0, s_pSaveCursor, s_dwFragSize );
 
-		/* SoundIsPaused indicates full speed mode in this case; if
-		   the emulated Atari is paused, this routine is not invoked */
-		if( !s_bSoundIsPaused )
-		{
-//			_TRACE2("PrimaryThread.SndPlay_DSSound: s_nSaveFragNo: %d, s_nPlayFragNo: %d\n", s_nSaveFragNo, s_nPlayFragNo);
-
-			/* There is spinlock used to synchronize the threads. We should
-			   avoid this solution but it's rather fast and we don't really
-			   need the interlocked functions or critical sections here */
-			while( s_nSaveFragNo != s_nPlayFragNo && --nDelay )
-				Sleep( 1 );
-#ifdef _DEBUG
-			if( 0 == nDelay ) _TRACE0("!PrimaryThread.SndPlay_DSSound: Delay = 0!\n");
-#endif _DEBUG
-		}
-		/* The PlayFragNo indicator is incremented by a secondary thread so we can
-		   synchronize the thread with primary thread's writes to a stream buffer */
-
-		if( ++s_nSaveFragNo == s_nNumberOfFrags )
-			s_nSaveFragNo = 0;
-
-		s_pSaveCursor = &s_pSoundBuffer[ s_nSaveFragNo * s_dwFragSize ];
-
-		s_dwFragPos  = 0;
-		s_nUpdateCnt = 1;
-		s_nFrameCnt  = 1;
 	}
 } /* #OF# SndPlay_DSSound */
 
@@ -912,6 +884,7 @@ DSSoundThreadProc(
 			else /* s_nPlayFragNo != s_nSaveFragNo */
 			{
 				hResult = IDirectSoundBuffer_GetCurrentPosition( s_lpDSBuffer, &dwPlayCursor, &dwSaveCursor );
+//				_TRACE2("Sound cursor: %d, %d\n", dwPlayCursor, dwSaveCursor);
 				if( SUCCEEDED(hResult) )
 				{
 					dwBufferOffset = s_nPlayFragNo * s_dwFragSize;

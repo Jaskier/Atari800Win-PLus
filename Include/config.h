@@ -469,7 +469,7 @@
 #undef SUPPORTS_SOUND_REINIT
 
 /* Define to use synchronized sound. */
-#undef SYNCHRONIZED_SOUND
+#define SYNCHRONIZED_SOUND
 
 /* Alternate system-wide config file for non-Unix OS. */
 #undef SYSTEM_WIDE_CFG_FILE

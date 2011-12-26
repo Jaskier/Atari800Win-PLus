@@ -830,8 +830,8 @@ PreTranslateMessage(
 )
 {
 #ifdef _DEBUG
-	if( WM_KEYDOWN == pMsg->message || WM_KEYUP == pMsg->message ) // if( VK_MENU == wp )
-		TRACE2("msg=0x%x, wp=0x%x\n", pMsg->message, pMsg->wParam);
+//	if( WM_KEYDOWN == pMsg->message || WM_KEYUP == pMsg->message ) // if( VK_MENU == wp )
+//		TRACE2("msg=0x%x, wp=0x%x\n", pMsg->message, pMsg->wParam);
 #endif
 	switch( pMsg->message )
 	{
