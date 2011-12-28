@@ -3,6 +3,7 @@
 #include "colours_external.h"
 #include "monitor.h"
 #include "input_win.h"
+#include "misc_win.h"
 
 char CFG_osa_filename[FILENAME_MAX] = Util_FILENAME_NOT_SET;
 char CFG_osb_filename[FILENAME_MAX] = Util_FILENAME_NOT_SET;
@@ -42,7 +43,7 @@ int PLATFORM_Initialise(int *argc, char *argv[]) {
 };
 
 int PLATFORM_Exit(int run_monitor) {
-	if (run_monitor && MONITOR_Run())
+	if (run_monitor && Misc_LaunchMonitor())
 		return TRUE;
 	return FALSE;
 };
