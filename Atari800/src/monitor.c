@@ -602,6 +602,11 @@ static void safe_gets(char *buffer, size_t size, char const *prompt)
 	}
 #else
 	fputs(prompt, stdout);
+
+#ifdef HAVE_FFLUSH
+	fflush(stdout);
+#endif
+
 	fgets(buffer, size, stdin);
 #endif
 	Util_chomp(buffer);
