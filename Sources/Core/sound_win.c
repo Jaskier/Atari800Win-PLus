@@ -435,7 +435,7 @@ Sound_Initialise(
 
 		if( !s_hWaveOut )
 		{
-			mmResult = waveOutOpen( &s_hWaveOut, 2, &s_wfxWaveFormat, 0, 0, CALLBACK_NULL );
+			mmResult = waveOutOpen( &s_hWaveOut, WAVE_MAPPER, &s_wfxWaveFormat, 0, 0, CALLBACK_NULL );
 			if( mmResult != MMSYSERR_NOERROR )
 			{
 				ServeMMError( IDS_MMERR_OPEN, mmResult, FALSE );
