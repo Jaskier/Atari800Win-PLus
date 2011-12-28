@@ -33,7 +33,7 @@ File    : sound_win.c
 #define MM_NUMBER_OF_FRAGS			8
 #define MM_FRAMES_PER_FRAG			2
 
-#define DS_NUMBER_OF_FRAGS			2 /* Do not change the value! */
+#define DS_NUMBER_OF_FRAGS			4 /* Do not change the value! */
 #define DS_FRAMES_PER_FRAG			2
 /* TIP:
    Frames per fragment = sound latency in frames at present,
@@ -83,7 +83,8 @@ static DWORD        s_dwBufferSize          = 0;
 DWORD        s_dwFragSize            = 0;
 DWORD        s_dwFragPos             = 0;
 static int          s_n16BitSnd             = 0; // 0 for 8-bit sound, 1 for 16-bit one
-static UBYTE		s_nSilenceData          = 0x80;
+static UBYTE		s_nSilenceData8         = 0x80;
+static UWORD		s_nSilenceData16		= 0x8000;
 static DWORD        s_dwStartVolume         = 0;
 BOOL         s_bSoundIsPaused        = TRUE;
 
@@ -334,7 +335,7 @@ Sound_Initialise(
 		nNumberOfFrags = DS_NUMBER_OF_FRAGS;
 		nFramesPerFrag = g_Sound.nLatency;//DS_FRAMES_PER_FRAG;
 
-		_ASSERT(2 == nNumberOfFrags);
+//		_ASSERT(2 == nNumberOfFrags);
 	}
 	/* Compute the values related to sound buffer size */
 	if( Atari800_TV_PAL == Atari800_tv_mode )
@@ -388,12 +389,13 @@ Sound_Initialise(
 	/* Set sound quality */
 	Sound_SetQuality( g_Sound.nQuality );
 
-	/* Establish silence data */
-//	s_nSilenceData = n16BitSnd ? 0x00 : 0x80; // in 16bit sound silence is 0x8000, now is 0x8080
-
 	/* Clear the sound buffer */
-	for( i = s_nPlayFragNo * s_dwFragSize; i < s_nSaveFragNo * (int)s_dwFragSize; i++ )
-		s_pSoundBuffer[ i ] = s_nSilenceData;
+	if (n16BitSnd)
+		for( i = s_nPlayFragNo * s_dwFragSize; i < s_nSaveFragNo * (int)s_dwFragSize; i+=2 )
+			((UWORD *)s_pSoundBuffer)[ i/2 ] = s_nSilenceData16;
+	else
+		for( i = s_nPlayFragNo * s_dwFragSize; i < s_nSaveFragNo * (int)s_dwFragSize; i++ )
+			s_pSoundBuffer[ i ] = s_nSilenceData8;
 	
 	/* Initialize the kernel sound machine */
 	POKEYSND_Init( POKEYSND_FREQ_17_EXACT,
@@ -433,7 +435,7 @@ Sound_Initialise(
 
 		if( !s_hWaveOut )
 		{
-			mmResult = waveOutOpen( &s_hWaveOut, WAVE_MAPPER, &s_wfxWaveFormat, 0, 0, CALLBACK_NULL );
+			mmResult = waveOutOpen( &s_hWaveOut, 2, &s_wfxWaveFormat, 0, 0, CALLBACK_NULL );
 			if( mmResult != MMSYSERR_NOERROR )
 			{
 				ServeMMError( IDS_MMERR_OPEN, mmResult, FALSE );
@@ -854,6 +856,10 @@ DSSoundThreadProc(
 	HRESULT hResult;
 	int     i;
 
+#ifdef _DEBUG
+	LARGE_INTEGER lnTicks;
+#endif
+
 	while( END_EVENT + WAIT_OBJECT_0 != dwEventResult )
 	{
 		dwEventResult = WaitForMultipleObjects( NUMBER_OF_EVENTS, s_arrEvents, FALSE, INFINITE );
@@ -867,14 +873,29 @@ DSSoundThreadProc(
 				{
 					if( LockSoundBuffer( TRUE, 0, 0, &lpvPtr1, &dwBytes1, &lpvPtr2, &dwBytes2, DSBLOCK_ENTIREBUFFER ) )
 					{
-						for( i = 0; i < (int)dwBytes1; i++ )
-							((UBYTE*)lpvPtr1)[ i ] = s_nSilenceData;
-
-						if( lpvPtr2 != NULL )
+						if (s_n16BitSnd)
 						{
-							for( i = 0; i < (int)dwBytes2; i++ )
-								((UBYTE*)lpvPtr2)[ i ] = s_nSilenceData;
+							for( i = 0; i < (int)dwBytes1; i+=2 )
+								((UWORD*)lpvPtr1)[ i/2 ] = s_nSilenceData16;
+
+							if( lpvPtr2 != NULL )
+							{
+								for( i = 0; i < (int)dwBytes2; i+=2 )
+									((UWORD*)lpvPtr2)[ i/2 ] = s_nSilenceData16;
+							}
 						}
+						else
+						{
+							for( i = 0; i < (int)dwBytes1; i++ )
+								((UBYTE*)lpvPtr1)[ i ] = s_nSilenceData8;
+
+							if( lpvPtr2 != NULL )
+							{
+								for( i = 0; i < (int)dwBytes2; i++ )
+									((UBYTE*)lpvPtr2)[ i ] = s_nSilenceData8;
+							}
+						}
+
 						LockSoundBuffer( FALSE, 0, 0, &lpvPtr1, &dwBytes1, &lpvPtr2, &dwBytes2, 0 );
 
 						bBufferCleared = TRUE;
@@ -891,6 +912,10 @@ DSSoundThreadProc(
 
 					if( !(dwPlayCursor >= dwBufferOffset && dwPlayCursor < dwBufferOffset + s_dwFragSize) )
 					{
+#ifdef _DEBUG
+						QueryPerformanceCounter( &lnTicks );
+						_TRACE1("Ticks %d\n", lnTicks.LowPart);
+#endif
 						if( LockSoundBuffer( TRUE, dwBufferOffset, s_dwFragSize, &lpvPtr1, &dwBytes1, &lpvPtr2, &dwBytes2, 0 ) )
 						{
 							s_pPlayCursor = &s_pSoundBuffer[ dwBufferOffset ];
