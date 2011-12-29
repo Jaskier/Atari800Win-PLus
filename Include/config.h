@@ -457,7 +457,7 @@
 #undef SUPPORTS_PLATFORM_CONFIGURE
 
 /* Update the Palette if it changed. */
-//#define SUPPORTS_PLATFORM_PALETTEUPDATE 1
+#define SUPPORTS_PLATFORM_PALETTEUPDATE 1
 
 /* Platform-specific sleep function. */
 #undef SUPPORTS_PLATFORM_SLEEP

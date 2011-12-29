@@ -4,6 +4,7 @@
 #include "monitor.h"
 #include "input_win.h"
 #include "misc_win.h"
+#include "display_win.h"
 
 char CFG_osa_filename[FILENAME_MAX] = Util_FILENAME_NOT_SET;
 char CFG_osb_filename[FILENAME_MAX] = Util_FILENAME_NOT_SET;
@@ -26,7 +27,8 @@ int Palette_Read(char * file) {
 	return COLOURS_EXTERNAL_ReadFilename(Colours_external, file);
 }
 
-void Palette_Generate(int black, int white, int saturation, int contrast, int brightness, int gamma, int external) {
+void Palette_Generate(int black, int white, int saturation, int contrast, int brightness, int gamma, int external)
+{
 	Colours_setup->black_level = black;
 	Colours_setup->white_level = white;
 	Colours_setup->saturation = ((double)saturation - 50) / 50;
@@ -38,20 +40,31 @@ void Palette_Generate(int black, int white, int saturation, int contrast, int br
 	Colours_Update();
 }
 
-int PLATFORM_Initialise(int *argc, char *argv[]) {
+int PLATFORM_Initialise(int *argc, char *argv[])
+{
 	return TRUE;
 };
 
-int PLATFORM_Exit(int run_monitor) {
+int PLATFORM_Exit(int run_monitor)
+{
 	if (run_monitor && Misc_LaunchMonitor())
 		return TRUE;
 	return FALSE;
 };
 
-int PLATFORM_PORT(int num) {
+int PLATFORM_PORT(int num)
+{
 	return Atari_PORT(num);
 };
 
-int PLATFORM_TRIG(int num) { 
+int PLATFORM_TRIG(int num)
+{ 
 	return Atari_TRIG(num);
+};
+
+void PLATFORM_PaletteUpdate(void)
+{
+	Screen_UseAtariPalette( TRUE );
+	Screen_FreeInterp();
+	Screen_PrepareInterp( FALSE );
 };
