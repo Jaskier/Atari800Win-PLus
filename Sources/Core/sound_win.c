@@ -639,44 +639,9 @@ Sound_SetQuality(
 	else
 		/* Ron Fries' old Pokey emulation */
 		POKEYSND_enable_new_pokey = 0;
-	POKEYSND_DoInit();
+//	POKEYSND_DoInit();
 
 } /* #OF# Sound_SetQuality */
-
-/*========================================================
-Function : pokey_update
-=========================================================*/
-/* #FN#
-   This function is called by the Atari800 kernel */
-void
-/* #AS#
-   Nothing */
-pokey_update( void )
-{
-	if( --s_nSkipUpdate )
-		return;
-
-	s_nSkipUpdate = g_Sound.nSkipUpdate;
-
-	if( !s_bSoundIsPaused )
-	{
-		DWORD dwSampleSize, dwFragPos = s_dwFragSize * s_nUpdateCnt / s_nUpdatesPerFrag;
-		if( dwFragPos > s_dwFragSize )
-			dwFragPos = s_dwFragSize;
-
-		if( (dwSampleSize = dwFragPos - s_dwFragPos) )
-		{
-			dwSampleSize = (dwSampleSize >> s_n16BitSnd) & 0xfffffffe;
-			dwFragPos = s_dwFragPos + (dwSampleSize << s_n16BitSnd);
-
-			/* Write the part of audio data to the buffer */
-			POKEYSND_Process_ptr( s_pSaveCursor + s_dwFragPos, dwSampleSize );
-
-			s_dwFragPos = dwFragPos;
-		}
-		s_nUpdateCnt++;
-	}
-} /* #OF# pokey_update */
 
 /*========================================================
 Function : SndPlay_NoSound
@@ -689,12 +654,19 @@ void
    Nothing */
 SndPlay_NoSound( void )
 {
+	int samples_written = MZPOKEYSND_UpdateProcessBuffer();
+	int bytes_written = (s_n16BitSnd ? samples_written*2 : samples_written);
+	if ( s_dwFragPos + bytes_written > s_dwFragSize)
+		bytes_written = s_dwFragSize - s_dwFragPos;
+	memcpy(s_pSaveCursor + s_dwFragPos, MZPOKEYSND_process_buffer, bytes_written);
+	s_dwFragPos += bytes_written;
+
 	if( ++s_nFrameCnt > s_nFramesPerFrag )
 	{
 		_ASSERT(s_dwFragPos <= s_dwFragSize);
 
-		if( s_dwFragPos < s_dwFragSize )
-			POKEYSND_Process_ptr( s_pSaveCursor + s_dwFragPos, (s_dwFragSize - s_dwFragPos) >> s_n16BitSnd );
+//		if( s_dwFragPos < s_dwFragSize )
+//			POKEYSND_Process_ptr( s_pSaveCursor + s_dwFragPos, (s_dwFragSize - s_dwFragPos) >> s_n16BitSnd );
 
 		if( g_Sound.pfOutput )
 			fwrite( s_pSaveCursor, s_dwFragSize, 1, g_Sound.pfOutput );
@@ -727,13 +699,20 @@ void
    Nothing */
 SndPlay_MMSound( void )
 {
+	int samples_written = MZPOKEYSND_UpdateProcessBuffer();
+	int bytes_written = (s_n16BitSnd ? samples_written*2 : samples_written);
+	if ( s_dwFragPos + bytes_written > s_dwFragSize)
+		bytes_written = s_dwFragSize - s_dwFragPos;
+	memcpy(s_pSaveCursor + s_dwFragPos, MZPOKEYSND_process_buffer, bytes_written);
+	s_dwFragPos += bytes_written;
+
 	if( ++s_nFrameCnt > s_nFramesPerFrag )
 	{
 		_ASSERT(s_dwFragPos <= s_dwFragSize);
 
-		if( s_dwFragPos < s_dwFragSize )
+//		if( s_dwFragPos < s_dwFragSize )
 			/* Write the audio data to the buffer if it is not full */
-			POKEYSND_Process_ptr( s_pSaveCursor + s_dwFragPos, (s_dwFragSize - s_dwFragPos) >> s_n16BitSnd );
+//			POKEYSND_Process_ptr( s_pSaveCursor + s_dwFragPos, (s_dwFragSize - s_dwFragPos) >> s_n16BitSnd );
 
 		if( g_Sound.pfOutput )
 			fwrite( s_pSaveCursor, s_dwFragSize, 1, g_Sound.pfOutput );
@@ -771,12 +750,19 @@ void
    Nothing */
 SndPlay_DSSound( void )
 {
+	int samples_written = MZPOKEYSND_UpdateProcessBuffer();
+	int bytes_written = (s_n16BitSnd ? samples_written*2 : samples_written);
+	if ( s_dwFragPos + bytes_written > s_dwFragSize)
+		bytes_written = s_dwFragSize - s_dwFragPos;
+	memcpy(s_pSaveCursor + s_dwFragPos, MZPOKEYSND_process_buffer, bytes_written);
+	s_dwFragPos += bytes_written;
+
 	if( ++s_nFrameCnt > s_nFramesPerFrag )
 	{
 		_ASSERT(s_dwFragPos <= s_dwFragSize);
 
-		if( s_dwFragPos < s_dwFragSize )
-			POKEYSND_Process_ptr( s_pSaveCursor + s_dwFragPos, (s_dwFragSize - s_dwFragPos) >> s_n16BitSnd );
+//		if( s_dwFragPos < s_dwFragSize )
+//			POKEYSND_Process_ptr( s_pSaveCursor + s_dwFragPos, (s_dwFragSize - s_dwFragPos) >> s_n16BitSnd );
 
 		if( g_Sound.pfOutput )
 			fwrite( s_pSaveCursor, s_dwFragSize, 1, g_Sound.pfOutput );
@@ -913,8 +899,8 @@ DSSoundThreadProc(
 					if( !(dwPlayCursor >= dwBufferOffset && dwPlayCursor < dwBufferOffset + s_dwFragSize) )
 					{
 #ifdef _DEBUG
-						QueryPerformanceCounter( &lnTicks );
-						_TRACE1("Ticks %d\n", lnTicks.LowPart);
+//						QueryPerformanceCounter( &lnTicks );
+//						_TRACE1("Ticks %d\n", lnTicks.LowPart);
 #endif
 						if( LockSoundBuffer( TRUE, dwBufferOffset, s_dwFragSize, &lpvPtr1, &dwBytes1, &lpvPtr2, &dwBytes2, 0 ) )
 						{
