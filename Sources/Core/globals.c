@@ -20,6 +20,7 @@ int       g_nStartY       = DEF_START_Y;
 int       g_nTestVal      = 0;
 
 ULONG     g_ulAtariState  = ATARI_UNINITIALIZED;
+int       g_InitDone      = FALSE;
 
 int       g_argc          = 0;
 char     *g_argv          [ 32 ];

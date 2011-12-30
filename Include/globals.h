@@ -74,6 +74,7 @@ extern int       g_nStartY;
 extern int       g_nTestVal;
 
 extern ULONG     g_ulAtariState;
+extern int       g_InitDone;
 
 extern int       g_argc;
 extern char     *g_argv          [];

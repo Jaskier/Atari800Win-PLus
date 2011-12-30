@@ -266,7 +266,7 @@ InitInstance()
 			ThreadState = FALSE;
 		}
 	}
-
+	g_InitDone = TRUE;
 	return TRUE;
 } /* #OF# CAtari800WinApp::InitInstance */
 
@@ -441,7 +441,7 @@ Method   : CAtari800WinApp::Emulate
 BOOL CAtari800WinApp::Emulate()
 {
 	if( (_IsFlagSet( g_Misc.ulState, MS_STOP_WHEN_NO_FOCUS ) &&
-		 _IsFlagSet( g_ulAtariState, ATARI_NO_FOCUS )) || ST_ATARI_STOPPED )
+		 _IsFlagSet( g_ulAtariState, ATARI_NO_FOCUS )) || ST_ATARI_STOPPED || g_ulAtariState == 0 || g_InitDone == FALSE )
 	{
 
 		if( m_ulEqualizer != 1 )
