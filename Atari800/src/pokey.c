@@ -55,6 +55,10 @@
 #include "votraxsnd.h"
 #endif
 
+#ifdef __PLUS
+void pokey_update(void);
+#endif
+
 UBYTE POKEY_KBCODE;
 UBYTE POKEY_SERIN;
 UBYTE POKEY_IRQST;
@@ -440,6 +444,10 @@ void POKEY_Frame(void)
 
 void POKEY_Scanline(void)
 {
+#ifdef __PLUS
+	pokey_update();
+#endif
+
 #ifdef VOL_ONLY_SOUND
 	POKEYSND_UpdateVolOnly();
 #endif
