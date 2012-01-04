@@ -690,7 +690,7 @@ DriveInsert(
 	CString strPrompt;
 
 	/* Get the most recently used file name to use in a file dialog */
-	_strncpy( szDiskName, SIO_filename[ nDriveNum - 1 ], MAX_PATH );
+	strcpy( szDiskName, SIO_filename[ nDriveNum - 1 ]);
 	strPrompt.Format( IDS_SELECT_DSK_LOAD, nDriveNum );
 
 	if( PickFileName( TRUE, szDiskName, strPrompt, IDS_FILTER_DSK,
@@ -747,7 +747,7 @@ SaveState(
 	{
 		char szFileName[ MAX_PATH + 1 ];
 		/* Get the most recently used file name to use in a file dialog */
-		_strncpy( szFileName, atari_state_dir, MAX_PATH );
+		strcpy( szFileName, atari_state_dir);
 
 		if( PickFileName( FALSE, szFileName, IDS_SELECT_A8S_SAVE, IDS_FILTER_A8S,
 						  "a8s", PF_SAVE_FLAGS, TRUE, DEFAULT_A8S ) &&
@@ -1013,7 +1013,7 @@ OnFileBootAtariImage()
 	char szFileName[ MAX_PATH + 1 ];
 
 	/* Get the most recently used file name to use in a file dialog */
-	_strncpy( szFileName, g_szAutobootFile, MAX_PATH );
+	strcpy( szFileName, g_szAutobootFile);
 
 	if( PickFileName( TRUE, szFileName, IDS_SELECT_ALL_LOAD, IDS_FILTER_ALL,
 					  "atr", PF_LOAD_FLAGS ) &&
@@ -1049,7 +1049,7 @@ OnFileLoadExecutable()
 	SuspendThread();
 
 	char szFileName[ MAX_PATH + 1 ];
-	_strncpy( szFileName, atari_exe_dir, MAX_PATH );
+	strcpy( szFileName, atari_exe_dir );
 
 	if( PickFileName( TRUE, szFileName, IDS_SELECT_BIN_LOAD, IDS_FILTER_BIN,
 					  "xex", PF_LOAD_FLAGS, TRUE, DEFAULT_BIN ) &&
@@ -1389,7 +1389,7 @@ OnFileTurnDisk()
 
 	char szDiskPath[ MAX_PATH + 1 ];
 
-	_strncpy( szDiskPath, SIO_filename[ 0 ], MAX_PATH );
+	strcpy( szDiskPath, SIO_filename[ 0 ]);
 	if( strcmp( szDiskPath, "Empty" ) != 0 &&
 		strcmp( szDiskPath, "Off" ) != 0 )
 	{
@@ -1408,7 +1408,7 @@ OnFileTurnDisk()
 		CFile cfFile;
 
 		GetCurrentDirectory( MAX_PATH, szCurDir );
-		_strncpy( szNewDir, szDiskPath, MAX_PATH );
+		strcpy( szNewDir, szDiskPath );
 
 		for( i = strlen( szNewDir ); i > 0 && szNewDir[ i ] != '\\'; i-- );
 		if( i > 0 )
@@ -1477,7 +1477,7 @@ OnFileAttachTapeImage()
 	SuspendThread();
 
 	char szFileName[ FILENAME_MAX ];
-	_strncpy( szFileName, cassette_filename, FILENAME_MAX - 1 );
+	strcpy( szFileName, cassette_filename);
 
 	if( PickFileName( TRUE, szFileName, IDS_SELECT_CAS_LOAD, IDS_FILTER_CAS,
 					  "cas", PF_LOAD_FLAGS, TRUE, DEFAULT_TAP ) &&
@@ -1540,7 +1540,7 @@ OnFileAttachCartridgeImage()
 
 	char szNewCart[ MAX_PATH + 1 ];
 
-	_strncpy( szNewCart, g_szOtherRom, MAX_PATH );
+	strcpy( szNewCart, g_szOtherRom);
 
 	if( PickCartridge( szNewCart ) )
 	{
@@ -1603,7 +1603,7 @@ OnFileReadState()
 #else /*HAVE_LIBZ*/
 	char szFileName[ MAX_PATH + 1 ];
 	/* Get the most recently used file name to use in a file dialog */
-	_strncpy( szFileName, atari_state_dir, MAX_PATH );
+	strcpy( szFileName, atari_state_dir);
 
 	if( PickFileName( TRUE, szFileName, IDS_SELECT_A8S_LOAD, IDS_FILTER_A8S,
 						"a8s", PF_LOAD_FLAGS, TRUE, DEFAULT_A8S ) &&
@@ -3900,7 +3900,7 @@ ConvertRomToCart()
 {
 	char szFileName[ MAX_PATH + 1 ];
 
-	_strncpy( szFileName, g_szOtherRom, MAX_PATH );
+	strcpy( szFileName, g_szOtherRom);
 	GetFolderPath( szFileName, NULL );
 
 	if( PickFileName( TRUE, szFileName, IDS_SELECT_ROM_CONV, IDS_FILTER_ROM,
@@ -6398,7 +6398,7 @@ OnMessageKailleraStart(
 				  /*_stricmp( SIO_filename[ 0 ], "Empty" ) != 0 &&*/ /* We have to turn the drive off */
 					_stricmp( SIO_filename[ 0 ], "Off" ) != 0 )
 				{
-					_strncpy( s_Settings.szDiskFile, SIO_filename[ 0 ], MAX_PATH );
+					strcpy( s_Settings.szDiskFile, SIO_filename[ 0 ]);
 					/* Detach the disk image */
 					SIO_Dismount( 1 );
 					SIO_drive_status[ 0 ] = SIO_OFF;
@@ -6410,7 +6410,7 @@ OnMessageKailleraStart(
 			{
 				if( _IsPathAvailable( g_szBinaryFile ) )
 				{
-					_strncpy( s_Settings.szExecFile, g_szBinaryFile, MAX_PATH );
+					strcpy( s_Settings.szExecFile, g_szBinaryFile);
 					strcpy( g_szBinaryFile, FILE_NONE );
 				}
 			}
@@ -6419,7 +6419,7 @@ OnMessageKailleraStart(
 				if( _IsPathAvailable( g_szCurrentRom ) &&
 					CARTRIDGE_NONE != CARTRIDGE_type )
 				{
-					_strncpy( s_Settings.szCartFile, g_szCurrentRom, MAX_PATH );
+					strcpy( s_Settings.szCartFile, g_szCurrentRom);
 					/* Remove the cartridge */
 					CARTRIDGE_Remove();
 					strcpy( g_szCurrentRom, FILE_NONE );
@@ -6429,7 +6429,7 @@ OnMessageKailleraStart(
 			{
 				if( _IsPathAvailable( g_szSnapshotFile ) )
 				{
-					_strncpy( s_Settings.szSnapFile, g_szSnapshotFile, MAX_PATH );
+					strcpy( s_Settings.szSnapFile, g_szSnapshotFile);
 					strcpy( g_szSnapshotFile, FILE_NONE );
 				}
 				break;
@@ -6500,7 +6500,7 @@ OnMessageKailleraStop(
 		}
 		if( _IsPathAvailable( s_Settings.szExecFile ) )
 		{
-			_strncpy( g_szBinaryFile, s_Settings.szExecFile, MAX_PATH );
+			strcpy( g_szBinaryFile, s_Settings.szExecFile);
 		}
 		if( _IsPathAvailable( s_Settings.szCartFile ) )
 		{
@@ -6509,7 +6509,7 @@ OnMessageKailleraStop(
 		}
 		if( _IsPathAvailable( s_Settings.szSnapFile ) )
 		{
-			_strncpy( g_szSnapshotFile, s_Settings.szSnapFile, MAX_PATH );
+			strcpy( g_szSnapshotFile, s_Settings.szSnapFile);
 		}
 		/* Restore the emulation state flags */
 		_SetFlag( g_Misc.ulState, s_Settings.ulMiscState & KA_MS_FLAGS_TO_CLEAR );

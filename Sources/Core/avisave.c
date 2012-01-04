@@ -330,7 +330,7 @@ AVI_SaveInfo(
 		pdw[ 0 ] = mmioStringToFOURCC( "INFO", 0 );
 		pdw[ 1 ] = mmioStringToFOURCC( "ISBJ", 0 ); /* Subject */
 		pdw[ 2 ] = nInfoLen;
-		_strncpy( psz + nHeadLen, pszInfo, nInfoLen - 1 );
+		strncpy( psz + nHeadLen, pszInfo, nInfoLen - 1 );
 
 		if( !AVIFileWriteData( pFile, mmioStringToFOURCC( "LIST", 0 ), psz, nHeadLen + nInfoLen ) )
 		{

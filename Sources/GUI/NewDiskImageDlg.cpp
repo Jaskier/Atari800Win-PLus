@@ -410,7 +410,7 @@ OnOK()
 			return;
 		}
 
-		_strncpy( szPostfix, &m_szDiskName[ strlen( m_szDiskName ) - 4 ], 5 );
+		strncpy( szPostfix, &m_szDiskName[ strlen( m_szDiskName ) - 4 ], 5 );
 		if( _stricmp( szPostfix, ".atr" ) == 0 )
 		{
 			/* There is the definition of AFILE_ATR_Header structure in atari.h */

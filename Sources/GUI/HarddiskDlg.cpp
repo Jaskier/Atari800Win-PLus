@@ -184,11 +184,11 @@ OnInitDialog()
 	/* Backup hard disk paths */
 	for( int i = 0; i < HD_DRIVES_NO; i++ )
 	{
-		_strncpy( m_pDriveData[ i ].szNewDir, m_pDriveData[ i ].pszDir, MAX_PATH );
+		strcpy( m_pDriveData[ i ].szNewDir, m_pDriveData[ i ].pszDir);
 		SetDlgItemText( m_pDriveData[ i ].nCtrlID, m_pDriveData[ i ].szNewDir );
 	}
 	/* Backup executables path */
-	_strncpy( m_szHardExePath, g_szHardExePath, FILENAME_MAX - 1 );
+	strcpy( m_szHardExePath, g_szHardExePath );
 	SetDlgItemText( IDC_HARDDISK_EXEPATH, m_szHardExePath );
 
 	SetDlgState();

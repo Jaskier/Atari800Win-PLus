@@ -204,7 +204,7 @@ GetDiskImage(
 	BOOL	bResult = FALSE;
 
 	/* Get the most recently used file name to use in a file dialog */
-	_strncpy( szDiskName, m_pDiskData[ nDrive ].szNewName, MAX_PATH );
+	strcpy( szDiskName, m_pDiskData[ nDrive ].szNewName);
 	strPrompt.Format( IDS_SELECT_DSK_LOAD, nDrive + 1 );
 
 	if( PickFileName( TRUE, szDiskName, strPrompt, IDS_FILTER_DSK,
@@ -212,7 +212,7 @@ GetDiskImage(
 		*szDiskName != '\0' )
 	{
 		SetDlgItemText( m_pDiskData[ nDrive ].nEditID, szDiskName );
-		_strncpy( m_pDiskData[ nDrive ].szNewName, szDiskName, MAX_PATH );
+		strcpy( m_pDiskData[ nDrive ].szNewName, szDiskName);
 		m_pDiskData[ nDrive ].usStatus = CheckSelectedDisk( szDiskName );
 
 		bResult = TRUE;
@@ -340,7 +340,7 @@ OnInitDialog()
 		m_pDiskData[ i ].nEditID   = (m_bSmallMode ? IDC_DRIVE_EDIT   : anCtrlsLarge[ i ][ 1 ]);
 		m_pDiskData[ i ].nComboID  = (m_bSmallMode ? IDC_DRIVE_COMBO  : anCtrlsLarge[ i ][ 2 ]);
 		/* Backup drives paths */
-		_strncpy( m_pDiskData[ i ].szNewName, m_pDiskData[ i ].pszName, MAX_PATH );
+		strcpy( m_pDiskData[ i ].szNewName, m_pDiskData[ i ].pszName);
 		m_pDiskData[ i ].usStatus = SIO_drive_status[ i ];
 	}
 	if( m_bSmallMode )
@@ -647,7 +647,7 @@ OnNewImage()
 		/* Attach disk image to any drive if it was expected */
 		dlgNewDiskImage.m_bAttachDisk )
 	{
-		_strncpy( m_pDiskData[ dlgNewDiskImage.m_nDriveNumber ].szNewName, dlgNewDiskImage.m_szDiskName, MAX_PATH );
+		strcpy( m_pDiskData[ dlgNewDiskImage.m_nDriveNumber ].szNewName, dlgNewDiskImage.m_szDiskName );
 		m_pDiskData[ dlgNewDiskImage.m_nDriveNumber ].usStatus = CheckSelectedDisk( dlgNewDiskImage.m_szDiskName );
 	}
 	SetDlgState();

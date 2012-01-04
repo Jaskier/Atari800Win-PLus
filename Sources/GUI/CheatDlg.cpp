@@ -391,7 +391,7 @@ SetTrainerFileName()
 
 		/* Split disk full path */
 		_tsplitpath( szFilePath, szTemp, szTemp, szFile, szTemp );
-		_strncpy( m_szTrainerFile, szFile, MAX_PATH );
+		strcpy( m_szTrainerFile, szFile);
 		/* Add an extension to the file name */
 		strcat( m_szTrainerFile, ".a8t" );
 

@@ -158,7 +158,7 @@ OnInitDialog()
 	m_nHardReadOnly   = Devices_h_read_only;
 	m_nEnableRTime    = RTIME_enabled;
 
-	_strncpy( m_szPrintCommand, Devices_print_command, PRINT_CMD_LENGTH );
+	strcpy( m_szPrintCommand, Devices_print_command);
 
 	SetDlgState();
 
@@ -416,7 +416,7 @@ OnOK()
 			strcpy( m_szPrintCommand, DEF_PRINT_COMMAND );
 		if( _stricmp( m_szPrintCommand, Devices_print_command ) != 0 )
 		{
-			_strncpy( Devices_print_command, m_szPrintCommand, PRINT_CMD_LENGTH );
+			strcpy( Devices_print_command, m_szPrintCommand);
 			WriteRegString( NULL, REG_PRINT_COMMAND, Devices_print_command );
 		}
 		CCommonDlg::OnOK();

@@ -156,7 +156,9 @@ SearchRomImages()
 		char acRomNamesBackup[ ROM_TYPES_NO ][ MAX_PATH + 1 ];
 
 		for( int i = 0; i < ROM_TYPES_NO; i++ )
-			_strncpy( &acRomNamesBackup[ i ][ 0 ], m_pRomData[ i ].pszName, MAX_PATH );
+		{
+			strcpy( &acRomNamesBackup[ i ][ 0 ], m_pRomData[ i ].pszName);
+		}
 
 		strPath = dlgFileSmall.GetPathName();	
 		if( Misc_TestRomPaths( (LPSTR)(LPCSTR)strPath, GetWnd()->GetSafeHwnd() ) )
@@ -164,7 +166,7 @@ SearchRomImages()
 			/* The Cancel button must work after using Search */
 			for( int i = 0; i < ROM_TYPES_NO; i++ )
 			{
-				_strncpy( m_pRomData[ i ].szNewName, m_pRomData[ i ].pszName, MAX_PATH );
+				strcpy( m_pRomData[ i ].szNewName, m_pRomData[ i ].pszName);
 				strcpy( m_pRomData[ i ].pszName, &acRomNamesBackup[ i ][ 0 ] );
 			}
 			bResult = TRUE;

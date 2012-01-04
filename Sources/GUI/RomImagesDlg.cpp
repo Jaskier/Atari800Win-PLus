@@ -225,10 +225,10 @@ OnInitDialog()
 		/* Set the appropriate controls IDs */
 		m_pRomData[ i ].nCtrlID = (m_bSmallMode ? anCtrlsSmall[ i ] : anCtrlsLarge[ i ]);
 		/* Backup ROM paths */
-		_strncpy( m_pRomData[ i ].szNewName, m_pRomData[ i ].pszName, MAX_PATH );
+		strcpy( m_pRomData[ i ].szNewName, m_pRomData[ i ].pszName);
 	}
 	/* Backup cart path */
-	_strncpy( m_szCartName, g_szOtherRom, MAX_PATH );
+	strcpy( m_szCartName, g_szOtherRom);
 	/* Remember the cartridge state */
 	m_nCartState = (CARTRIDGE_NONE == CARTRIDGE_type ? CS_DETACHED : CS_ATTACHED);
 

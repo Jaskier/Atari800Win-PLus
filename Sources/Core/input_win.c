@@ -766,7 +766,7 @@ InitJoystickInput(
 		ServeDInputError( IDS_DIERR_ADDING_DEVICE, hResult, FALSE );
 		return FALSE;
 	}
-	_strncpy( g_Input.acDevNames[ g_Input.nDevFoundNum++ ], lpDevInstance->tszInstanceName, INPUT_DEV_NAMELEN );
+	strcpy( g_Input.acDevNames[ g_Input.nDevFoundNum++ ], lpDevInstance->tszInstanceName );
 	IDirectInputDevice_Release( pdev );
 
 	return DIENUM_CONTINUE;
@@ -2387,7 +2387,7 @@ DI_GetErrorString(
     }
 	if( dwLen )
     {
-        _strncpy( pszErrorBuff, pszError, dwLen );
+        strncpy( pszErrorBuff, pszError, dwLen );
         pszErrorBuff[ dwLen ] = '\0';
     }
     return TRUE;

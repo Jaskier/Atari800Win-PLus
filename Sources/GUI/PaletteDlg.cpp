@@ -343,7 +343,7 @@ OnInitDialog()
 	m_nBrightness = g_Screen.Pal.nBrightness;
 	m_nGamma      = g_Screen.Pal.nGamma;
 
-	_strncpy( m_szPaletteFile, g_szPaletteFile, MAX_PATH );
+	strcpy( m_szPaletteFile, g_szPaletteFile);
 
 	if( !m_bSmallMode )
 	{
@@ -808,7 +808,7 @@ OnOK()
 
 	if( _stricmp( g_szPaletteFile, m_szPaletteFile ) != 0 )
 	{
-		_strncpy( g_szPaletteFile, m_szPaletteFile, MAX_PATH );
+		strcpy( g_szPaletteFile, m_szPaletteFile );
 		WriteRegString( NULL, REG_FILE_PALETTE, g_szPaletteFile );
 		bChanged = TRUE;
 	}

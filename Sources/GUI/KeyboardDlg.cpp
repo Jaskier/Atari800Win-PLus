@@ -191,8 +191,8 @@ OnInitDialog()
 	m_ulInputState = g_Input.ulState;
 	m_nArrowsMode  = g_Input.Key.nArrowsMode;
 
-	_strncpy( m_szTemplateFile, g_szTemplateFile, MAX_PATH );
-	_strncpy( m_szTemplateDesc, g_szTemplateDesc, TEMPLATE_DESC_LENGTH );
+	strcpy( m_szTemplateFile, g_szTemplateFile);
+	strcpy( m_szTemplateDesc, g_szTemplateDesc);
 
 	/* Read the template from a file */
 	PrepareTemplate( m_szTemplateFile, m_szTemplateDesc );

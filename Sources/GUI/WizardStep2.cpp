@@ -177,7 +177,7 @@ OnInitDialog()
 		/* Set the appropriate controls IDs */
 		m_pRomData[ i ].nCtrlID = anCtrls[ i ];
 		/* Backup ROM paths */
-		_strncpy( m_pRomData[ i ].szNewName, m_pRomData[ i ].pszName, MAX_PATH );
+		strcpy( m_pRomData[ i ].szNewName, m_pRomData[ i ].pszName );
 	}
 	SetDlgState();
 

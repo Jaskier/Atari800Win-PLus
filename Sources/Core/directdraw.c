@@ -1761,7 +1761,7 @@ DD_GetErrorString(
 	}
 	if( dwLen )
 	{
-		_strncpy( pszErrorBuff, pszError, dwLen );
+		strncpy( pszErrorBuff, pszError, dwLen );
 		pszErrorBuff[ dwLen ] = '\0';
 	}
 	return TRUE;

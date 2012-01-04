@@ -1440,7 +1440,7 @@ DS_GetErrorString( HRESULT hResult,
 	}
 	if( dwLen )
 	{
-		_strncpy( pszErrorBuff, pszError, dwLen );
+		strncpy( pszErrorBuff, pszError, dwLen );
 		pszErrorBuff[ dwLen ] = 0;
 	}
 	return TRUE;
@@ -1597,7 +1597,7 @@ MM_GetErrorString( MMRESULT mmResult,
 	}
 	if( dwLen )
 	{
-		_strncpy( pszErrorBuff, pszError, dwLen );
+		strncpy( pszErrorBuff, pszError, dwLen );
 		pszErrorBuff[ dwLen ] = '\0';
 	}
 	return TRUE;

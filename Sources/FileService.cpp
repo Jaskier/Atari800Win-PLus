@@ -81,7 +81,7 @@ PickFileName(
 	char szFilePath[ MAX_PATH + 1 ];
 	int  nResult = IDOK;
 
-	_strncpy( szFilePath, pszFileName, MAX_PATH );
+	strcpy( szFilePath, pszFileName);
 
 	if( bCheckPath )
 	{
@@ -135,7 +135,7 @@ PickFileName(
 									(pParentWnd ? pParentWnd : AfxGetMainWnd()) );
 
 		if( IDOK == (nResult = dlgFileSmall.DoModal()) )
-			_strncpy( pszFileName, dlgFileSmall.GetPathName(), MAX_PATH );
+			strcpy( pszFileName, dlgFileSmall.GetPathName() );
 	}
 	else
 	{
@@ -156,7 +156,7 @@ PickFileName(
 			fdlgFile.m_ofn.lpfnHook = FileDialogHookProc;
 
 		if( IDOK == (nResult = fdlgFile.DoModal()) )
-			_strncpy( pszFileName, fdlgFile.GetPathName(), MAX_PATH );
+			strcpy( pszFileName, fdlgFile.GetPathName());
 	}
 	_CursorFree();
 
@@ -654,7 +654,9 @@ GetFolderPath(
 		pszPathName[ i++ ] = '\0';
 	}
 	if( pszFileName != NULL )
-		_strncpy( pszFileName, &pszPathName[ i ], MAX_PATH );
+	{
+		strcpy( pszFileName, &pszPathName[ i ]);
+	}
 
 	/* Add ending backslash to drive name */
 	if( strlen( pszPathName ) == 2 && pszPathName[ 1 ] == ':' )
@@ -677,7 +679,7 @@ RunExecutable(
 	char szNewDir[ MAX_PATH + 1 ];
 	BOOL bResult = FALSE;
 
-	_strncpy( szNewDir, pszFileName, MAX_PATH );
+	strcpy( szNewDir, pszFileName);
 	GetFolderPath( szNewDir, NULL );
 	if( _stricmp( szNewDir, atari_exe_dir ) != 0 )
 	{
@@ -686,7 +688,7 @@ RunExecutable(
 	}
 	if( BINLOAD_Loader( pszFileName ) )
 	{
-		_strncpy( g_szBinaryFile, pszFileName, MAX_PATH );
+		strcpy( g_szBinaryFile, pszFileName);
 		bResult = TRUE;
 	}
 	else
@@ -714,12 +716,12 @@ RunSnapshot(
 	   contents a complete path to the file */
 	if( _stricmp( pszFileName, atari_state_dir ) != 0 )
 	{
-		_strncpy( atari_state_dir, pszFileName, MAX_PATH );
+		strcpy( atari_state_dir, pszFileName);
 		WriteRegString( NULL, REG_FILE_STATE, atari_state_dir );
 	}
 	if( StateSav_ReadAtariState( pszFileName, "rb" ) )
 	{
-		_strncpy( g_szSnapshotFile, pszFileName, MAX_PATH );
+		strcpy( g_szSnapshotFile, pszFileName);
 		bResult = TRUE;
 	}
 	else
@@ -833,7 +835,7 @@ GetBootFileInfo(
 			*pFileType |= IAF_A8S_IMAGE;
 			if( NULL != pszFileName )
 			{
-				_strncpy( pszFileName, g_szSnapshotFile, nBufferLen );
+				strcpy( pszFileName, g_szSnapshotFile);
 				return TRUE;
 			}
 		}
@@ -847,7 +849,7 @@ GetBootFileInfo(
 			*pFileType |= IAF_ROM_IMAGE;
 			if( NULL != pszFileName )
 			{
-				_strncpy( pszFileName, g_szCurrentRom, nBufferLen );
+				strncpy( pszFileName, g_szCurrentRom, nBufferLen );
 				return TRUE;
 			}
 		}
@@ -866,7 +868,7 @@ GetBootFileInfo(
 				*pFileType |= IAF_BIN_IMAGE;
 				if( NULL != pszFileName )
 				{
-					_strncpy( pszFileName, g_szBinaryFile, nBufferLen );
+					strncpy( pszFileName, g_szBinaryFile, nBufferLen );
 					return TRUE;
 				}
 			}
@@ -881,7 +883,7 @@ GetBootFileInfo(
 				*pFileType |= IAF_DSK_IMAGE;
 				if( NULL != pszFileName )
 				{
-					_strncpy( pszFileName, SIO_filename[ 0 ], nBufferLen );
+					strncpy( pszFileName, SIO_filename[ 0 ], nBufferLen );
 					return TRUE;
 				}
 			}
@@ -896,7 +898,7 @@ GetBootFileInfo(
 				*pFileType |= IAF_CAS_IMAGE;
 				if( NULL != pszFileName )
 				{
-					_strncpy( pszFileName, cassette_filename, nBufferLen );
+					strncpy( pszFileName, cassette_filename, nBufferLen );
 					return TRUE;
 				}
 			}

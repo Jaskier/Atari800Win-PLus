@@ -252,7 +252,7 @@ SetNetworkGameName(
 
 		/* Split disk full path */
 		_tsplitpath( szFilePath, szTemp, szTemp, szFile, szTemp );
-		_strncpy( m_szGameName, szFile, GAME_NAME_LENGTH );
+		strcpy( m_szGameName, szFile );
 
 		/* Store the booting image type */
 		m_unBootImage = unFileType;
@@ -439,7 +439,7 @@ OnOK()
 	}
 	g_Kaillera.unBootImage = m_unBootImage;
 
-	_strncpy( g_Kaillera.szGameName, m_szGameName, GAME_NAME_LENGTH );
+	strcpy( g_Kaillera.szGameName, m_szGameName);
 	g_Kaillera.szGameName[ strlen( g_Kaillera.szGameName ) + 1 ] = '\0';
 
 	CCommonDlg::OnOK();

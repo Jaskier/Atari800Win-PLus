@@ -694,7 +694,7 @@ Misc_FindWindow(
 {
 	FindWnd_t FindWnd;
 
-	_strncpy( FindWnd.szWndTitle, pszTitle, WND_TITLE_LENGTH );
+	strcpy( FindWnd.szWndTitle, pszTitle);
 	FindWnd.dwThreadId = dwThreadId;
 	FindWnd.hWnd       = NULL;
 
@@ -720,7 +720,7 @@ Misc_FindChildWindow(
 {
 	FindWnd_t FindWnd;
 
-	_strncpy( FindWnd.szWndTitle, pszTitle, WND_TITLE_LENGTH );
+	strcpy( FindWnd.szWndTitle, pszTitle);
 	FindWnd.dwThreadId = 0;
 	FindWnd.hWnd       = NULL;
 
@@ -1315,7 +1315,7 @@ Misc_ExecutePrintCmd(
 		char szFile[ MAX_PATH + 1 ];
 		int  nResult;
 
-		_strncpy( szPath, pszPrintFile, MAX_PATH );
+		strcpy( szPath, pszPrintFile);
 		GetFolderPath( szPath, szFile );
 
 		if( (nResult =

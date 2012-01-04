@@ -41,7 +41,7 @@ static int s_nVersion = CURRENT_REV;
 /* Macro-definitions */
 
 #define _RegReadString(hk, key, sz, def, len) \
-	(ReadRegBinary( hk, key, sz, len, FALSE ) == READ_REG_FAIL && (_strncpy( sz, def, len ), TRUE))
+	(ReadRegBinary( hk, key, sz, len, FALSE ) == READ_REG_FAIL && (strcpy( sz, def), TRUE))
 
 #define _RegWriteString(hk, key, val) \
 	WriteRegString( hk, key, val )

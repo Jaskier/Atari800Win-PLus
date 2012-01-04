@@ -213,7 +213,7 @@ OnOK()
 		{
 			BOOL bIsCas = FALSE;
 			/* Set description of the tape */
-			_strncpy( cassette_description, m_szTapeDesc, CASSETTE_DESCRIPTION_MAX - 1 );
+			strcpy( cassette_description, m_szTapeDesc);
 			/* Write cassette header */
 			CASSETTE_CreateFile( m_szTapeName, &pfImage, &bIsCas );
 			/* Close the image file */

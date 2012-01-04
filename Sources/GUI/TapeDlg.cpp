@@ -115,7 +115,7 @@ SetPosInfo(
 		if( (cassette_max_block + 1) == (int)nPos )
 		{
 			/* Set the "End of tape" label */
-			_strncpy( szInfo, m_szLabels[ LABEL_ENDOFTAPE ], LOADSTRING_SIZE_S );
+			strcpy( szInfo, m_szLabels[ LABEL_ENDOFTAPE ]);
 		}
 		else
 			/* Set the "Block x of y" label */
@@ -124,11 +124,11 @@ SetPosInfo(
 	else if( m_bCasImage )
 	{
 		/* Set the "Empty tape" label */
-		_strncpy( szInfo, m_szLabels[ LABEL_EMPTYTAPE ], LOADSTRING_SIZE_S );
+		strcpy( szInfo, m_szLabels[ LABEL_EMPTYTAPE ] );
 	}
 	else
 		/* Set the "No tape attached" label */
-		_strncpy( szInfo, m_szLabels[ LABEL_NOTAPE ], LOADSTRING_SIZE_S );
+		strcpy( szInfo, m_szLabels[ LABEL_NOTAPE ]);
 
 	pStatic->SetWindowText( szInfo );
 
@@ -200,11 +200,11 @@ OnInitDialog()
 	CCommonDlg::OnInitDialog();
 	
 	/* Cache the kernel values */
-	_strncpy( m_szTapeFile, cassette_filename, FILENAME_MAX - 1 );
+	strcpy( m_szTapeFile, cassette_filename );
 
 	/* Backup a current tape file name and position */
-	_strncpy( m_szTapeBack, cassette_filename, FILENAME_MAX - 1 );
-	_strncpy( m_szTapeLast, cassette_filename, FILENAME_MAX - 1 );
+	strcpy( m_szTapeBack, cassette_filename );
+	strcpy( m_szTapeLast, cassette_filename);
 	m_nCurrentBack = cassette_current_block;
 
 	/* Check if the tape image is a cassette file */
@@ -297,7 +297,7 @@ PrepareTape(
 		EjectTape();
 
 	/* Save a name of the last used image */
-	_strncpy( m_szTapeLast, pszTapeFile, FILENAME_MAX - 1 );
+	strcpy( m_szTapeLast, pszTapeFile );
 
 	return bResult;
 
@@ -408,7 +408,7 @@ OnNewImage()
 		dlgNewTapeImage.m_bAttachTape )
 	{
 		/* Set a name of the created image */
-		_strncpy( m_szTapeFile, dlgNewTapeImage.m_szTapeName, FILENAME_MAX - 1 );
+		strcpy( m_szTapeFile, dlgNewTapeImage.m_szTapeName);
 		SetDlgItemText( IDC_TAPE_FILE, m_szTapeFile );
 		/* Open a tape image */
 		PrepareTape( m_szTapeFile, FALSE, TRUE );

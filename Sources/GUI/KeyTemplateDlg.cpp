@@ -119,11 +119,11 @@ CKeyTemplateDlg(
 	//}}AFX_DATA_INIT
 	ASSERT(NULL != pszTemplateFile);
 	m_pszTemplateFile = pszTemplateFile;
-	_strncpy( m_szTemplateFile, m_pszTemplateFile, MAX_PATH );
+	strcpy( m_szTemplateFile, m_pszTemplateFile);
 
 	ASSERT(NULL != pszTemplateDesc);
 	m_pszTemplateDesc = pszTemplateDesc;
-	_strncpy( m_szTemplateDesc, m_pszTemplateDesc, TEMPLATE_DESC_LENGTH );
+	strcpy( m_szTemplateDesc, m_pszTemplateDesc);
 
 	m_nFirstCtrl = IDC_KEYTEMPLATE_FIRST;
 	m_nLastCtrl  = IDC_KEYTEMPLATE_LAST;
@@ -586,10 +586,10 @@ OnOK()
 			strcpy( m_szTemplateFile, DEFAULT_A8K );
 
 		if( _stricmp( m_pszTemplateFile, m_szTemplateFile ) != 0 )
-			_strncpy( m_pszTemplateFile, m_szTemplateFile, MAX_PATH );
+			strcpy( m_pszTemplateFile, m_szTemplateFile);
 
 		if( _stricmp( m_pszTemplateDesc, m_szTemplateDesc ) != 0 )
-			_strncpy( m_pszTemplateDesc, m_szTemplateDesc, TEMPLATE_DESC_LENGTH );
+			strcpy( m_pszTemplateDesc, m_szTemplateDesc);
 	}
 	CCommonDlg::OnOK();
 

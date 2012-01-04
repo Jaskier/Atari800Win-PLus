@@ -173,9 +173,6 @@ typedef unsigned (__stdcall *PTHREAD_START)(void *);
 #define _CursorFree() \
 	AfxGetApp()->DoWaitCursor(-1)
 
-#define _strncpy(dest, src, len) \
-	(strncpy(dest, src, len)[ len ] = '\0')
-
 #ifdef __cplusplus
 }
 #endif
