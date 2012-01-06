@@ -13,11 +13,13 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Polish (Poland) resources
+// Polish resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_PLK)
+#ifdef _WIN32
 LANGUAGE LANG_POLISH, SUBLANG_DEFAULT
 #pragma code_page(1250)
+#endif //_WIN32
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -25,16 +27,18 @@ LANGUAGE LANG_POLISH, SUBLANG_DEFAULT
 //
 
 IDB_WIZARD              BITMAP                  "Res\\Wizard.bmp"
-#endif    // Polish (Poland) resources
+#endif    // Polish resources
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
-// English (United States) resources
+// English (U.S.) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
+#endif //_WIN32
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -88,7 +92,7 @@ IDB_SB_KAILLERA4_E      BITMAP                  "Res\\sb_kaillera4_e.bmp"
 // Dialog
 //
 
-IDD_KEYSETGETKEY DIALOG 0, 0, 129, 32
+IDD_KEYSETGETKEY DIALOG  0, 0, 129, 32
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Define Key"
 FONT 8, "MS Sans Serif"
@@ -146,7 +150,7 @@ BEGIN
     CONTROL         "&Attach disks Read Only",IDC_DRIVE_READONLY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,13,156,88,10
 END
 
-IDD_SETTINGS DIALOG 0, 0, 174, 144
+IDD_SETTINGS DIALOG  0, 0, 174, 144
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Atari Settings"
 FONT 8, "MS Sans Serif"
@@ -277,7 +281,7 @@ BEGIN
     CONTROL         "&Mute sound playback",IDC_SOUND_MUTE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,6,124,163,10
 END
 
-IDD_FILE_SMALL DIALOG 0, 0, 150, 92
+IDD_FILE_SMALL DIALOG  0, 0, 150, 92
 STYLE DS_SETFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
 CAPTION "Dialog"
 FONT 8, "MS Sans Serif"
@@ -288,7 +292,7 @@ BEGIN
     EDITTEXT        IDC_FILE_SMALL_EDIT,5,55,140,12,ES_AUTOHSCROLL
 END
 
-IDD_HARDDISK DIALOG 0, 0, 201, 145
+IDD_HARDDISK DIALOG  0, 0, 201, 145
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Pick Virtual Hard Disk Directories"
 FONT 8, "MS Sans Serif"
@@ -335,7 +339,7 @@ BEGIN
     PUSHBUTTON      "A&dvanced...",IDC_JOYSTICK_ADVSETTING,5,113,50,14
 END
 
-IDD_ERRORLOG DIALOG 0, 0, 150, 92
+IDD_ERRORLOG DIALOG  0, 0, 150, 92
 STYLE DS_SETFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
 CAPTION "Log File"
 FONT 8, "MS Sans Serif"
@@ -356,7 +360,7 @@ BEGIN
     EDITTEXT        IDC_WARNING_TEXT,5,5,165,75,ES_MULTILINE | ES_READONLY | NOT WS_BORDER
 END
 
-IDD_KEYBOARD DIALOG 0, 0, 175, 138
+IDD_KEYBOARD DIALOG  0, 0, 175, 138
 STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Keyboard Options"
 FONT 8, "MS Sans Serif"
@@ -378,7 +382,7 @@ BEGIN
     CONTROL         "&Use keyboard template",IDC_KEYBOARD_USETEMPLATE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,99,156,10
 END
 
-IDD_FILEASSOCIATIONS DIALOG 0, 0, 193, 152
+IDD_FILEASSOCIATIONS DIALOG  0, 0, 193, 152
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "File Associations"
 FONT 8, "MS Sans Serif"
@@ -414,7 +418,7 @@ BEGIN
     PUSHBUTTON      "&Remove all",IDC_FILEASSOCIATIONS_REMOVEALL,138,23,50,14
 END
 
-IDD_KEYSET DIALOG 0, 0, 117, 148
+IDD_KEYSET DIALOG  0, 0, 117, 148
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Configure Keyset"
 FONT 8, "MS Sans Serif"
@@ -439,7 +443,7 @@ BEGIN
     GROUPBOX        "",IDC_STATIC,5,93,107,30
 END
 
-IDD_GRAPHICSADV DIALOG 0, 0, 174, 145
+IDD_GRAPHICSADV DIALOG  0, 0, 174, 145
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Advanced Graphics Options"
 FONT 8, "MS Sans Serif"
@@ -495,7 +499,7 @@ BEGIN
     LTEXT           "&Gamma",IDC_PALETTE_GAMMA_LABEL,123,44,44,8
 END
 
-IDD_ROMIMAGES DIALOG 0, 0, 231, 159
+IDD_ROMIMAGES DIALOG  0, 0, 231, 159
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "ROM Image Selections"
 FONT 8, "MS Sans Serif"
@@ -521,7 +525,7 @@ BEGIN
     PUSHBUTTON      "&Info...",IDC_ROMIMAGES_INFO,62,140,50,14
 END
 
-IDD_ROMIMAGES_SMALL DIALOG 0, 0, 174, 92
+IDD_ROMIMAGES_SMALL DIALOG  0, 0, 174, 92
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "ROM Image Selections"
 FONT 8, "MS Sans Serif"
@@ -577,7 +581,7 @@ BEGIN
     EDITTEXT        IDC_CARTRIDGETYPE_DESCRIPTION,11,45,152,44,ES_MULTILINE | ES_READONLY | WS_VSCROLL | NOT WS_TABSTOP
 END
 
-IDD_MOUSE DIALOG 0, 0, 174, 142
+IDD_MOUSE DIALOG  0, 0, 174, 142
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Mouse Options"
 FONT 8, "MS Sans Serif"
@@ -611,7 +615,7 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,6,109,167,10
 END
 
-IDD_ROMSEARCHING DIALOG 0, 0, 154, 47
+IDD_ROMSEARCHING DIALOG  0, 0, 154, 47
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 CAPTION "|"
 FONT 8, "MS Sans Serif"
@@ -620,7 +624,7 @@ BEGIN
     CTEXT           "Searching for BASIC and OS ROM images...",IDC_STATIC,0,9,154,8
 END
 
-IDD_CONVERTTYPE DIALOG 0, 0, 160, 125
+IDD_CONVERTTYPE DIALOG  0, 0, 160, 125
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "ATASCII to ASCII"
 FONT 8, "MS Sans Serif"
@@ -669,7 +673,7 @@ BEGIN
     GROUPBOX        "External palette",IDC_STATIC,5,0,205,42
 END
 
-IDD_JOYSTICK_SMALL DIALOG 0, 0, 174, 90
+IDD_JOYSTICK_SMALL DIALOG  0, 0, 174, 90
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Joystick Options"
 FONT 8, "MS Sans Serif"
@@ -687,7 +691,7 @@ BEGIN
     PUSHBUTTON      "A&dvanced...",IDC_JOYSTICK_ADVSETTING,5,71,50,14
 END
 
-IDD_PERFORMANCE DIALOG 0, 0, 164, 139
+IDD_PERFORMANCE DIALOG  0, 0, 164, 139
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Performance Options"
 FONT 8, "MS Sans Serif"
@@ -716,7 +720,7 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,100,145,10
 END
 
-IDD_KEYTEMPLATE DIALOG 0, 0, 175, 100
+IDD_KEYTEMPLATE DIALOG  0, 0, 175, 100
 STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Keyboard Template"
 FONT 8, "MS Sans Serif"
@@ -736,7 +740,7 @@ BEGIN
     EDITTEXT        IDC_KEYTEMPLATE_DESCRIPTION,56,56,108,12,ES_AUTOHSCROLL
 END
 
-IDD_WIZARD_STEP2 DIALOG 0, 0, 175, 131
+IDD_WIZARD_STEP2 DIALOG  0, 0, 175, 131
 STYLE DS_SETFONT | DS_3DLOOK | DS_CONTROL | WS_CHILD
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -756,7 +760,7 @@ BEGIN
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,4,15,167,1
 END
 
-IDD_WIZARD_STEP3 DIALOG 0, 0, 175, 131
+IDD_WIZARD_STEP3 DIALOG  0, 0, 175, 131
 STYLE DS_SETFONT | DS_3DLOOK | DS_CONTROL | WS_CHILD
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -788,7 +792,7 @@ BEGIN
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,4,15,167,1
 END
 
-IDD_WIZARD_STEP1 DIALOG 0, 0, 175, 131
+IDD_WIZARD_STEP1 DIALOG  0, 0, 175, 131
 STYLE DS_SETFONT | DS_3DLOOK | DS_CONTROL | WS_CHILD
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -818,7 +822,7 @@ BEGIN
     LTEXT           "",IDC_WIZARD_FRAME,96,5,175,131
 END
 
-IDD_BOOTTYPE DIALOG 0, 0, 160, 123
+IDD_BOOTTYPE DIALOG  0, 0, 160, 123
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "XFD to ATR"
 FONT 8, "MS Sans Serif"
@@ -875,7 +879,7 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,32,155,10
 END
 
-IDD_JOYSTICKADV DIALOG 0, 0, 174, 117
+IDD_JOYSTICKADV DIALOG  0, 0, 174, 117
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Advanced Joystick Options"
 FONT 8, "MS Sans Serif"
@@ -898,7 +902,7 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,11,78,156,10
 END
 
-IDD_CHEAT DIALOG 0, 0, 175, 157
+IDD_CHEAT DIALOG  0, 0, 175, 157
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Cheat Options"
 FONT 8, "MS Sans Serif"
@@ -927,7 +931,7 @@ BEGIN
     PUSHBUTTON      "Sa&ve",IDC_CHEAT_SAVE,90,112,74,14
 END
 
-IDD_KAILLERA DIALOG 0, 0, 174, 138
+IDD_KAILLERA DIALOG  0, 0, 174, 138
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Network Game"
 FONT 8, "MS Sans Serif"
@@ -968,7 +972,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO
+GUIDELINES DESIGNINFO 
 BEGIN
     IDD_ABOUTBOX, DIALOG
     BEGIN
@@ -1283,7 +1287,7 @@ IDI_ATARIFILE07         ICON                    "res\\AtariFile07.ico"
 // Menu
 //
 
-IDR_MAINFRAME MENU
+IDR_MAINFRAME MENU 
 BEGIN
     POPUP "&File"
     BEGIN
@@ -1536,7 +1540,7 @@ END
 // Accelerator
 //
 
-IDR_MAINFRAME ACCELERATORS
+IDR_MAINFRAME ACCELERATORS 
 BEGIN
     VK_F5,          ID_ATARI_COLDSTART,     VIRTKEY, SHIFT, NOINVERT
     "D",            ID_ATARI_DISKDRIVES,    VIRTKEY, ALT, NOINVERT
@@ -2220,17 +2224,17 @@ END
 // String Table
 //
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDR_MAINFRAME           "Atari800Win\n\nAtari8\n\n\nAtari800Win.Document\nAtari8 Document"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     AFX_IDS_APP_TITLE       "Atari800Win"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_WARN_KBJOY          "Keys which are used by joystick emulation are excluded from other functions. However, you will be able to disable keysets temporarily by activating Scroll Lock key.\r\n\r\nDo you want to continue?"
     IDS_WARN_DOUBLE         "This mode can be up to 15 times slower than the smaller window size. If you do not have an AGP card it is likely to be very slow.\r\n\r\nAre you sure you want to switch to it?"
@@ -2245,7 +2249,7 @@ BEGIN
     IDS_WARN_KALOAD         "Could not load KAILLERACLIENT.DLL. No network games will be possible."
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_WARN_KAUSE          "Could not obtain necessary functions from KAILLERACLIENT.DLL. No network games will be possible."
     IDS_WARN_KAVERSION      "You are trying to use Kaillera client library version %s instead of recommended %s. It may lead to unexpected compatibility errors when the network games are activated."
@@ -2265,7 +2269,7 @@ BEGIN
     IDS_WARN_RECORD         "You are trying to %s while %s stream is being recorded to a file. The %s recording will be stopped if you decide to continue.\r\n\r\nDo you want to continue?"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_WARN_RECORD_VIDEO   "video"
     IDS_WARN_RECORD_SOUND   "sound"
@@ -2285,14 +2289,14 @@ BEGIN
     IDS_DDERR_SURFACE_BLT   "blitting to a surface"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     ID_FILE_PAGE_SETUP      "Change the printing options"
     ID_FILE_PRINT_SETUP     "Change the printer and printing options"
     ID_FILE_PRINT           "Print the screen snapshot"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     ID_APP_ABOUT            "Display program information, version number and copyright"
     ID_APP_EXIT             "Quit the emulator"
@@ -2302,25 +2306,25 @@ BEGIN
     ID_HELP                 "Display help for current task or command"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     AFX_IDS_SCMOVE          "Change the window position"
     AFX_IDS_SCMINIMIZE      "Reduce the window to an icon"
     AFX_IDS_SCCLOSE         "Close the emulator window"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     AFX_IDS_SCRESTORE       "Restore the window to normal size"
     AFX_IDS_SCTASKLIST      "Activate Task List"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     AFX_IDS_PREVIEW_CLOSE   "Close print preview mode"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_REG_OPEN_ERROR      "Error opening the Windows registry to save information."
     IDS_REG_LOAD_ERROR      "Error reading the key %s from Registry.\nThis value will be replaced with a default."
@@ -2331,7 +2335,7 @@ BEGIN
     IDS_ERROR_NO_HITIMER    "Your machine does not support a high resolution timer. This program cannot run without one."
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_ERROR_NO_ZLIB       "Cannot save/restore state files without a working ZLIB.DLL."
     IDS_ERROR_AUTOBOOT      "Could not load the file '%s'.\nThe file was not recognized as an Atari image."
@@ -2349,7 +2353,7 @@ BEGIN
     IDS_ERROR_PCX_SAVE      "The Atari save screenshot operation failed."
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_ERROR_NO_PATH       "The selected folder does not exist!\n\nFolder: '%s'"
     IDS_ERROR_NO_FILE       "The selected file does not exist!\n\nFile: '%s'"
@@ -2367,7 +2371,7 @@ BEGIN
     IDS_ERROR_ATR_WRITE     "Error writing the ATR file!"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_ERROR_A8K_TYPE      "Not an Atari keyboard template file."
     IDS_ERROR_A8K_VER       "Incorrect/old version of template file."
@@ -2385,7 +2389,7 @@ BEGIN
     IDS_CART_5200_EE_16     "In Atari 5200 there's 32 KB of address space reserved for the cartridge ($4000-$BFFF). A two chip 16 KB cartridge is mapped that way:\r\n- First 8 KB are mapped into lower 16 KB. Since an address line is not connected, $4000-$5FFF and $6000-$7FFF contain same data, which is first half of the cartridge image.\r\n- Similarly, second 8 KB are mapped into upper 16 KB."
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_DRIVE_MSG1          "Cannot write to a compressed disk image, mode remains Read Only."
     IDS_DRIVE_MSG2          "Do you want to remove write-protection for the Atari disk image?"
@@ -2399,7 +2403,7 @@ BEGIN
     IDS_WIZARD_TIP          "Tip: you can run the Wizard later by selecting 'Setup Wizard'\nfrom 'Help' menu."
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_CART_5200_32        "Standard 32 KB cartridge for Atari 5200, that occupies 32 KB of address space between $4000 and $BFFF."
     IDS_CART_5200_40        "The cartridge with 'Bounty Bob Strikes Back' game uses very strange bank switching method:\r\n- Four 4 KB banks (A,B,C,D) are mapped into $4000-$4FFF. An access to $4FF6 selects bank A, $4FF7 - bank B, $4FF8 - bank C, $4FF9 - bank D.\r\n- Four 4 KB banks (E,F,G,H) are mapped into $5000-$5FFF. An access to $5FF6 selects bank E, $5FF7 - bank F, $5FF8 - bank G, $5FF9 - bank H.\r\n- The remaining 8 KB is mapped to upper 16 KB of cartridge address space in Atari 5200. That is, $8000-$9FFF and $A000-$BFFF contain same data."
@@ -2419,7 +2423,7 @@ BEGIN
     IDS_CART_5200_4         "Standard 4 KB cartridge for Atari 5200, mapped into $8000-$8FFF, $9000-$9FFF, $A000-$AFFF and $B000-$BFFF."
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_CART_RIGHT_8        "8 KB cartridge for Atari 800, mapped into $8000-$9FFF. Atari 800 was the only 8-bit Atari with a Right Cartridge slot, in addition to the Left Cartridge slot as present on all 8-bit Ataris."
     IDS_CART_WILL_32        "The cartridge has 4 banks mapped to $A000-$BFFF. An access to $D500 selects bank A, $D501 - bank B, etc. An access to $D508-$D50F disables the cartridge."
@@ -2439,7 +2443,7 @@ BEGIN
     IDS_CART_SWXEGS_256     "This bank-switched cartridge occupies 16 KB of address space between $8000 and $BFFF. The cartridge memory is divided into 32 banks, 8 KB each. The last bank is always mapped to $A000-$BFFF. Five lowest bits of a byte written to $D500-$D5FF select the bank mapped to $8000-$BFFF, bit 7 disables the cartridge."
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_CART_SWXEGS_512     "This bank-switched cartridge occupies 16 KB of address space between $8000 and $BFFF. The cartridge memory is divided into 64 banks, 8 KB each. The last bank is always mapped to $A000-$BFFF. Six lowest bits of a byte written to $D500-$D5FF select the bank mapped to $8000-$BFFF, bit 7 disables the cartridge."
     IDS_CART_SWXEGS_1024    "This bank-switched cartridge occupies 16 KB of address space between $8000 and $BFFF. The cartridge memory is divided into 128 banks, 8 KB each. The last bank is always mapped to $A000-$BFFF. Seven lowest bits of a byte written to $D500-$D5FF select the bank mapped to $8000-$BFFF, bit 7 disables the cartridge."
@@ -2453,7 +2457,7 @@ BEGIN
     IDS_DCM2ATR_MSG3        "The file '%s' could not be opened for output, stopping operation."
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_KAERR_HDR           "Atari800Win PLus: Kaillera Error"
     IDS_SFX_TEST_WARNING    "This test is only effective when the atari is running\nand sound output is enabled."
@@ -2467,7 +2471,7 @@ BEGIN
     IDS_GFX_FILE_CLOSED     "Video file has been closed."
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_DDERR_ALLOC_OFFSCR  "allocating a memory drawing surface"
     IDS_DDERR_ALLOC_PALETTE "allocating a color palette"
@@ -2479,7 +2483,7 @@ BEGIN
     IDS_DDERR_HDR           "Atari800Win PLus: DirectDraw Error"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_DIERR_CREATING_OBJ  "creating the DirectInput object"
     IDS_DIERR_CREATING_DEVICE "creating a DirectInput joystick device"
@@ -2494,7 +2498,7 @@ BEGIN
     IDS_DIERR_PROMPT        "While %s, DirectInput returned the unrecoverable error:\n%s"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_DIERR_HDR           "Atari800Win PLus: DirectInput Error"
     IDS_DSERR_CREATE_THREAD "creating the notification thread"
@@ -2507,7 +2511,7 @@ BEGIN
     IDS_DSERR_COOP_NORMAL   "setting the DirectSound cooperative level"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_DSERR_COOP_PRIORITY "setting the DirectSound cooperative level for priority access\n(try a 22kHz frequency setting)"
     IDS_DSERR_SET_NOTIFY    "setting up notification events for a playback buffer"
@@ -2524,7 +2528,7 @@ BEGIN
     IDS_DSERR_HDR           "Atari800Win PLus: DirectSound Error"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_MMERR_OPEN          "opening the waveform device"
     IDS_MMERR_PREP_HDR      "preparing the waveform header"
@@ -2536,7 +2540,7 @@ BEGIN
     IDS_KAERR_PORT_NO       "You and player %d have selected the same joystick ports as your local ports.\nThe network game cannot be continued."
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_TRAYTIP_RUN         "Run at %s"
     IDS_TRAYTIP_VID         "Video system: %s"
@@ -2552,7 +2556,7 @@ BEGIN
     IDS_TRAYTIP_MSE_KOALAPAD "Koala pad"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_TRAYTIP_MSE_LIGHTPEN "Light pen"
     IDS_TRAYTIP_MSE_LIGHTGUN "Light gun"
@@ -2572,7 +2576,7 @@ BEGIN
     IDS_TRAYTIP_SAV_INACTIVE "Off"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_TRAYTIP_SAV_ACTIVE  "On"
     IDS_TRAYTIP_NET_INACTIVE "Inactive"
@@ -2588,14 +2592,14 @@ BEGIN
     IDS_IMAGE_NONE          "No image"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
-    IDS_COPYRIGHT           "Atari800 © 1995-1998 David Firth\r\nAtari800 © 1998-2005 Atari800 development team\r\nAtari800Win © 1998-2000 Richard Lawrence\r\nAtari800Win PLus © 2000-2003 Tomasz Szymankowski\r\nAtari800Win PLus © 2004-2011 Marcin Lewandowski\r\nR: handler over TCP/IP © 2000 Daniel Noguerol\r\nHelp file, some routines © 2000-2003 Piotr Fusik\r\nlibpng 1.2.8 © 1998-2004 Glenn Randers-Pehrson\r\nzlib 1.2.3 © 1995-2005 Jean-loup Gailly and Mark Adler\r\n\r\nThis program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA."
+    IDS_COPYRIGHT           "Atari800 © 1995-1998 David Firth\r\nAtari800 © 1998-2012 Atari800 development team\r\nAtari800Win © 1998-2000 Richard Lawrence\r\nAtari800Win PLus © 2000-2003 Tomasz Szymankowski\r\nAtari800Win PLus © 2004-2012 Marcin Lewandowski\r\nR: handler over TCP/IP © 2000 Daniel Noguerol\r\nHelp file, some routines © 2000-2003 Piotr Fusik\r\nlibpng 1.2.8 © 1998-2004 Glenn Randers-Pehrson\r\nzlib 1.2.3 © 1995-2005 Jean-loup Gailly and Mark Adler\r\n\r\nThis program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA."
     IDS_WEB_PAGE            "http://www.atari.org.pl/PLus/index_us.htm"
     IDS_PRG_NAME            "%s for Windows 9x/NT/2000/XP"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_CONVDLG_NAME_A2PC   "ATASCII to ASCII"
     IDS_CONVDLG_NAME_PC2A   "ASCII to ATASCII"
@@ -2605,7 +2609,7 @@ BEGIN
     IDS_CONV_WIN2CAPEK      "Win-1250 (cz) to &Capek"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_CONV_DESC_NONE      "Does converting End Of Line (EOL) characters only."
     IDS_CONV_DESC_PANTHER   "Does converting between Panther (Polish letters standard) and Win-1250."
@@ -2617,7 +2621,7 @@ BEGIN
     IDS_TAPE_NO_TAPE        "No tape attached"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_TAPE_END_OF_TAPE    "End of tape"
     IDS_TAPE_BLOCK_NO       "Block %d of %d"
@@ -2634,7 +2638,7 @@ BEGIN
     IDS_SELECT_A8T_LOAD     "Load Atari trainer information file"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_SELECT_A8T_SAVE     "Save Atari trainer information file"
     IDS_SELECT_TXT_CONV     "Select text file to convert"
@@ -2654,7 +2658,7 @@ BEGIN
     IDS_SELECT_ALL_LOAD     "Select an Atari image"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     ID_FILE_BOOTATARIIMAGE  "Autostart an Atari disk/tape/executable/cartridge/state image"
     ID_FILE_LOADEXECUTABLE  "Load an Atari executable file directly"
@@ -2670,7 +2674,7 @@ BEGIN
     ID_FILE_DETACHDISKIMAGE_DRIVE1 "Remove disk image from drive 1"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     ID_FILE_DETACHDISKIMAGE_DRIVE2 "Remove disk image from drive 2"
     ID_FILE_DETACHDISKIMAGE_DRIVE3 "Remove disk image from drive 3"
@@ -2690,7 +2694,7 @@ BEGIN
                             "Save a memory image with the ROMs (not normally necessary)"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     ID_ATARI_RPATCH         "Enable R: patch for TCP/IP"
     ID_ATARI_DISABLEBASIC   "Disable BASIC when booting Atari"
@@ -2702,7 +2706,7 @@ BEGIN
     ID_ATARI_COLDSTART      "Turn the emulated Atari off and on"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     ID_ATARI_MACHINETYPE_OSA "Emulate Atari 800 OS-A"
     ID_ATARI_MACHINETYPE_OSB "Emulate Atari 800 OS-B"
@@ -2716,7 +2720,7 @@ BEGIN
     ID_ATARI_MEMORYSIZE_320KBCOMPY "Emulate 320 KB machine (Compy Shop)"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     ID_ATARI_MEMORYSIZE_320KBRAMBO "Emulate 320 KB machine (Rambo)"
     ID_ATARI_MEMORYSIZE_576KB "Emulate 576 KB machine"
@@ -2732,7 +2736,7 @@ BEGIN
     ID_ATARI_PPATCH         "Enable P: patch for printer device"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     ID_INPUT_CAPTUREMOUSE   "Use the mouse for emulating a device"
     ID_INPUT_JOYSTICKS      "Pick which joystick to use and autofire options"
@@ -2748,7 +2752,7 @@ BEGIN
     ID_INPUT_MOUSEDEVICE_LIGHTPEN "Emulate light pen"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     ID_INPUT_MOUSEDEVICE_LIGHTGUN "Emulate light gun"
     ID_INPUT_MOUSEDEVICE_AMIGAMOUSE "Emulate Amiga mouse"
@@ -2761,7 +2765,7 @@ BEGIN
     ID_INPUT_NETWORKGAME    "Create or join a network game"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     ID_VIEW_GRAPHICSOPTIONS "Change the windows graphical display options"
     ID_VIEW_TOGGLEMODES     "Toggle between windowed and full screen modes"
@@ -2778,7 +2782,7 @@ BEGIN
     ID_VIEW_ARTIFACTING_GTIA "Emulate GTIA artifacting"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     ID_VIEW_ARTIFACTING_CTIA "Emulate CTIA artifacting"
     ID_VIEW_PALETTE         "Select colors to be used"
@@ -2797,7 +2801,7 @@ BEGIN
                             "Test the Pokey processor overhead with current settings"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     ID_MISC_FILEASSOCIATIONS 
                             "Set file associations for integration with shell"
@@ -2817,7 +2821,7 @@ BEGIN
     ID_MISC_RESTARTEMULATION "Restart the emulator"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     ID_MISC_VIEWLOGFILE     "View the error/information log"
     ID_MISC_MONITOR         "Launch the monitor console"
@@ -2827,7 +2831,7 @@ BEGIN
     ID_HELP_WEB_PAGE        "Open the Atari800Win PLus home page"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_SELECT_FOLDER       "Select folder"
     IDS_SELECT_FILE         "Select file"
@@ -2844,7 +2848,7 @@ BEGIN
     IDS_FILTER_A8K          "Atari keyboard templates (*.a8k)|*.a8k|All Files (*.*)|*.*||"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_FILTER_A8T          "Atari trainer information files (*.a8t)|*.a8t|All Files (*.*)|*.*||"
     IDS_FILTER_ACT          "Atari palette files (*.act)|*.act|All Files (*.*)|*.*||"
@@ -2863,7 +2867,7 @@ BEGIN
     IDS_FILTER_ALL          "Atari images (*.atr,*.xex,*.cas,*.car,*.a8s, etc)|*.atr;*.xfd;*.atr.gz;*.atz;*.xfd.gz;*.xfz;*.dcm;*.com;*.exe;*.xex;*.cas;*.rom;*.bin;*.car;*.a8s|All Files (*.*)|*.*||"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_KEYSET_NW           "NorthWest"
     IDS_KEYSET_N            "North"
@@ -2874,7 +2878,7 @@ BEGIN
     IDS_KEYSET_SW           "SouthWest"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_KEYSET_W            "West"
     IDS_KEYSET_CENTRE       "Centre"
@@ -2884,7 +2888,7 @@ BEGIN
     IDS_JOY_ARROWS          "Arrows + RCtrl as fire"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_JOY_KEYSET_A        "Keyset A"
     IDS_JOY_KEYSET_B        "Keyset B"
@@ -2900,7 +2904,7 @@ BEGIN
     IDS_DEFAULT             "Default"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     ID_MISC_MONITORASK      "Ask what to do when Atari crashes"
     ID_MISC_MONITOROPEN     "Open monitor when Atari crashes"
@@ -2911,7 +2915,7 @@ BEGIN
     ID_VIEW_STRETCHMODE_HIEND "HiEnd stretching mode"
 END
 
-#endif    // English (United States) resources
+#endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

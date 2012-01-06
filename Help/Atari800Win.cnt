@@ -25,6 +25,7 @@
 3 P: device handler (printer)=HID_RP_P_DEVICE
 3 R: device handler (TCP/IP)=HID_RP_R_DEVICE
 1 What's new
+2 In version 4.1=HID_WHATS_NEW_41
 2 In version 4.0=HID_WHATS_NEW_40
 2 In version 3.1=HID_WHATS_NEW_31
 2 In version 3.0=HID_WHATS_NEW_30

@@ -8,8 +8,8 @@ REPORT=Yes
 CONTENTS=HID_CONTENTS
 TITLE=Atari800Win PLus Help
 COPYRIGHT=Atari800Win PLus Help © 2000-2003 by Piotr Fusik, Tomasz Szymankowski.
-BMROOT=.\Bmp
-BMROOT=..\Res
+BMROOT=..\RES\RES
+BMROOT=BMP
 ROOT=..
 ROOT=.
 HLP=Atari800Win.hlp
@@ -49,9 +49,8 @@ HID_POP_DISK_LED                        0xFFF06
 HID_POP_STATUS_BAR                      0xFFF07
 HID_POP_SYSTEM_MENU                     0xFFF08
 
-
 [WINDOWS]
-main="",,27904,(r14876671),(r12632256),0
+main="",,27904,(r14876671),(r12632256)
 
 [CONFIG]
 BrowseButtons()
