@@ -101,7 +101,7 @@ END
 
 IDD_ABOUTBOX DIALOGEX 0, 0, 206, 129
 STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "About Atari800Win PLus 4.1"
+CAPTION "About Atari800Win PLus 4.2"
 FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
     ICON            IDR_MAINFRAME,IDC_ABOUT_ICON,7,5,20,20
@@ -1615,13 +1615,13 @@ BEGIN
             VALUE "Comments", "Get the latest version from: http://www.atari.org.pl/PLus/index_us.htm"
             VALUE "CompanyName", "jaskier@atari8.info"
             VALUE "FileDescription", "An Atari 8-bit emulator for Win32"
-            VALUE "FileVersion", "4.1"
+            VALUE "FileVersion", "4.2"
             VALUE "InternalName", "Atari800Win"
             VALUE "LegalCopyright", "Copyright © 1997-2011 David Firth, Richard Lawrence, Tomasz Szymankowski, Piotr Fusik, Marcin Lewandowski"
             VALUE "LegalTrademarks", "Atari is the registered trademark of a now-dead company"
             VALUE "OriginalFilename", "Atari800Win.exe"
             VALUE "ProductName", "Atari800Win PLus"
-            VALUE "ProductVersion", "4.1"
+            VALUE "ProductVersion", "4.2"
             VALUE "SpecialBuild", "This release is based on Atari800 kernel 2.2.1"
         END
     END

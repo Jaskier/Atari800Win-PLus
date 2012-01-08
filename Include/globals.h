@@ -18,7 +18,7 @@ extern "C" {
 
 /* Shared C-core specific const definitions */
 
-#define VERSION_INFO			"Atari800Win PLus 4.1"
+#define VERSION_INFO			"Atari800Win PLus 4.2"
 
 #define ATARI_UNINITIALIZED		0x0001	/* Various machine states the Atari can be in */
 #define ATARI_RUNNING			0x0002

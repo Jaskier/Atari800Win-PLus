@@ -379,7 +379,7 @@
 #define PACKAGE_NAME "Atari800Win PLus"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "Atari800Win PLus 4.1"
+#define PACKAGE_STRING "Atari800Win PLus 4.2"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "Atari800Win"
@@ -388,7 +388,7 @@
 #define PACKAGE_URL "http://www.atari.org.pl/PLus/index_us.htm"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "4.1"
+#define PACKAGE_VERSION "4.2"
 
 /* Define to use page-based attribute array. */
 #undef PAGED_ATTRIB
