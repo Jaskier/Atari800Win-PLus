@@ -36,7 +36,7 @@ File    : display_win.c
 
 /* Stretching routines have been optimized by Piotr Fusik. */
 
-#define PFUSIK_ASM
+#undef PFUSIK_ASM
 #pragma warning (disable: 4731)
 
 /* WARNING!: Robust interpolation routines in C seem to be faster

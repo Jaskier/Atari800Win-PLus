@@ -115,22 +115,16 @@ Timer_WaitForVBI( void )
 	ULONG ulTimerLastVal = s_ulAtariHWNextTime;
 	LARGE_INTEGER lnTicks;
 	int nDelay = 50;
-
-#ifdef _DEBUG
-	DWORD   dwPlayCursor   = 0;
-	DWORD   dwSaveCursor   = 0;
-//	IDirectSoundBuffer_GetCurrentPosition( s_lpDSBuffer, &dwPlayCursor, &dwSaveCursor );
-//	if (abs(dwSaveCursor-dwPlayCursor)<1000)_TRACE2("Sound cursor: %d, %d\n", dwPlayCursor, dwSaveCursor);
-#endif _DEBUG
+	ULONG deltaTime = s_ulDeltaT * PLATFORM_AdjustSpeed();
 
 	QueryPerformanceCounter( &lnTicks );
 	if( s_bTimerRollover )
 	{
-		while( lnTicks.LowPart > s_ulAtariHWNextTime && (s_ulAtariHWNextTime - lnTicks.LowPart < s_ulDeltaT) )
+		while( lnTicks.LowPart > s_ulAtariHWNextTime && (s_ulAtariHWNextTime - lnTicks.LowPart < deltaTime) )
 		{
 			QueryPerformanceCounter( &lnTicks );
 			lSpareTicks = ULONG_MAX - lnTicks.LowPart + 1;
-			_ASSERT(lSpareTicks <= (long)s_ulDeltaT);
+			_ASSERT(lSpareTicks <= (long)deltaTime);
 			if( lSpareTicks > s_nSleepThreshold )
 			{
 				SleepEx( SLEEP_TIME_IN_MS, TRUE );
@@ -150,66 +144,29 @@ Timer_WaitForVBI( void )
 				SleepEx( SLEEP_TIME_IN_MS, TRUE );
 				QueryPerformanceCounter( &lnTicks );
 				lSpareTicks = (long)(s_ulAtariHWNextTime - lnTicks.LowPart);
-#ifdef _DEBUG
-//				IDirectSoundBuffer_GetCurrentPosition( s_lpDSBuffer, &dwPlayCursor, &dwSaveCursor );
-//				_TRACE3("Sound cursor: %d, %d, %d\n", dwPlayCursor, dwSaveCursor, Atari800_nframes);
-#endif
 			}
 			while( s_ulAtariHWNextTime > lnTicks.LowPart && lnTicks.LowPart > ulTimerLastVal )
 				QueryPerformanceCounter( &lnTicks );
 
-			s_ulAtariHWNextTime += s_ulDeltaT;
+			s_ulAtariHWNextTime += deltaTime;
 		}
 		else
 		{
-			if( lSpareTicks > (long)s_ulDeltaT )
-				s_ulAtariHWNextTime = lnTicks.LowPart + s_ulDeltaT;
+			if( lSpareTicks > (long)deltaTime )
+				s_ulAtariHWNextTime = lnTicks.LowPart + deltaTime;
 			else
-				s_ulAtariHWNextTime += s_ulDeltaT;
+				s_ulAtariHWNextTime += deltaTime;
 		}
 	}
 	else
 	{
-		if( -lSpareTicks > (long)s_ulDeltaT )
+		if( -lSpareTicks > (long)deltaTime )
 			s_ulAtariHWNextTime = lnTicks.LowPart + 1;
 		else
-			s_ulAtariHWNextTime += s_ulDeltaT;
+			s_ulAtariHWNextTime += deltaTime;
 	}
 	if( ulTimerLastVal > s_ulAtariHWNextTime )
 		s_bTimerRollover = TRUE;
-
-	if( _IsFlagSet( g_Sound.ulState, SS_DS_SOUND ) )
-	{
-		if( s_nFrameCnt > s_nFramesPerFrag )
-		{
-		
-			/* SoundIsPaused indicates full speed mode in this case; if
-			   the emulated Atari is paused, this routine is not invoked */
-			if( !s_bSoundIsPaused )
-			{
-	//			_TRACE2("PrimaryThread.SndPlay_DSSound: s_nSaveFragNo: %d, s_nPlayFragNo: %d\n", s_nSaveFragNo, s_nPlayFragNo);
-
-				/* There is spinlock used to synchronize the threads. We should
-				   avoid this solution but it's rather fast and we don't really
-				   need the interlocked functions or critical sections here */
-				while( s_nSaveFragNo != s_nPlayFragNo && --nDelay )
-					Sleep( 1 );
-	#ifdef _DEBUG
-				if( 0 == nDelay ) _TRACE0("!PrimaryThread.SndPlay_DSSound: Delay = 0!\n");
-	#endif _DEBUG
-			}
-			/* The PlayFragNo indicator is incremented by a secondary thread so we can
-			   synchronize the thread with primary thread's writes to a stream buffer */
-
-			if( ++s_nSaveFragNo == s_nNumberOfFrags )
-				s_nSaveFragNo = 0;
-
-			s_pSaveCursor = &s_pSoundBuffer[ s_nSaveFragNo * s_dwFragSize ];
-
-			s_dwFragPos  = 0;
-			s_nUpdateCnt = 1;
-			s_nFrameCnt  = 1;
-		}
-	}
+	return;
 
 } /* #OF# Timer_WaitForVBI */

@@ -13,6 +13,7 @@ File    : Atari800Win.cpp
 #include "Atari800WinView.h"
 #include "MainFrame.h"
 #include "Helpers.h"
+#include "SDL.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -213,7 +214,7 @@ InitInstance()
 		SystemParametersInfo( SPI_SETMENUUNDERLINES, 0, (LPVOID)bEnable, 0 );
 	}
 #endif
-
+	SDL_Init(SDL_INIT_AUDIO | SDL_INIT_TIMER);
 	/* Standard initialization
 	   If you are not using these features and wish to reduce the
 	   size of your final executable, you should remove from the
@@ -242,6 +243,7 @@ InitInstance()
 	/* The one and only window has been initialized, so show and update it */
 	m_pMainWnd->ShowWindow( SW_SHOW );
 	m_pMainWnd->UpdateWindow();
+	PLATFORM_PaletteUpdate();
 
 	/* For a variety of reasons it's better to set the current working
 	   directory to where Atari800Win (the executable) is located */
@@ -287,6 +289,7 @@ ExitInstance()
 		EmuThread->SuspendThread();
 	}
 	delete Surface1Mutex, Surface2Mutex;
+	SDL_Quit();
 
 #if WINVER >= 0x0500
 	/* Disable menu underlines */

@@ -71,7 +71,7 @@
 #undef HAVE_CLOCK
 
 /* Define to 1 if you have the <direct.h> header file. */
-#define HAVE_DIRECT_H
+#define HAVE_DIRECT_H 1
 
 /* Define to 1 if you have the <dirent.h> header file, and it defines `DIR'.
    */
@@ -81,43 +81,43 @@
 #undef HAVE_DOPRNT
 
 /* Define to 1 if you have the <errno.h> header file. */
-#define HAVE_ERRNO_H
+#define HAVE_ERRNO_H 1
 
 /* Define to 1 if you have the <fcntl.h> header file. */
-#define HAVE_FCNTL_H
+#define HAVE_FCNTL_H 1
 
 /* Define to 1 if you have the `fdopen' function. */
-#define HAVE_FDOPEN
+#define HAVE_FDOPEN 1
 
 /* Define to 1 if you have the `fflush' function. */
-#define HAVE_FFLUSH
+#define HAVE_FFLUSH 1
 
 /* Define to 1 if you have the <file.h> header file. */
 #undef HAVE_FILE_H
 
 /* Define to 1 if you have the `floor' function. */
-#define HAVE_FLOOR
+#define HAVE_FLOOR 1
 
 /* Define to 1 if fseeko (and presumably ftello) exists and is declared. */
 #undef HAVE_FSEEKO
 
 /* Define to 1 if you have the `fstat' function. */
-#define HAVE_FSTAT
+#define HAVE_FSTAT 1
 
 /* Define to 1 if you have the `getcwd' function. */
-#define HAVE_GETCWD
+#define HAVE_GETCWD 1
 
 /* Define to 1 if you have the `gethostbyaddr' function. */
-#define HAVE_GETHOSTBYADDR
+#define HAVE_GETHOSTBYADDR 1
 
 /* Define to 1 if you have the `gethostbyname' function. */
-#define HAVE_GETHOSTBYNAME
+#define HAVE_GETHOSTBYNAME 1
 
 /* Define to 1 if you have the `gettimeofday' function. */
 #undef HAVE_GETTIMEOFDAY
 
 /* Define to 1 if you have the `inet_ntoa' function. */
-#define HAVE_INET_NTOA
+#define HAVE_INET_NTOA 1
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
@@ -126,34 +126,34 @@
 #undef HAVE_LIBGEM
 
 /* Define to 1 if you have the `png' library (-lpng). */
-#define HAVE_LIBPNG
+#define HAVE_LIBPNG 1
 
 /* Define to 1 if you have the `z' library (-lz). */
-#define HAVE_LIBZ
+#define HAVE_LIBZ 1
 
 /* Define to 1 if you have the `localtime' function. */
-#define HAVE_LOCALTIME
+#define HAVE_LOCALTIME 1
 
 /* Define to 1 if you have the `memmove' function. */
-#define HAVE_MEMMOVE
+#define HAVE_MEMMOVE 1
 
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
 
 /* Define to 1 if you have the `memset' function. */
-#define HAVE_MEMSET
+#define HAVE_MEMSET 1
 
 /* Define to 1 if you have the `mkdir' function. */
-#define HAVE_MKDIR
+#define HAVE_MKDIR 1
 
 /* Define to 1 if you have the `mkstemp' function. */
 #undef HAVE_MKSTEMP
 
 /* Define to 1 if you have the `mktemp' function. */
-#define HAVE_MKTEMP
+#define HAVE_MKTEMP 1
 
 /* Define to 1 if you have the `modf' function. */
-#define HAVE_MODF
+#define HAVE_MODF 1
 
 /* Define to 1 if you have the `nanosleep' function. */
 #undef HAVE_NANOSLEEP
@@ -192,16 +192,16 @@
 #undef HAVE_SIGNAL
 
 /* Define to 1 if you have the <signal.h> header file. */
-#define HAVE_SIGNAL_H
+#define HAVE_SIGNAL_H 1
 
 /* Define to 1 if you have the `snprintf' function. */
 #undef HAVE_SNPRINTF
 
 /* Define to 1 if you have the `socket' function. */
-#define HAVE_SOCKET
+#define HAVE_SOCKET 1
 
 /* Define to 1 if you have the `stat' function. */
-#define HAVE_STAT
+#define HAVE_STAT 1
 
 /* Define to 1 if `stat' has the bug that it succeeds when given the
    zero-length file name argument. */
@@ -211,40 +211,40 @@
 #undef HAVE_STDINT_H
 
 /* Define to 1 if you have the <stdlib.h> header file. */
-#define HAVE_STDLIB_H
+#define HAVE_STDLIB_H 1
 
 /* Define to 1 if you have the `strcasecmp' function. */
 #undef HAVE_STRCASECMP
 
 /* Define to 1 if you have the `strchr' function. */
-#define HAVE_STRCHR
+#define HAVE_STRCHR 1
 
 /* Define to 1 if you have the `strdup' function. */
-#define HAVE_STRDUP
+#define HAVE_STRDUP 1
 
 /* Define to 1 if you have the `strerror' function. */
-#define HAVE_STRERROR
+#define HAVE_STRERROR 1
 
 /* Define to 1 if you have the <strings.h> header file. */
-#define HAVE_STRINGS_H
+#undef HAVE_STRINGS_H
 
 /* Define to 1 if you have the <string.h> header file. */
 #undef HAVE_STRING_H
 
 /* Define to 1 if you have the `strncpy' function. */
-#define HAVE_STRNCPY
+#define HAVE_STRNCPY 1
 
 /* Define to 1 if you have the `strrchr' function. */
-#define HAVE_STRRCHR
+#define HAVE_STRRCHR 1
 
 /* Define to 1 if you have the `strstr' function. */
-#define HAVE_STRSTR
+#define HAVE_STRSTR 1
 
 /* Define to 1 if you have the `strtol' function. */
-#define HAVE_STRTOL
+#define HAVE_STRTOL 1
 
 /* Define to 1 if you have the `system' function. */
-#define HAVE_SYSTEM
+#define HAVE_SYSTEM 1
 
 /* Define to 1 if you have the <sys/dir.h> header file, and it defines `DIR'.
    */
@@ -267,13 +267,13 @@
 #undef HAVE_SYS_SOUNDCARD_H
 
 /* Define to 1 if you have the <sys/stat.h> header file. */
-#define HAVE_SYS_STAT_H
+#define HAVE_SYS_STAT_H 1
 
 /* Define to 1 if you have the <sys/time.h> header file. */
 #undef HAVE_SYS_TIME_H
 
 /* Define to 1 if you have the <sys/types.h> header file. */
-#define HAVE_SYS_TYPES_H
+#define HAVE_SYS_TYPES_H 1
 
 /* Define to 1 if you have the <termios.h> header file. */
 #undef HAVE_TERMIOS_H
@@ -282,40 +282,40 @@
 #define HAVE_TIME
 
 /* Define to 1 if you have the <time.h> header file. */
-#define HAVE_TIME_H
+#define HAVE_TIME_H 1
 
 /* Define to 1 if you have the `tmpfile' function. */
 #undef HAVE_TMPFILE
 
 /* Define to 1 if you have the `tmpnam' function. */
-#define HAVE_TMPNAM
+#define HAVE_TMPNAM 1
 
 /* Define to 1 if you have the `uclock' function. */
 #undef HAVE_UCLOCK
 
 /* Define to 1 if you have the <unistd.h> header file. */
-#define HAVE_UNISTD_H
+#define HAVE_UNISTD_H 1
 
 /* Define to 1 if you have the <unixio.h> header file. */
 #undef HAVE_UNIXIO_H
 
 /* Define to 1 if you have the `unlink' function. */
-#define HAVE_UNLINK
+#define HAVE_UNLINK 1
 
 /* Define to 1 if you have the `usleep' function. */
 #undef HAVE_USLEEP
 
 /* Define to 1 if you have the `vprintf' function. */
-#define HAVE_VPRINTF
+#define HAVE_VPRINTF 1
 
 /* Define to 1 if you have the `vsnprintf' function. */
 #undef HAVE_VSNPRINTF
 
 /* Define to 1 if you have the <windows.h> header file. */
-#define HAVE_WINDOWS_H
+#define HAVE_WINDOWS_H 1
 
 /* Define to 1 if you have the <winsock2.h> header file. */
-#define HAVE_WINSOCK2_H
+#define HAVE_WINSOCK2_H 1
 
 /* Define to 1 if you have the `_mkdir' function. */
 #undef HAVE__MKDIR
@@ -469,7 +469,7 @@
 #undef SUPPORTS_SOUND_REINIT
 
 /* Define to use synchronized sound. */
-#undef SYNCHRONIZED_SOUND
+#define SYNCHRONIZED_SOUND
 
 /* Alternate system-wide config file for non-Unix OS. */
 #undef SYSTEM_WIDE_CFG_FILE

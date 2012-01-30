@@ -160,9 +160,7 @@ BOOL
 AVI_CreateStreamSound(
 	PAVIFILE    pFile,       /* #IN# */
 	PAVISTREAM *psStream,    /* #OUT# */
-	int         nRate,       /* #IN# Sample per second */
-	ULONG       nBufferSize, /* #IN# */
-	int         nBlockAlign  /* #IN# */
+	int         nRate        /* #IN# Sample per second */
 )
 {
 	AVISTREAMINFO strhdr;
@@ -173,7 +171,6 @@ AVI_CreateStreamSound(
 	strhdr.fccHandler            = 0;
 	strhdr.dwScale               = 1;//nBlockAlign;
 	strhdr.dwRate                = nRate;
-	strhdr.dwSuggestedBufferSize = nBufferSize;
 	strhdr.dwSampleSize          = 0;//nBlockAlign;
 
 	/* Create the stream */
@@ -453,17 +450,14 @@ Video_OpenOutput(
 						/* Add the sound stream only when sound is not muted */
 						if( bWithSound )
 						{
-							struct SoundInterParms_t sipInfo;
-							sipInfo.dwMask = SIP_WAVEFORMAT | SIP_SAMPLESIZE;
+							WAVEFORMATEX sipInfo;
 
 							/* Some critical sound parameters are not available as global variables */
 							Sound_GetInterParms( &sipInfo );
 
-							if( AVI_CreateStreamSound( pfVideoOutput, &s_psSound, g_Sound.nRate,
-													   sipInfo.dwSampleSize,
-													   sipInfo.wfxFormat.nBlockAlign ) )
+							if( AVI_CreateStreamSound( pfVideoOutput, &s_psSound, g_Sound.nRate ) )
 							{
-								if( !AVI_SetFormatSound( &s_psSound, &sipInfo.wfxFormat ) )
+								if( !AVI_SetFormatSound( &s_psSound, &sipInfo ) )
 								{
 									AVI_CloseStream( &s_psSound );
 								}

@@ -5,6 +5,7 @@
 #include "input_win.h"
 #include "misc_win.h"
 #include "display_win.h"
+#include "sound_win.h"
 
 char CFG_osa_filename[FILENAME_MAX] = Util_FILENAME_NOT_SET;
 char CFG_osb_filename[FILENAME_MAX] = Util_FILENAME_NOT_SET;
@@ -68,3 +69,8 @@ void PLATFORM_PaletteUpdate(void)
 	Screen_FreeInterp();
 	Screen_PrepareInterp( FALSE );
 };
+
+double PLATFORM_AdjustSpeed(void)
+{
+	return Sound_AdjustSpeed();
+}

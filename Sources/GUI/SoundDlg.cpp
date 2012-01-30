@@ -134,7 +134,7 @@ SetDlgState()
 	ASSERT(NULL != pSlider);
 
 	/* Set up Volume slider */
-	pSlider->EnableWindow( Sound_VolumeCapable() );
+	pSlider->EnableWindow( 1 );
 	pSlider->SetRange( 0, 100, FALSE );
 	pSlider->SetTicFreq( 10 );
 	pSlider->SetPageSize( 10 );
@@ -639,8 +639,6 @@ OnOK()
 		{
 			g_Sound.nVolume = m_nSoundVol;
 			WriteRegDWORD( NULL, REG_SOUND_VOLUME, g_Sound.nVolume );
-
-			Sound_SetVolume();
 		}
 		CCommonDlg::OnOK();
 	}

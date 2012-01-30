@@ -44,7 +44,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\Res;..\..\Include;..\..\Atari800\src;..\..\Include\DirectX"
+				AdditionalIncludeDirectories="..\..\Res;..\..\Include;..\..\Atari800\src;..\..\Include\DirectX;..\..\Include\SDL"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;__PLUS;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -68,7 +68,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="zlib_d.lib libpng_d.lib vfw32.lib winmm.lib ddraw.lib dsound.lib dinput.lib dxguid.lib"
+				AdditionalDependencies="zlib_d.lib libpng_d.lib vfw32.lib winmm.lib ddraw.lib dsound.lib dinput.lib dxguid.lib sdl.lib"
 				ShowProgress="0"
 				OutputFile="..\..\Distribution\Atari800Win.exe"
 				LinkIncremental="0"
@@ -135,7 +135,7 @@
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="2"
 				FavorSizeOrSpeed="1"
-				AdditionalIncludeDirectories="..\..\Res;..\..\Include;..\..\Atari800\src;..\..\Include\DirectX"
+				AdditionalIncludeDirectories="..\..\Res;..\..\Include;..\..\Atari800\src;..\..\Include\DirectX;..\..\Include\SDL"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;__PLUS;_CRT_SECURE_NO_WARNINGS"
 				StringPooling="true"
 				MinimalRebuild="false"
@@ -161,7 +161,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="zlib.lib libpng.lib vfw32.lib winmm.lib ddraw.lib dsound.lib dinput.lib dxguid.lib"
+				AdditionalDependencies="zlib.lib libpng.lib vfw32.lib winmm.lib ddraw.lib dsound.lib dinput.lib dxguid.lib sdl.lib"
 				OutputFile="..\..\Distribution\Atari800Win.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\Lib"
