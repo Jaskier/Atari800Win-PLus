@@ -2442,8 +2442,9 @@ void init_mzpokeysnd_sync(void)
     ticks_per_sample = (double)ticks_per_frame / samples_per_frame;
     tick_pos = 0;
     bytes_per_frame = (int)ceil(num_cur_pokeys*samples_per_frame*((snd_flags & POKEYSND_BIT16) ? 2:1));
-    free(MZPOKEYSND_process_buffer);
-    MZPOKEYSND_process_buffer = (UBYTE *)Util_malloc(bytes_per_frame);
+//    free(MZPOKEYSND_process_buffer);
+    if (!MZPOKEYSND_process_buffer)
+		MZPOKEYSND_process_buffer = (UBYTE *)Util_malloc(4*48000/50);
     memset(MZPOKEYSND_process_buffer, 0, bytes_per_frame);
     tick_pos = 0;
     samp_pos = 0.0;

@@ -493,7 +493,7 @@ OnOK()
 			WriteRegDWORD( NULL, REG_MISC_STATE, g_Misc.ulState );
 
 			if( !bFullSpeed && _IsFlagSet( g_Misc.ulState, MS_FULL_SPEED ) )
-				Sound_Clear( FALSE, FALSE );
+				Sound_Clear();
 			else
 			if( bFullSpeed && !_IsFlagSet( g_Misc.ulState, MS_FULL_SPEED ) )
 				Sound_Restart();

@@ -27,6 +27,7 @@ File    : registry.c
 #include "registry.h"
 #include "screen.h"
 #include "cfg.h"
+#include "SDL.h"
 
 #ifdef WIN_NETWORK_GAMES
 #include "kaillera.h"
@@ -550,11 +551,8 @@ WriteAtari800Registry(
 	_RegWriteNumber( hkKey, REG_SOUND_STATE,         g_Sound.ulState               );
 	_RegWriteNumber( hkKey, REG_SOUND_RATE,          g_Sound.nRate                 );
 	_RegWriteNumber( hkKey, REG_SOUND_VOLUME,        g_Sound.nVolume               );
-	_RegWriteNumber( hkKey, REG_SOUND_UPDATE,        g_Sound.nSkipUpdate           );
-	_RegWriteNumber( hkKey, REG_SOUND_LATENCY,       g_Sound.nLatency              );
 	_RegWriteNumber( hkKey, REG_SOUND_QUALITY,       g_Sound.nQuality              );
-	_RegWriteNumber( hkKey, REG_SOUND_DIGITIZED,     g_Sound.nDigitized            );
-	_RegWriteNumber( hkKey, REG_BIENIAS_FIX,         g_Sound.nBieniasFix           );
+	_RegWriteNumber( hkKey, REG_SOUND_LATENCY,       g_Sound.nLatency              );
 	_RegWriteNumber( hkKey, REG_INPUT_STATE,         g_Input.ulState               );
 	_RegWriteNumber( hkKey, REG_JOYSTICKS,           g_Input.Joy.ulSelected        );
 	_RegWriteNumber( hkKey, REG_AUTOFIRE_MODE,       g_Input.Joy.nAutoMode         );
@@ -623,7 +621,7 @@ InitialiseRegistry(
 	Atari800_machine_type         = Atari800_MACHINE_XLXE;
 	Atari800_tv_mode              = Atari800_TV_PAL;
 	Atari800_refresh_rate         = 1;
-	Devices_h_read_only                   = 1;
+	Devices_h_read_only           = 1;
 	Atari800_disable_basic        = 1;
 	RTIME_enabled                 = 1;
 	ESC_enable_sio_patch          = 1;
@@ -634,7 +632,7 @@ InitialiseRegistry(
 	CARTRIDGE_type                = CARTRIDGE_NONE;
 	INPUT_joy_block_opposite_directions = 1;
 	INPUT_joy_multijoy                  = 0;
-	INPUT_mouse_mode              = DEF_MOUSE_MODE;
+	INPUT_mouse_mode					= DEF_MOUSE_MODE;
 	INPUT_mouse_port                    = DEF_MOUSE_PORT;
 	INPUT_mouse_speed                   = DEF_MOUSE_SPEED;
 	INPUT_mouse_pot_min                 = DEF_POT_MIN;
@@ -657,11 +655,8 @@ InitialiseRegistry(
 	g_Sound.ulState               = DEF_SOUND_STATE;
 	g_Sound.nRate                 = DEF_SOUND_RATE;
 	g_Sound.nVolume               = DEF_SOUND_VOL;
-	g_Sound.nSkipUpdate           = DEF_SKIP_UPDATE;
-	g_Sound.nLatency              = DEF_SOUND_LATENCY;
 	g_Sound.nQuality              = DEF_SOUND_QUALITY;
-	g_Sound.nDigitized            = DEF_SOUND_DIGITIZED;
-	g_Sound.nBieniasFix           = 0;
+	g_Sound.nLatency              = DEF_SOUND_LATENCY;
 	g_Input.ulState               = DEF_INPUT_STATE;
 	g_Input.Joy.ulSelected        = DEF_JOY_SELECTS;
 	g_Input.Joy.nAutoMode         = DEF_AUTOFIRE_MODE;
@@ -945,11 +940,8 @@ HandleRegistry( void )
 			bFail |= _RegReadNumber( hkKey, REG_SOUND_STATE,         g_Sound.ulState,               DEF_SOUND_STATE         );
 			bFail |= _RegReadNumber( hkKey, REG_SOUND_RATE,          g_Sound.nRate,                 DEF_SOUND_RATE          );
 			bFail |= _RegReadNumber( hkKey, REG_SOUND_VOLUME,        g_Sound.nVolume,               DEF_SOUND_VOL           );
-			bFail |= _RegReadNumber( hkKey, REG_SOUND_UPDATE,        g_Sound.nSkipUpdate,           DEF_SKIP_UPDATE         );
-			bFail |= _RegReadNumber( hkKey, REG_SOUND_LATENCY,       g_Sound.nLatency,              DEF_SOUND_LATENCY       );
 			bFail |= _RegReadNumber( hkKey, REG_SOUND_QUALITY,       g_Sound.nQuality,              DEF_SOUND_QUALITY       );
-			bFail |= _RegReadNumber( hkKey, REG_SOUND_DIGITIZED,     g_Sound.nDigitized,            DEF_SOUND_DIGITIZED     );
-			bFail |= _RegReadNumber( hkKey, REG_BIENIAS_FIX,         g_Sound.nBieniasFix,           0                       );
+			bFail |= _RegReadNumber( hkKey, REG_SOUND_LATENCY,       g_Sound.nLatency,              DEF_SOUND_LATENCY       );
 			bFail |= _RegReadNumber( hkKey, REG_INPUT_STATE,         g_Input.ulState,               DEF_INPUT_STATE         );
 			bFail |= _RegReadNumber( hkKey, REG_AUTOFIRE_MODE,       g_Input.Joy.nAutoMode,         DEF_DONT_SHOW_FLAGS     );
 			bFail |= _RegReadNumber( hkKey, REG_AUTOFIRE_STICKS,     g_Input.Joy.ulAutoSticks,      DEF_AUTOFIRE_STICKS     );
@@ -982,9 +974,6 @@ HandleRegistry( void )
 				g_nStartY = GetSystemMetrics( SM_CYFULLSCREEN ) - (_IsFlagSet( g_Screen.ulState, SM_WRES_DOUBLE ) ? ATARI_DOUBLE_HEIGHT : Screen_HEIGHT);
 			if( g_nStartY < 0 )
 				g_nStartY = 0;
-
-			if( 22050 == g_Sound.nRate )
-				_ClrFlag( g_Sound.ulState, SS_CUSTOM_RATE );
 
 			if( !ReadRegPaths() )
 				bFail = TRUE;

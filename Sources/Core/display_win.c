@@ -203,7 +203,7 @@ ShowDDError(
 
 	/* Get us back to a GDI display and stop making noises */
 	Screen_SetSafeDisplay( TRUE );
-	Sound_Clear( FALSE, FALSE );
+	Sound_Clear();
 
 	/* Get the error string and present it to the user */
 	DD_GetErrorString( hResult, szError, LOADSTRING_SIZE_S );

@@ -155,11 +155,7 @@ int mz_clear_regs = 0;
 
 int POKEYSND_enable_new_pokey = TRUE;
 int POKEYSND_bienias_fix = TRUE;  /* when TRUE, high frequencies get emulated: better sound but slower */
-#if defined(__PLUS) && !defined(_WX_)
-#define BIENIAS_FIX (g_Sound.nBieniasFix)
-#else
 #define BIENIAS_FIX POKEYSND_bienias_fix
-#endif
 #ifndef ASAP
 int POKEYSND_stereo_enabled = FALSE;
 #endif
@@ -518,9 +514,6 @@ static void Update_pokey_sound_rf(UWORD addr, UBYTE val, UBYTE chip,
 
 #ifdef VOL_ONLY_SOUND
 
-#ifdef __PLUS
-			if (g_Sound.nDigitized)
-#endif
 			if ((POKEY_AUDC[chan + chip_offs] & POKEY_VOL_ONLY)) {
 
 #ifdef STEREO_SOUND
@@ -974,9 +967,6 @@ static void pokeysnd_process_8(void *sndbuffer, int sndn)
 #endif  /* INTERPOLATE_SOUND */
 
 #ifdef VOL_ONLY_SOUND
-#ifdef __PLUS
-			if (g_Sound.nDigitized)
-#endif
 			{
 				if (POKEYSND_sampbuf_rptr != POKEYSND_sampbuf_ptr) {
 					int l;
@@ -1083,9 +1073,6 @@ static void pokeysnd_process_8(void *sndbuffer, int sndn)
 		}
 	}
 #ifdef VOL_ONLY_SOUND
-#ifdef __PLUS
-	if (g_Sound.nDigitized)
-#endif
 	{
 		if (POKEYSND_sampbuf_rptr == POKEYSND_sampbuf_ptr)
 			POKEYSND_sampbuf_last = ANTIC_CPU_CLOCK;
@@ -1104,9 +1091,6 @@ static void pokeysnd_process_8(void *sndbuffer, int sndn)
 static void Update_serio_sound_rf(int out, UBYTE data)
 {
 #ifdef VOL_ONLY_SOUND
-#ifdef __PLUS
-	if (g_Sound.nDigitized) {
-#endif
 	int bits, pv, future;
 	if (!POKEYSND_serio_sound_enabled) return;
 
@@ -1136,9 +1120,6 @@ static void Update_serio_sound_rf(int out, UBYTE data)
 		bits >>= 1;
 	}
 	POKEYSND_sampbuf_lastval -= pv;
-#ifdef __PLUS
-	}
-#endif
 #endif  /* VOL_ONLY_SOUND */
 }
 #endif /* SERIO_SOUND */
@@ -1169,10 +1150,6 @@ static void Update_consol_sound_rf(int set)
 	static int prev_atari_speaker = 0;
 	static unsigned int prev_cpu_clock = 0;
 	int d;
-#ifdef __PLUS
-	if (!g_Sound.nDigitized)
-		return;
-#endif
 	if (!POKEYSND_console_sound_enabled)
 		return;
 

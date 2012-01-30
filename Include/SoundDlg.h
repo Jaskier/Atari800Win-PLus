@@ -22,11 +22,6 @@ class CSoundDlg : public CCommonDlg
 {
 // Type definitions
 public:
-	struct SndModeInfo_t
-	{
-		int nSoundRate;
-		int nLowLimit;
-	};
 
 // Construction
 public:
@@ -65,33 +60,22 @@ private:
 	ULONG m_ulSoundState;
 	int   m_nSoundRate;
 	int   m_nSoundVol;
-	int   m_nSkipUpdate;
 	int   m_nSoundLatency;
 	int   m_nSoundQuality;
-	BOOL  m_bDigitized;
 	BOOL  m_bEnableStereo;
-	int	  m_nLowSkipLimit;
-	int   m_nHighSkipLimit;
-
-	SndModeInfo_t *m_pSndModeInfo;
 
 // Generated message map functions
 protected:
 	//{{AFX_MSG(CSoundDlg)
 	afx_msg void OnReleasedCaptureVolumeSlider(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
-	afx_msg void OnSelchangeDriverType();
+	afx_msg void OnSelchangeSoundResolution();
 	afx_msg void OnKillfocusSoundLatency();
 	afx_msg void OnDeltaposSoundLatencySpin(NMHDR* pNMHDR, LRESULT* pResult);
-	afx_msg void OnSoundStereo();
-	afx_msg void OnSoundDigitized();
-	afx_msg void OnSelchangeSoundPlayback();
-	afx_msg void OnKillfocusPokeyDivisor();
-	afx_msg void OnDeltaposPokeyDivisorSpin(NMHDR* pNMHDR, LRESULT* pResult);
-	afx_msg void OnSelchangeSoundResolution();
 	afx_msg void OnKillfocusSoundQuality();
 	afx_msg void OnDeltaposSoundQualitySpin(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnSoundMute();
+	afx_msg void OnSoundStereo();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

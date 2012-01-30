@@ -2989,7 +2989,7 @@ OnSoundOptions()
 	{
 		if( dlgSound.m_bModeChanged )
 		{
-			Sound_Initialise( TRUE );
+			Sound_Initialise( FALSE );
 		}
 	}
 	CleanScreen();
@@ -3045,9 +3045,6 @@ OnSoundMute()
 		if( _IsFlagSet( g_Sound.ulState, SS_NO_SOUND ) )
 		{
 			_ClrFlag( g_Sound.ulState, SS_NO_SOUND );
-			/* Registry is corrupted? */
-			if( !_IsFlagSet( g_Sound.ulState, SS_MM_SOUND | SS_DS_SOUND ) )
-				_SetFlag( g_Sound.ulState, SS_MM_SOUND );
 		}
 		else
 			_SetFlag( g_Sound.ulState, SS_NO_SOUND );

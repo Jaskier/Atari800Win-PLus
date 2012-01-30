@@ -338,7 +338,7 @@ Misc_TogglePause( void )
 		else
 		{
 			_SetFlag( g_ulAtariState, ATARI_PAUSED );
-			Sound_Clear( FALSE, FALSE );
+			Sound_Clear();
 
 			if( g_hMainWnd )
 				SetTimer( g_hMainWnd, TIMER_READ_JOYSTICK, 100, NULL );
@@ -372,7 +372,7 @@ Misc_ToggleFullSpeed( void )
 		else
 		{
 			_SetFlag( g_Misc.ulState, MS_FULL_SPEED );
-			Sound_Clear( FALSE, FALSE );
+			Sound_Clear();
 		}
 		/* Force screen refreshing (keep in mind that there may
 		   be different refresh rate set for full speed mode */
@@ -611,7 +611,7 @@ Atari_Exit(
 		/* Reset everything DirectDraw */
 		Screen_Clear( TRUE, FALSE );
 		/* Reset everything MultiMedia/DirectSound */
-		Sound_Clear( TRUE, TRUE );
+		Sound_Clear();
 		/* Reset everything DirectInput */
 		Input_Clear();
 

@@ -21,7 +21,7 @@ extern "C" {
 
 /* Whenever any value is changed/deleted/added in this file,
    change CURRENT_REV */
-#define CURRENT_REV				20
+#define CURRENT_REV				21
 
 #define REG_MACHINE_TYPE		"sysMachineType"
 #define REG_RAMSIZE_OSA			"sysRamSizeOSA"
@@ -105,12 +105,9 @@ extern "C" {
 #define REG_SOUND_STATE			"soundState"
 #define REG_SOUND_RATE			"soundRate"
 #define REG_SOUND_VOLUME		"soundVolume"
-#define REG_SOUND_UPDATE		"soundUpdate"
-#define REG_SOUND_LATENCY		"soundLatency"
 #define REG_SOUND_QUALITY		"soundQuality"
-#define REG_SOUND_DIGITIZED		"soundDigitized"
+#define REG_SOUND_LATENCY		"soundLatency"
 #define REG_ENABLE_STEREO		"soundEnableStereo"
-#define REG_BIENIAS_FIX			"soundBieniasFix"
 
 #define REG_MISC_STATE			"miscState"
 #define REG_DONT_SHOW			"miscDontShowFlags"

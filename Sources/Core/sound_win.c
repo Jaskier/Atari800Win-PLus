@@ -7,14 +7,9 @@ File    : sound_win.c
 @(#) #LM# 09.11.2003
 */
 
-#define DIRECTSOUND_VERSION		0x0500
-
 #include <stdio.h>
 #include <windows.h>
-#include <mmsystem.h>
 #include <limits.h>
-#include <crtdbg.h>
-#include <dsound.h>
 #include "WinConfig.h"
 #include "Resource.h"
 #include "Helpers.h"
@@ -37,11 +32,8 @@ struct SoundCtrl_t g_Sound =
 	DEF_SOUND_STATE,
 	DEF_SOUND_RATE,
 	DEF_SOUND_VOL,
-	DEF_SKIP_UPDATE,
-	DEF_SOUND_LATENCY,
 	DEF_SOUND_QUALITY,
-	DEF_SOUND_DIGITIZED,
-	0,
+	DEF_SOUND_LATENCY,
 	NULL
 };
 
@@ -86,6 +78,7 @@ static void SndPlay_SDLSound( void ) {
 	int gap;
 	int newpos;
 	int bytes_per_sample;
+	int i;
 	double bytes_per_ms;
 
 	/* produce samples from the sound emulation */
@@ -93,6 +86,19 @@ static void SndPlay_SDLSound( void ) {
 	bytes_per_sample = (POKEYSND_stereo_enabled ? 2 : 1) * ((_IsFlagSet( g_Sound.ulState, SS_16BIT_AUDIO )) ? 2 : 1);
 	bytes_per_ms = (bytes_per_sample)*(g_Sound.nRate/1000.0);
 	bytes_written = ((_IsFlagSet( g_Sound.ulState, SS_16BIT_AUDIO )) ? samples_written * 2 : samples_written);
+
+	/* due to bug in atari800 sound engine, neutral value for
+	   8bit sound is 0x20 not 0x80
+	   16bit sound is 0xa000 not 0x0000 */
+	if (_IsFlagSet( g_Sound.ulState, SS_16BIT_AUDIO )) {
+		for (i=1; i<bytes_written; i+=2) {
+			MZPOKEYSND_process_buffer[i] = MZPOKEYSND_process_buffer[i] + 0x60;
+		}
+	} else {
+		for (i=0; i<bytes_written; i++) {
+			MZPOKEYSND_process_buffer[i] = MZPOKEYSND_process_buffer[i] + 0x60;
+		}
+	}
 
 	if( g_Sound.pfOutput )
 		fwrite( MZPOKEYSND_process_buffer, bytes_written, 1, g_Sound.pfOutput );
@@ -202,6 +208,8 @@ double Sound_AdjustSpeed(void)
 	int gap_too_large;
 	static int inited = FALSE;
 
+	if (s_bSoundIsPaused)
+		return 1.0;
 	if (!inited) {
 		inited = TRUE;
 		avg_gap = gap_est;
@@ -210,15 +218,15 @@ double Sound_AdjustSpeed(void)
 		avg_gap = avg_gap + alpha * (gap_est - avg_gap);
 	}
 
-	gap_too_small = ((20-7)*g_Sound.nRate*bytes_per_sample)/1000;
-	gap_too_large = ((20+7)*g_Sound.nRate*bytes_per_sample)/1000;
+	gap_too_small = ((g_Sound.nLatency - DEF_SOUND_SPREAD) * 
+					g_Sound.nRate * bytes_per_sample) / 1000;
+	gap_too_large = ((g_Sound.nLatency + DEF_SOUND_SPREAD) *
+					g_Sound.nRate * bytes_per_sample) / 1000;
 	if (avg_gap < gap_too_small) {
-		double speed = 0.95;
-		return speed;
+		return 0.95;
 	}
 	if (avg_gap > gap_too_large) {
-		double speed = 1.05;
-		return speed;
+		return 1.05;
 	}
 	return 1.0;
 }
@@ -238,19 +246,21 @@ Sound_Initialise(
 #define DSP_BUFFER_FRAGS 8
 
 	SDL_AudioSpec desired, obtained;
-	int specified_delay_samps = (g_Sound.nRate * 20) / 1000;
+	int specified_delay_samps = (g_Sound.nRate * g_Sound.nLatency) / 1000;
 	int dsp_buffer_samps = 1024 * DSP_BUFFER_FRAGS + specified_delay_samps;
 	int bytes_per_sample = (POKEYSND_stereo_enabled ? 2 : 1) * ((_IsFlagSet( g_Sound.ulState, SS_16BIT_AUDIO )) ? 2 : 1);
 
 	desired.freq = g_Sound.nRate;
 	desired.format = _IsFlagSet( g_Sound.ulState, SS_16BIT_AUDIO ) ? AUDIO_S16 : AUDIO_U8;
 	desired.channels = POKEYSND_stereo_enabled ? 2 : 1;
-	desired.samples = 1024;
+	desired.samples = (g_Sound.nLatency<=20) ? 512 : 1024;
 	desired.callback = SoundCallback;
 	desired.userdata = NULL;
 
+	SDL_CloseAudio();
 	if (SDL_OpenAudio(&desired, &obtained) < 0) {
-		Sound_Disable( TRUE );
+		s_bSoundIsPaused = FALSE;
+		Atari_PlaySound = SndPlay_NoSound;
 		return FALSE;
 	}
 
@@ -267,7 +277,7 @@ Sound_Initialise(
 		memset(dsp_buffer, 0x80, dsp_buffer_bytes);
 
 	/* Initialize the kernel sound machine */
-	POKEYSND_Init( POKEYSND_FREQ_17_EXACT, desired.freq, desired.channels,
+	POKEYSND_Init( POKEYSND_FREQ_17_EXACT, obtained.freq, desired.channels,
 		(_IsFlagSet( g_Sound.ulState, SS_16BIT_AUDIO ) ? 1 : 0), bClearRegs );
 
 	Atari_PlaySound = SndPlay_SDLSound;
@@ -341,10 +351,7 @@ Function : Sound_Clear
 void
 /* #AS#
    Nothing */
-Sound_Clear(
-	BOOL bPermanent,
-	BOOL bFreeBuffer
-)
+Sound_Clear()
 {
 	s_bSoundIsPaused = TRUE;
 	SDL_PauseAudio(1);
@@ -362,8 +369,14 @@ Sound_Restart( void )
 {
 	if( _IsFlagSet( g_Misc.ulState, MS_FULL_SPEED ) )
 		return;
-	SDL_PauseAudio(0);
+
+	if (_IsFlagSet( g_Sound.ulState, SS_16BIT_AUDIO ))
+		memset(dsp_buffer, 0, dsp_buffer_bytes);
+	else
+		memset(dsp_buffer, 0x80, dsp_buffer_bytes);
+
 	s_bSoundIsPaused = FALSE;
+	SDL_PauseAudio(0);
 } /* #OF# Sound_Restart */
 
 /*========================================================
@@ -379,8 +392,6 @@ Sound_OpenOutput( char *pszOutFileName )
 	if( g_Sound.pfOutput )
 		/* Close Sound Output file */
 		Sound_CloseOutput();
-
-	_ASSERT(0 == POKEYSND_stereo_enabled || 1 == POKEYSND_stereo_enabled);
 
 	if( (g_Sound.pfOutput = fopen( pszOutFileName, "wb" )) )
 	{
@@ -456,30 +467,4 @@ Sound_CloseOutput( void )
 		DisplayMessage( NULL, IDS_SFX_FILE_CLOSED, 0, MB_ICONINFORMATION | MB_OK );
 	}
 } /* #OF# Sound_CloseOutput */
-
-/*========================================================
-Function : Sound_Disable
-=========================================================*/
-/* #FN#
-   Turns off a sound playback (disable sound) */
-BOOL
-/* #AS#
-   TRUE if succeeded, otherwise FALSE */
-Sound_Disable(
-	BOOL bClearSound
-)
-{
-	if( bClearSound )
-		Sound_Clear( TRUE, FALSE );
-	SDL_PauseAudio(1);
-	return TRUE;
-	/* Modify sound state of emulator */
-//	_ClrFlag( g_Sound.ulState, SS_DS_SOUND | SS_MM_SOUND ); /* Sound/Mute needs these flags */
-	_SetFlag( g_Sound.ulState, SS_NO_SOUND );
-	WriteRegDWORD( NULL, REG_SOUND_STATE, g_Sound.ulState );
-
-	/* It always is succeeded for SS_NO_SOUND */
-	return Sound_Initialise( TRUE );
-
-} /* #OF# Sound_Disable */
 
