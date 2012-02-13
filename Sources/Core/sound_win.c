@@ -90,22 +90,22 @@ static void SndPlay_SDLSound( void ) {
 	/* due to bug in atari800 sound engine, neutral value for
 	   8bit sound is 0x20 not 0x80
 	   16bit sound is 0xa000 not 0x0000 */
-	if (_IsFlagSet( g_Sound.ulState, SS_16BIT_AUDIO )) {
+/*	if (_IsFlagSet( g_Sound.ulState, SS_16BIT_AUDIO )) {
 		for (i=1; i<bytes_written; i+=2) {
-			MZPOKEYSND_process_buffer[i] = MZPOKEYSND_process_buffer[i] + 0x60;
+			MZPOKEYSND_process_buffer[i] = MZPOKEYSND_process_buffer[i] + 0x40;
 		}
 	} else {
 		for (i=0; i<bytes_written; i++) {
-			MZPOKEYSND_process_buffer[i] = MZPOKEYSND_process_buffer[i] + 0x60;
+			MZPOKEYSND_process_buffer[i] = MZPOKEYSND_process_buffer[i] + 0x40;
 		}
 	}
-
+*/
 	if( g_Sound.pfOutput )
 		fwrite( MZPOKEYSND_process_buffer, bytes_written, 1, g_Sound.pfOutput );
 
 	Video_SaveFrame( NULL, 0, MZPOKEYSND_process_buffer, bytes_written );
 
-	if (s_bSoundIsPaused)
+	if (s_bSoundIsPaused || _IsFlagSet( g_Sound.ulState, SS_NO_SOUND ))
 		return;
 
 	SDL_LockAudio();
@@ -208,7 +208,7 @@ double Sound_AdjustSpeed(void)
 	int gap_too_large;
 	static int inited = FALSE;
 
-	if (s_bSoundIsPaused)
+	if (s_bSoundIsPaused || _IsFlagSet( g_Sound.ulState, SS_NO_SOUND ))
 		return 1.0;
 	if (!inited) {
 		inited = TRUE;
