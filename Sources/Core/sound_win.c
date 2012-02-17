@@ -164,6 +164,7 @@ static void SoundCallback(void *userdata, Uint8 *stream, int len)
 #define MAX_SAMPLE_SIZE 4
 	static char last_bytes[MAX_SAMPLE_SIZE];
 	int bytes_per_sample = (POKEYSND_stereo_enabled ? 2 : 1)*((_IsFlagSet( g_Sound.ulState, SS_16BIT_AUDIO )) ? 2:1);
+
 	gap = dsp_write_pos - dsp_read_pos;
 	if (gap < len) {
 		underflow_amount = len - gap;
@@ -171,15 +172,20 @@ static void SoundCallback(void *userdata, Uint8 *stream, int len)
 		/*return;*/
 	}
 	newpos = dsp_read_pos + len;
+
+	SDL_memset(stream, 0, len);
 	if (newpos/dsp_buffer_bytes == dsp_read_pos/dsp_buffer_bytes) {
 		/* no wrap */
-		memcpy(stream, dsp_buffer + (dsp_read_pos%dsp_buffer_bytes), len);
+//		memcpy(stream, dsp_buffer + (dsp_read_pos%dsp_buffer_bytes), len);
+		SDL_MixAudio(stream, dsp_buffer + (dsp_read_pos%dsp_buffer_bytes), len, g_Sound.nVolume);
 	}
 	else {
 		/* wraps */
 		int first_part_size = dsp_buffer_bytes - (dsp_read_pos%dsp_buffer_bytes);
-		memcpy(stream,  dsp_buffer + (dsp_read_pos%dsp_buffer_bytes), first_part_size);
-		memcpy(stream + first_part_size, dsp_buffer, len - first_part_size);
+//		memcpy(stream,  dsp_buffer + (dsp_read_pos%dsp_buffer_bytes), first_part_size);
+//		memcpy(stream + first_part_size, dsp_buffer, len - first_part_size);
+		SDL_MixAudio(stream, dsp_buffer + (dsp_read_pos%dsp_buffer_bytes), first_part_size, g_Sound.nVolume);
+		SDL_MixAudio(stream + first_part_size, dsp_buffer, len - first_part_size, g_Sound.nVolume);
 	}
 	/* save the last sample as we may need it to fill underflow */
 	if (gap >= bytes_per_sample) {
@@ -245,7 +251,7 @@ Sound_Initialise(
 {
 #define DSP_BUFFER_FRAGS 8
 
-	SDL_AudioSpec desired, obtained;
+	SDL_AudioSpec desired;
 	int specified_delay_samps = (g_Sound.nRate * g_Sound.nLatency) / 1000;
 	int dsp_buffer_samps = 1024 * DSP_BUFFER_FRAGS + specified_delay_samps;
 	int bytes_per_sample = (POKEYSND_stereo_enabled ? 2 : 1) * ((_IsFlagSet( g_Sound.ulState, SS_16BIT_AUDIO )) ? 2 : 1);
@@ -258,11 +264,7 @@ Sound_Initialise(
 	desired.userdata = NULL;
 
 	SDL_CloseAudio();
-	if (SDL_OpenAudio(&desired, &obtained) < 0) {
-		s_bSoundIsPaused = FALSE;
-		Atari_PlaySound = SndPlay_NoSound;
-		return FALSE;
-	}
+	SDL_OpenAudio(&desired, NULL);
 
 	dsp_buffer_bytes = dsp_buffer_samps * bytes_per_sample;
 	dsp_read_pos = 0;
@@ -277,7 +279,7 @@ Sound_Initialise(
 		memset(dsp_buffer, 0x80, dsp_buffer_bytes);
 
 	/* Initialize the kernel sound machine */
-	POKEYSND_Init( POKEYSND_FREQ_17_EXACT, obtained.freq, desired.channels,
+	POKEYSND_Init( POKEYSND_FREQ_17_EXACT, desired.freq, desired.channels,
 		(_IsFlagSet( g_Sound.ulState, SS_16BIT_AUDIO ) ? 1 : 0), bClearRegs );
 
 	Atari_PlaySound = SndPlay_SDLSound;
