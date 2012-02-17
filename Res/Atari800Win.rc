@@ -1594,8 +1594,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 4,1,0,0
- PRODUCTVERSION 4,1,0,0
+ FILEVERSION 4,2,0,0
+ PRODUCTVERSION 4,2,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x23L
@@ -2588,7 +2588,7 @@ END
 
 STRINGTABLE 
 BEGIN
-    IDS_COPYRIGHT           "Atari800 © 1995-1998 David Firth\r\nAtari800 © 1998-2012 Atari800 development team\r\nAtari800Win © 1998-2000 Richard Lawrence\r\nAtari800Win PLus © 2000-2003 Tomasz Szymankowski\r\nAtari800Win PLus © 2004-2012 Marcin Lewandowski\r\nR: handler over TCP/IP © 2000 Daniel Noguerol\r\nHelp file, some routines © 2000-2003 Piotr Fusik\r\nlibpng 1.2.8 © 1998-2004 Glenn Randers-Pehrson\r\nzlib 1.2.3 © 1995-2005 Jean-loup Gailly and Mark Adler\r\n\r\nThis program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA."
+    IDS_COPYRIGHT           "Atari800 © 1995-1998 David Firth\r\nAtari800 © 1998-2012 Atari800 development team\r\nAtari800Win © 1998-2000 Richard Lawrence\r\nAtari800Win PLus © 2000-2003 Tomasz Szymankowski\r\nAtari800Win PLus © 2004-2012 Marcin Lewandowski\r\nR: handler over TCP/IP © 2000 Daniel Noguerol\r\nHelp file, some routines © 2000-2003 Piotr Fusik\r\n\r\nAtari800 Win PLus uses the following libraries:\r\nlibpng - http://www.libpng.org\r\nzlib - http://zlib.net\r\nhqx filter - http://code.google.com/p/hqx/\r\nSDL - http://www.libsdl.org\r\n\r\nThis program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA."
     IDS_WEB_PAGE            "http://www.atari.org.pl/PLus/index_us.htm"
     IDS_PRG_NAME            "%s for Windows 9x/NT/2000/XP"
 END
