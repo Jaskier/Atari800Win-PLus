@@ -87,6 +87,7 @@ protected:
 	afx_msg void OnBrowse();
 	afx_msg void OnKillfocusEdit();
 	afx_msg void OnUseExternal();
+	afx_msg void OnAdjustExternal();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

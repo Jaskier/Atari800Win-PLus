@@ -517,7 +517,8 @@ CMainFrame()
 		DisplayMessage( NULL, IDS_ERROR_NO_PALETTE, 0, MB_ICONEXCLAMATION | MB_OK, g_szPaletteFile );
 	}
 	Palette_Generate( g_Screen.Pal.nBlackLevel, g_Screen.Pal.nWhiteLevel, g_Screen.Pal.nSaturation, g_Screen.Pal.nContrast, 
-		g_Screen.Pal.nBrightness, g_Screen.Pal.nGamma, _IsFlagSet( g_Misc.ulState, MS_USE_EXT_PALETTE ) );
+		g_Screen.Pal.nBrightness, g_Screen.Pal.nGamma,
+		_IsFlagSet( g_Misc.ulState, MS_USE_EXT_PALETTE ), _IsFlagSet( g_Misc.ulState, MS_TRANS_LOADED_PAL ) );
 
 	if( g_Misc.ulState != ulMiscState )
 		WriteRegDWORD( NULL, REG_MISC_STATE, g_Misc.ulState );
@@ -4267,7 +4268,8 @@ OnMiscClearAllSettings()
 
 			/* Re-generate a default palette */
 			Palette_Generate( g_Screen.Pal.nBlackLevel, g_Screen.Pal.nWhiteLevel, g_Screen.Pal.nSaturation, g_Screen.Pal.nContrast, 
-				g_Screen.Pal.nBrightness, g_Screen.Pal.nGamma, _IsFlagSet( g_Misc.ulState, MS_USE_EXT_PALETTE ) );
+				g_Screen.Pal.nBrightness, g_Screen.Pal.nGamma,
+				_IsFlagSet( g_Misc.ulState, MS_USE_EXT_PALETTE ), _IsFlagSet( g_Misc.ulState, MS_TRANS_LOADED_PAL )  );
 
 			/* Apply the changes to the main window */
 			Screen_UseAtariPalette( TRUE );

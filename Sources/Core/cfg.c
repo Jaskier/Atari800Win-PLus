@@ -28,7 +28,7 @@ int Palette_Read(char * file) {
 	return COLOURS_EXTERNAL_ReadFilename(Colours_external, file);
 }
 
-void Palette_Generate(int black, int white, int saturation, int contrast, int brightness, int gamma, int external)
+void Palette_Generate(int black, int white, int saturation, int contrast, int brightness, int gamma, int external, int adjust)
 {
 	Colours_setup->black_level = black;
 	Colours_setup->white_level = white;
@@ -36,7 +36,7 @@ void Palette_Generate(int black, int white, int saturation, int contrast, int br
 	Colours_setup->contrast = ((double)contrast - 50) / 25;
 	Colours_setup->brightness = ((double) brightness - 50) / 25;
 	Colours_setup->gamma = ((double) gamma - 50) / 50;
-	Colours_external->adjust = FALSE;
+	Colours_external->adjust = adjust;
 	Colours_external->loaded = external;
 	Colours_Update();
 }

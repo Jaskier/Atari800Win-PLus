@@ -59,6 +59,7 @@ BEGIN_MESSAGE_MAP(CPaletteDlg, CCommonDlg)
 	ON_BN_CLICKED(IDC_PALETTE_BROWSE, OnBrowse)
 	ON_EN_KILLFOCUS(IDC_PALETTE_EDIT, OnKillfocusEdit)
 	ON_BN_CLICKED(IDC_PALETTE_USEEXTERNAL, OnUseExternal)
+	ON_BN_CLICKED(IDC_PALETTE_ADJUSTEXTERNAL, OnAdjustExternal)
 	ON_WM_PAINT()
 	//}}AFX_MSG_MAP
 	ON_BN_CLICKED(IDC_PALETTE_OK, OnOK)
@@ -142,7 +143,8 @@ PreparePalette(
 		}
 	}
 
-	Palette_Generate( m_nBlackLevel, m_nWhiteLevel, m_nSaturation, m_nContrast, m_nBrightness, m_nGamma, _IsFlagSet( m_ulMiscState, MS_USE_EXT_PALETTE ) );
+	Palette_Generate( m_nBlackLevel, m_nWhiteLevel, m_nSaturation, m_nContrast, m_nBrightness, m_nGamma,
+		_IsFlagSet( m_ulMiscState, MS_USE_EXT_PALETTE ), _IsFlagSet( m_ulMiscState, MS_TRANS_LOADED_PAL)  );
 
 	/* Palette bar is drawn in windowed modes only */
 	if( !m_bSmallMode )
@@ -305,6 +307,8 @@ SetDlgState()
 	/* Set up check buttons states and activity */
 	_SetChkBttn( IDC_PALETTE_USEEXTERNAL,      _IsFlagSet( m_ulMiscState, MS_USE_EXT_PALETTE ) );
 	_EnableCtrl( IDC_PALETTE_USEEXTERNAL,      bPalette );
+	_SetChkBttn( IDC_PALETTE_ADJUSTEXTERNAL,   _IsFlagSet( m_ulMiscState, MS_TRANS_LOADED_PAL ) );
+	_EnableCtrl( IDC_PALETTE_ADJUSTEXTERNAL,   bPalette );
 
 	SetDlgItemInt( IDC_PALETTE_BLACKLEVEL, m_nBlackLevel, FALSE );
 	SetDlgItemInt( IDC_PALETTE_WHITELEVEL, m_nWhiteLevel, FALSE );
@@ -612,6 +616,25 @@ CPaletteDlg::
 OnUseExternal()
 {
 	_ClickButton( IDC_PALETTE_USEEXTERNAL, m_ulMiscState, MS_USE_EXT_PALETTE );
+	/* Read the palette from a file or/and format it */
+	PreparePalette( m_szPaletteFile );
+
+	SetDlgState();
+
+} /* #OF# CPaletteDlg::OnUseExternal */
+
+/*========================================================
+Method   : CPaletteDlg::OnAdjustExternal
+=========================================================*/
+/* #FN#
+   Sets a state of the object regarding to an appropriate check box */
+void
+/* #AS#
+   Nothing */
+CPaletteDlg::
+OnAdjustExternal()
+{
+	_ClickButton( IDC_PALETTE_ADJUSTEXTERNAL, m_ulMiscState, MS_TRANS_LOADED_PAL );
 	/* Read the palette from a file or/and format it */
 	PreparePalette( m_szPaletteFile );
 
